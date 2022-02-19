@@ -1,16 +1,180 @@
-html,
-body {
+body,
+html {
+  background-color: #fdfdfd;
   padding: 0;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
 }
 
 * {
-  box-sizing: border-box;
+  font-family: Helvetica, Arial, sans-serif;
+}
+
+/* h1, h2, h3, h4,
+p,
+strong {
+  color: #fefefe;
+} */
+
+p {
+  line-height: 1.4rem;
+}
+
+.column-left {
+  width: 320px;
+  height: 100vh;
+  /* background-color: #0b2128; */
+  background-color: #ededed;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+}
+
+section {
+  margin: 1rem;
+}
+
+section button {
+  margin-top: 1rem;
+  width: 100%;
+  padding: 0.25rem 0.5rem;
+  font-size: 1rem;
+}
+
+section div button:not(:first-child) {
+  margin-top: 0.5rem;
+}
+
+section select {
+  width: 100%;
+}
+
+.mt0 {
+  margin-top: 0;
+}
+
+.image-viewer {
+  color: #111;
+  flex-grow: 1;
+}
+
+.image-canv {
+  margin: 1rem;
+  border: 1px solid #e6e6e6;
+  /* box-shadow: 1px 1px 10px 2px rgb(52 52 52 / 20%); */
+}
+
+.image-viewer div {
+  background: tomato;
+  margin: 2rem;
+}
+
+main {
+  display: flex;
+}
+
+.address-field {
+  height: 2rem;
+  font-size: 1rem;
+  flex-grow: 1;
+}
+
+.address-label {
+  font-size: 0.875rem;
+  font-weight: bold;
+}
+
+section div button.connect-btn {
+  margin: 0;
+  width: 100px;
+}
+
+.field-cont {
+  display: flex;
+  margin-top: 0.25rem;
+}
+
+.connection-container {
+  margin: 1rem 0;
+}
+
+.input-field-error {
+  color: rgb(194, 13, 0);
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+.connection-details {
+  margin-top: 0.5rem;
+}
+
+.connection-details > div {
+  margin-top: 0.25rem;
+}
+
+.muted {
+  color: #555;
+}
+
+.modal-background {
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  background-color: rgb(0, 0, 0, 0.64);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-background .modal-cont {
+  width: calc(480px + 1rem + 2rem);
+  /* height: 400px; */
+  background: #efefef;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 2rem;
+  padding: 0 0.5rem;
+}
+
+.modal-header h4 {
+  margin: 0;
+}
+
+.explorer-grid {
+  display: grid;
+  grid-template-areas: "a a a";
+  gap: 0.5rem;
+  grid-auto-columns: 160px;
+  width: calc(480px + 1rem);
+  margin: 0 auto;
+}
+
+.explorer-cell {
+  width: 160px;
+  height: 160px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-contents {
+  height: 400px;
+  overflow-y: auto;
 }
