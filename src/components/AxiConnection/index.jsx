@@ -3,6 +3,7 @@ import { useState } from 'react';
 export default function AxiConnection({ handleConnected, handleDisconnected, handleConnectionError, isConnected }) {
   const [address, setAddress] = useState('');
   const [connectionError, setConnectionError] = useState('');
+  // const [connection, setConnection] = useState();
 
   const handleChangeInput = (e) => {
     if (connectionError) {
@@ -21,7 +22,8 @@ export default function AxiConnection({ handleConnected, handleDisconnected, han
 
     co.onopen = function (event) {
       console.log(`Websocket is now open on ${host}:${port}!`);
-      handleConnected();
+      handleConnected(co);
+      // setConnection(co);
     };
 
     co.onerror = function (event) {
@@ -68,10 +70,11 @@ export default function AxiConnection({ handleConnected, handleDisconnected, han
     }
   };
 
-  const handleClickDisconnect = () => {
-    console.log('Disconnect from AxiDraw...');
-    // Insert logic to disconnect Websocket and do any related clean-up
-  };
+  // const handleClickDisconnect = () => {
+  //   console.log('Disconnect from AxiDraw...');
+  //   // Insert logic to disconnect Websocket and do any related clean-up
+  //   // connection.close();
+  // };
 
   const buttonText = isConnected ? 'Disconnect' : 'Connect';
 
@@ -84,7 +87,7 @@ export default function AxiConnection({ handleConnected, handleDisconnected, han
         <div className="connection-details">
           <p>Plotter / <span className="muted">{plotterNickname}</span></p>
           <p>Address / <span className="muted">{address}</span></p>
-          <button className="mt0" onClick={handleClickDisconnect}>{buttonText}</button>
+          <button className="mt0" onClick={handleDisconnected}>{buttonText}</button>
         </div>
       ) : (
         <>

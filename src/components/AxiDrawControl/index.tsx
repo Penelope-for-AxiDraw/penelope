@@ -12,16 +12,18 @@ const AxiDrawControl = (props:ControlProps) => {
   const { pathToSvg, svgList } = props;
 
   const [isConnected, setIsConnected] = useState(false);
-  // const [connection, setConnection] = useState();
-  // const [pathToSvg, setPathToSvg] = useState(defaultPathToSvg);
+  const [connection, setConnection] = useState();
   const selectRef = useRef(null);
 
-  const registerConnection = () => {
+  const registerConnection = (ws) => {
     setIsConnected(true);
-    // setConnection(ws);
+    setConnection(ws);
   };
 
   const handleDisconnected = () => {
+    if (isConnected) {
+      connection.close();
+    }
     setIsConnected(false);
   }
 
@@ -31,14 +33,14 @@ const AxiDrawControl = (props:ControlProps) => {
 
   function sendCommand(cmd: String) {
     if (cmd === "plot") {
-      // const pattern = /^(.*[\\/])/;
-      // const [root_url] = pathToSvg.match(pattern);
-      // const { filename } = svgList[selectRef.current.value];
-      // connection.send(`${cmd}|${root_url}|${filename}`);
-      console.log("command is 'plot'");
+      const pattern = /^(.*[\\/])/;
+      const [root_url] = pathToSvg.match(pattern);
+      const { filename } = svgList[selectRef.current.value];
+      connection.send(`${cmd}|${root_url}|${filename}`);
+      // console.log("command is 'plot'");
     } else {
-      console.log(`command is ${cmd}`);
-      // connection.send(cmd);
+      // console.log(`command is ${cmd}`);
+      connection.send(cmd);
     }
   }
 
