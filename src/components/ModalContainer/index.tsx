@@ -5,7 +5,7 @@ const ModalContainer = ({ title, dismiss, children }) => {
         <div className="modal-cont">
           <div className="modal-header">
             <h4>{title}</h4>
-            <button onClick={dismiss}>dismiss</button>
+            <button onClick={dismiss}>×</button>
           </div>
           <div className="modal-contents">
             {children}

@@ -31,8 +31,8 @@ export default function ImageControls({ currentSvgData, initImageSelection }) {
           return <option key={item.filename} value={j}>{item.filename}</option>
         })}
       </select> */}
-      <div>
-        <h4>{filename}</h4>
+      <div className="image-meta-cont">
+        <h4>{filename.replace(/\.[^/.]+$/, "")}</h4>
         <p>{width}px × {height}px ({widthInch} in × {heightInch} in)</p>
         <p>Uploaded {formattedUploadDate}</p>
         <p>{description}</p>

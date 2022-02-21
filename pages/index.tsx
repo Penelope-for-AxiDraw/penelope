@@ -81,17 +81,6 @@ const Home: NextPage = () => {
 
 export default Home;
 
-const phrases = [
-  'Afternoon sunlight streamed in through the window, warming the large room and illuminating the intricate geometric designs on the tabletop.',
-  'The woman in the chair looked up from her work, her eyes widening in surprise as she saw the patterns.',
-  'She had never seen such intricate and beautiful design before, and she was intrigued.',
-  'She set down her pencil and reached for a magnifying glass to see the pattern better.',
-  'She gasped as she saw the intricate paths that ran through the paper, the beauty of it.',
-  'She could not believe she was able to see it with her own eyes.'
-];
-
-const getDescription = () => phrases[Math.floor(Math.random() * phrases.length)];
-
 const mockSvgList = [
   {
       filename: "bezibezi1643786499-plot.svg",
@@ -102,7 +91,8 @@ const mockSvgList = [
       width: 432,
       height: 432,
       updloadDate: 'May 25, 2021 17:36:00',
-      description: getDescription(),
+      description: 'Afternoon sunlight streamed in through the window, warming the large room and illuminating the intricate geometric designs on the tabletop.',
+      thumbnailUrl: "/images/bezibezi1643786499-plot.png",
   },
   {
       filename: "template_6x6.svg",
@@ -110,10 +100,11 @@ const mockSvgList = [
       language: "SVG",
       raw_url: "https://gist.githubusercontent.com/computershawn/f69739d83b88dfed562331fd49d8864c/raw/3f4497cd419ffc01019455582cab355f7c45d8df/template_6x6.svg",
       size: 1689,
-      width: 432,
-      height: 432,
+      width: 450,
+      height: 450,
       updloadDate: 'May 25, 2021 17:36:00',
-      description: getDescription(),
+      description: 'A square outline template for placing a 6x6-inch paper on AxiDraw drawing surface',
+      thumbnailUrl: "/images/template_6x6.png",
   },
   {
       filename: "bezibezi-1643437036-plot-lay2.svg",
@@ -124,7 +115,8 @@ const mockSvgList = [
       width: 432,
       height: 432,
       updloadDate: 'May 25, 2021 17:36:00',
-      description: getDescription(),
+      description: 'The woman in the chair looked up from her work, her eyes widening in surprise as she saw the patterns.',
+      thumbnailUrl: "/images/bezibezi-1643437036-plot-lay2.png",
   },
   {
       filename: "bezibezi-1643437036-plot-lay1.svg",
@@ -135,7 +127,8 @@ const mockSvgList = [
       width: 432,
       height: 432,
       updloadDate: 'May 25, 2021 17:36:00',
-      description: getDescription(),
+      description: 'She had never seen such intricate and beautiful design before, and she was intrigued.',
+      thumbnailUrl: "/images/bezibezi-1643437036-plot-lay1.png",
   },
   {
       filename: "triangles-1641524291-plot-layer2.svg",
@@ -143,10 +136,11 @@ const mockSvgList = [
       language: "SVG",
       raw_url: "https://gist.githubusercontent.com/computershawn/a9aeb0405015ab2f3737cd1af2af9465/raw/dba2f77b4fc6c06bf85f1f017ac00e877b9d1f1f/triangles-1641524291-plot-layer2.svg",
       size: 253874,
-      width: 432,
+      width: 288,
       height: 432,
       updloadDate: 'May 25, 2021 17:36:00',
-      description: getDescription(),
+      description: 'She set down her pencil and reached for a magnifying glass to see the pattern better.',
+      thumbnailUrl: "/images/triangles-1641524291-plot-layer2.png",
   },
   {
       filename: "pattern-1641792542-plot.svg",
@@ -157,7 +151,8 @@ const mockSvgList = [
       width: 432,
       height: 432,
       updloadDate: 'May 25, 2021 17:36:00',
-      description: getDescription(),
+      description: 'She gasped as she saw the intricate paths that ran through the paper, the beauty of it.',
+      thumbnailUrl: "/images/pattern-1641792542-plot.png",
   },
   {
       filename: "Untitled-3.svg",
@@ -165,20 +160,10 @@ const mockSvgList = [
       language: "SVG",
       raw_url: "https://gist.githubusercontent.com/computershawn/f8c1892bbf88a4b70924121f51df58ee/raw/082419bbb13888938dad3e01dff7f70aa0adbc3e/Untitled-3.svg",
       size: 154024,
-      width: 432,
+      width: 288,
       height: 432,
       updloadDate: 'May 25, 2021 17:36:00',
-      description: getDescription(),
-  },
-  {
-      filename: "sketch-1627177712.svg",
-      type: "image/svg+xml",
-      language: "SVG",
-      raw_url: "https://gist.githubusercontent.com/computershawn/993cb7ab0b2efa84d2ca744ef119a0f5/raw/f523533d5df60749dfbe357b7916c0cdd3f88406/sketch-1627177712.svg",
-      size: 5410,
-      width: 432,
-      height: 432,
-      updloadDate: 'May 25, 2021 17:36:00',
-      description: getDescription(),
+      description: 'She could not believe she was able to see it with her own eyes.',
+      thumbnailUrl: "/images/Untitled-3.png",
   }
 ];

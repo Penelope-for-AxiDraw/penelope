@@ -140,7 +140,7 @@ section div button.connect-btn {
 }
 
 .modal-background .modal-cont {
-  width: calc(480px + 1rem + 2rem);
+  width: calc(576px + 1rem + 2rem);
   /* height: 400px; */
   background: #efefef;
 }
@@ -161,20 +161,37 @@ section div button.connect-btn {
   display: grid;
   grid-template-areas: "a a a";
   gap: 0.5rem;
-  grid-auto-columns: 160px;
-  width: calc(480px + 1rem);
+  grid-auto-columns: 192px;
+  width: calc(576px + 1rem);
   margin: 0 auto;
 }
 
 .explorer-cell {
-  width: 160px;
-  height: 160px;
+  width: 192px;
+  height: 192px;
   display: flex;
   align-items: center;
   justify-content: center;
+  outline: 1px solid #cbcbcb;
 }
 
 .modal-contents {
   height: 400px;
   overflow-y: auto;
+  padding-top: 0.25rem;
+}
+
+.image-block-cont {
+  cursor: pointer;
+}
+
+.image-block-cont p {
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+  cursor: pointer;
+}
+
+.image-meta-cont p {
+  font-size: 0.875rem;
+  margin: 0.5rem 0;
 }
