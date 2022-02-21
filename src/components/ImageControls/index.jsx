@@ -10,6 +10,8 @@ export default function ImageControls({ currentSvgData, initImageSelection }) {
   //   initImageSelection();
   // }
 
+  const PTS_PER_INCH = 72;
+
   const {
     filename,
     width,
@@ -17,11 +19,17 @@ export default function ImageControls({ currentSvgData, initImageSelection }) {
     updloadDate,
     description
   } = currentSvgData;
-  const widthInch = width / 72;
-  const heightInch = height / 72;
+
+  const getInches = (dim) => dim % PTS_PER_INCH === 0 ? dim / PTS_PER_INCH : (dim / PTS_PER_INCH).toFixed(1);
+  const widthInch = getInches(width);
+  const heightInch = getInches(height);
   const dateObj = new Date(updloadDate);
-  const monthNameShort = dateObj.toLocaleString("en-US", { month: "short" });
-  const formattedUploadDate = `${monthNameShort} ${dateObj.getDate()}, ${dateObj.getFullYear()} @ ${dateObj.toLocaleTimeString('en-US')}`;
+  
+  const getFormattedUploadDate = (d) => {
+    const monthNameShort = dateObj.toLocaleString("en-US", { month: "short" });
+    return `${monthNameShort} ${d.getDate()}, ${d.getFullYear()} @ ${d.toLocaleTimeString('en-US', {hour: '2-digit', minute: '2-digit'})}`; 
+  }
+  const formattedUploadDate = getFormattedUploadDate(dateObj);
 
   return (
     <section>

@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { Octokit } from "octokit"; // Remove this from package.json
 import type { NextPage } from "next";
 // import AxiDrawConnection from "../src/components/Connection";
 import AxiDrawControl from "../src/components/AxiDrawControl";
@@ -8,14 +7,12 @@ import Viewer from "../src/components/Viewer";
 import ImageExplorer from "../src/components/ImageExplorer";
 
 const Home: NextPage = () => {
-  const defaultPathToSvg =
-    "https://gist.githubusercontent.com/computershawn/a9aeb0405015ab2f3737cd1af2af9465/raw/dba2f77b4fc6c06bf85f1f017ac00e877b9d1f1f/triangles-1641524291-plot-layer2.svg";
+  // const defaultPathToSvg = "https://gist.githubusercontent.com/computershawn/a9aeb0405015ab2f3737cd1af2af9465/raw/dba2f77b4fc6c06bf85f1f017ac00e877b9d1f1f/triangles-1641524291-plot-layer2.svg";
   const [svgList, setSvgList] = useState(mockSvgList);
-  const [pathToSvg, setPathToSvg] = useState(defaultPathToSvg);
+  const [pathToSvg, setPathToSvg] = useState(mockSvgList[0].raw_url);
   const [svgListIndex, setSvgListIndex] = useState(0);
-  const [selectingImage, setSelectingImage] = useState(true);
+  const [selectingImage, setSelectingImage] = useState(false);
   // const selectRef = useRef(null);
-  // const toki = process.env.NEXT_PUBLIC_GH_TOKEN;
 
   // Get a list of this user's gists
   // const doGetSvgList = useCallback(async () => {
