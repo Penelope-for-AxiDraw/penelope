@@ -3,7 +3,8 @@ import { useState } from 'react';
 export default function AxiConnection({ handleConnected, handleDisconnected, handleConnectionError, isConnected }) {
   const [address, setAddress] = useState('');
   const [connectionError, setConnectionError] = useState('');
-  // const [connection, setConnection] = useState();
+  const [deviceName, setDeviceName] = useState('…');
+  let connection;
 
   const handleChangeInput = (e) => {
     if (connectionError) {
@@ -12,18 +13,20 @@ export default function AxiConnection({ handleConnected, handleDisconnected, han
     setAddress(e.target.value);
   };
 
-  const startWebsocketThings = () => {
+  const getAxiSocket = () => {
     const [host, port] = address.split(':');
 
     const co = new WebSocket(`ws://${host}:${port}/`);
-    // co.onmessage = function (event) {
-    //     console.log("Server says: " + event.data);
-    // };
+    co.onmessage = function (event) {
+        const message = JSON.parse(event.data);
+        if (message.hasOwnProperty('deviceName')) {
+          setDeviceName(message.deviceName);
+        }
+    };
 
     co.onopen = function (event) {
-      console.log(`Websocket is now open on ${host}:${port}!`);
+      // console.log(`Websocket is now open on ${co.url}!`);
       handleConnected(co);
-      // setConnection(co);
     };
 
     co.onerror = function (event) {
@@ -32,7 +35,7 @@ export default function AxiConnection({ handleConnected, handleDisconnected, han
     };
 
     co.onclose = function (event) {
-      console.log("WebSocket is now closed.");
+      // console.log("WebSocket is now closed.");
       handleDisconnected();
     };
 
@@ -64,28 +67,20 @@ export default function AxiConnection({ handleConnected, handleDisconnected, han
   const handleClickConnect = () => {
     const isValid = validateConnectionParams(address);
     if (isValid) {
-      const ws = startWebsocketThings();
+      connection = getAxiSocket();
     } else {
       setConnectionError('Address is badly formatted');
     }
   };
 
-  // const handleClickDisconnect = () => {
-  //   console.log('Disconnect from AxiDraw...');
-  //   // Insert logic to disconnect Websocket and do any related clean-up
-  //   // connection.close();
-  // };
-
   const buttonText = isConnected ? 'Disconnect' : 'Connect';
-
-  const plotterNickname = "Temporary Nickname";
 
   return (
     <div className="connection-container">
       <div className="address-label">Connection</div>
       {isConnected ? (
         <div className="connection-details">
-          <p>Plotter / <span className="muted">{plotterNickname}</span></p>
+          <p>Plotter / <span className="muted">{deviceName}</span></p>
           <p>Address / <span className="muted">{address}</span></p>
           <button className="mt0" onClick={handleDisconnected}>{buttonText}</button>
         </div>

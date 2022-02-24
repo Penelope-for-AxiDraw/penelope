@@ -20,12 +20,18 @@ export default function AxiActions(props: actionsProps) {
     sendCommand('plot');
   }
 
+  const cmdGetName = () => {
+    // console.log('get name');
+    sendCommand('get_name');
+  }
+
   return (
     <div>
       <div className="address-label">Controls</div>
       <button className="mt0" onClick={cmdAlignMode}>Align Mode</button>
       <button className="mt0" onClick={cmdToggle}>Toggle Pen</button>
       <button className="mt0" onClick={cmdBeginPlot}>Plot Image</button>
+      {/* <button className="mt0" onClick={cmdGetName}>Get Name</button> */}
     </div>
   );
 };

@@ -4,12 +4,11 @@ import AxiConnection from '../AxiConnection';
 import AxiActions from '../AxiActions';
 
 interface ControlProps {
-  pathToSvg: string;
-  svgList: Array<object>;
+  currentSvgData: object;
 };
 
 const AxiDrawControl = (props:ControlProps) => {
-  const { pathToSvg, svgList } = props;
+  const { currentSvgData } = props;
 
   const [isConnected, setIsConnected] = useState(false);
   const [connection, setConnection] = useState();
@@ -17,6 +16,7 @@ const AxiDrawControl = (props:ControlProps) => {
 
   const registerConnection = (ws) => {
     setIsConnected(true);
+    ws.send('get_name');
     setConnection(ws);
   };
 
@@ -34,8 +34,10 @@ const AxiDrawControl = (props:ControlProps) => {
   function sendCommand(cmd: String) {
     if (cmd === "plot") {
       const pattern = /^(.*[\\/])/;
-      const [root_url] = pathToSvg.match(pattern);
-      const { filename } = svgList[selectRef.current.value];
+      const [root_url] = currentSvgData.raw_url.match(pattern);
+      // console.log('root_url', root_url);
+      const { filename } = currentSvgData;
+      // console.log('filename', filename);
       connection.send(`${cmd}|${root_url}|${filename}`);
       // console.log("command is 'plot'");
     } else {

@@ -66,8 +66,10 @@ const Home: NextPage = () => {
             <ImageControls
               currentSvgData={svgList[svgListIndex]}
               initImageSelection={openImageSelectionModal}
+              />
+            <AxiDrawControl
+              currentSvgData={svgList[svgListIndex]}
             />
-            <AxiDrawControl svgList={svgList} pathToSvg={pathToSvg} />
           </>
         )}
       </div>
@@ -158,6 +160,18 @@ const mockSvgList = [
       raw_url: "https://gist.githubusercontent.com/computershawn/f8c1892bbf88a4b70924121f51df58ee/raw/082419bbb13888938dad3e01dff7f70aa0adbc3e/Untitled-3.svg",
       size: 154024,
       width: 288,
+      height: 432,
+      updloadDate: 'May 25, 2021 17:36:00',
+      description: 'She could not believe she was able to see it with her own eyes.',
+      thumbnailUrl: "/images/Untitled-3.png",
+  },
+  {
+      filename: "bezibezi1643786499-zoomed.svg",
+      type: "image/svg+xml",
+      language: "SVG",
+      raw_url: "https://gist.githubusercontent.com/computershawn/6e7b05135d413a953b1a86dbcb379ebb/raw/c7fe22edcfae87cc749e243a523753249a9bf666/bezibezi1643786499-zoomed.svg",
+      size: 154024,
+      width: 432,
       height: 432,
       updloadDate: 'May 25, 2021 17:36:00',
       description: 'She could not believe she was able to see it with her own eyes.',
