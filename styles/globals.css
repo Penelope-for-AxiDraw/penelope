@@ -113,7 +113,8 @@ section div button.connect-btn {
 .input-field-error {
   color: rgb(194, 13, 0);
   font-size: 0.875rem;
-  margin-top: 0.25rem;
+  margin-top: 0.5rem;
+  line-height: 1.2rem;
 }
 
 .connection-details {

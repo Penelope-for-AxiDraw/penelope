@@ -7,8 +7,8 @@ export default function ImageControls({ currentEntry, initImageSelection }) {
   } = currentEntry;
 
   // const { width: widthPx, height: heightPx } = images.thumbnail;
-  const widthPx = images.thumbnail.width / 2;
-  const heightPx = images.thumbnail.height / 2;
+  const widthPx = images.thumbnail.width;
+  const heightPx = images.thumbnail.height;
   const { width: widthInch, height: heightInch } = images.svg;
   const dateObj = new Date(uploadDate);  
 

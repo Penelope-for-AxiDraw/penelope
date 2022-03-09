@@ -1,25 +1,18 @@
 import { useEffect, useState } from 'react';
 import { createClient } from 'contentful-management';
 import type { NextPage } from "next";
-// import AxiDrawConnection from "../src/components/Connection";
 import AxiDrawControl from "../src/components/AxiDrawControl";
 import ImageControls from "../src/components/ImageControls";
-import Viewer from "../src/components/Viewer";
+import ImagePreview from "../src/components/ImagePreview";
 import ImageExplorer from "../src/components/ImageExplorer";
 
 const Home: NextPage = () => {
   const [entries, setEntries] = useState([]);
-  // const [pathToSvg, setPathToSvg] = useState('https://gist.githubusercontent.com/computershawn/e2c0d36897524afc2dbdf20adc8525b3/raw/2f91dc4b6bfa6ca1a10c6190dbb89ad5e0f2ec55/bezibezi1643786499-plot.svg');
-  const [thumbnailUrl, setThumbnailUrl] = useState('https://gist.githubusercontent.com/computershawn/e2c0d36897524afc2dbdf20adc8525b3/raw/2f91dc4b6bfa6ca1a10c6190dbb89ad5e0f2ec55/bezibezi1643786499-plot.svg');
   const [listIndex, setlistIndex] = useState(0);
   const [selectingImage, setSelectingImage] = useState(false);
 
   const handleSelectImage = (index: number) => {
     setlistIndex(index);
-    // const url = entries[index].images.svg.url;
-    // setPathToSvg(url);
-    const url = entries[index].images.thumbnail.url;
-    setThumbnailUrl(url);
   }
 
   const openImageSelectionModal = () => {
@@ -67,8 +60,8 @@ const Home: NextPage = () => {
               id: thumbnailAsset?.sys.id,
               url: `https:${thumbnailAsset.fields.file['en-US'].url}`,
               fileName: thumbnailAsset?.fields.file['en-US'].fileName,
-              width: thumbnailAsset?.fields.file['en-US'].details.image.width,
-              height: thumbnailAsset?.fields.file['en-US'].details.image.height,
+              width: thumbnailAsset?.fields.file['en-US'].details.image.width / 2,
+              height: thumbnailAsset?.fields.file['en-US'].details.image.height / 2,
             },
             svg: {
               id: svgAsset?.sys.id,
@@ -83,11 +76,16 @@ const Home: NextPage = () => {
       });
 
       setEntries(entriesWithImageUrls);
-      setThumbnailUrl(entriesWithImageUrls[0].images.thumbnail.url);
     }
 
     fetchData();
   }, [client, entries]);
+
+  const placeholder = {
+    url: 'fun-pattern.png',
+    width: 288,
+    height: 432,
+  };
 
   return (
     <main>
@@ -100,7 +98,7 @@ const Home: NextPage = () => {
       }
       <div className="column-left">
         {entries.length === 0 ? (
-          <h4>(╯°□°)╯︵ ┻━┻</h4>
+          <TableFlip />
         ) : (
           <>
             {entries.length && (<ImageControls
@@ -113,9 +111,22 @@ const Home: NextPage = () => {
           </>
         )}
       </div>
-      <Viewer thumbnailUrl={thumbnailUrl} />
+      {entries.length ? <ImagePreview thumbnail={entries[listIndex].images.thumbnail} /> : <ImagePreview thumbnail={placeholder} />}
     </main>
   );
 };
 
 export default Home;
+
+
+const TableFlip = () => {
+  const tableFlipStyle = {
+    margin: '1rem',
+  };
+
+  return (
+    <div style={tableFlipStyle}>
+      <span>(╯°□°)╯︵ ┻━┻</span>
+    </div>
+  );
+}
