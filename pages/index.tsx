@@ -29,8 +29,8 @@ const Home: NextPage = () => {
       return;
     }
     const spaceID = process.env.NEXT_PUBLIC_SPACE || '';
-    const fieldsToGet = ['title', 'description', 'thumbnail', 'svgFile'];
     const fetchData = async () => {
+      const fieldsToGet = ['title', 'description', 'thumbnail', 'svgFile'];
       const { items: entries } = await client
         .getSpace(spaceID)
         .then((space) => space.getEnvironment("master"))
