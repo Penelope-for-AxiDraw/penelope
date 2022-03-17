@@ -1,15 +1,23 @@
-import { isValidElement, useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { createClient } from 'contentful-management';
+
+import { useRouter } from 'next/router';
 
 import { CredentialsBox, LoginScreen } from './styles';
 import Spinner from '../../src/components/Spinner';
+import { store } from '../../src/providers/store';
 
-const Login = () => {
+const Start = () => {
   const isDevMode = process.env.NODE_ENV === 'development';
   const defaultValue = 'xxxxxxxx';
   const buttonText = 'Yeah!';
   const SPACE_ID = 'spaceId';
   const TOKEN = 'accessToken';
+  const router = useRouter();
+
+  const globalState = useContext(store);
+  // const { dispatch } = globalState;
+  const { dispatch, state: { user } } = globalState;
 
   const [loading, setLoading] = useState(false);
   const [creds, setCreds] = useState({
@@ -24,18 +32,18 @@ const Login = () => {
   });
 
   const validateFields = () => {
-    const blankAccessCode = creds.accessToken.value.trim() === '';
-    const blankSpace = creds.spaceId.value.trim() === '';
+    const blankAccessCode = creds[TOKEN].value.trim() === '';
+    const blankSpace = creds[SPACE_ID].value.trim() === '';
 
     if (blankAccessCode || blankSpace) {
       const updatedCreds = {
         ...creds,
         accessToken: {
-          ...creds.accessToken,
+          ...creds[TOKEN],
           error: blankAccessCode ? 'Personal access token cannot be blank' : '',
         },
         spaceId: {
-          ...creds.spaceId,
+          ...creds[SPACE_ID],
           error: blankSpace ? 'Space ID cannot be blank' : '',
         },
       };
@@ -56,15 +64,15 @@ const Login = () => {
     switch (errorObj.status) {
       case 404:
         fieldErrorMessage = 'Could not find this space ID';
-        fieldName = 'spaceId';
+        fieldName = SPACE_ID;
         break;
       case 401:
         fieldErrorMessage = 'This personal access token is not valid';
-        fieldName = 'accessToken';
+        fieldName = TOKEN;
         break;
       default:
         fieldErrorMessage = 'Unknown sign-in error';
-        fieldName = 'spaceId';    
+        fieldName = SPACE_ID;    
     }
 
     const updatedCreds = {
@@ -85,8 +93,8 @@ const Login = () => {
       return;
     }
 
-    const accessToken = creds.accessToken.value;
-    const spaceId = creds.spaceId.value;
+    const accessToken = creds[TOKEN].value;
+    const spaceId = creds[SPACE_ID].value;
     let client = null;
     let space = null;  
 
@@ -97,8 +105,8 @@ const Login = () => {
       window.localStorage.setItem(
         'contentfulCreds',
         JSON.stringify({
-          personalAccessToken: accessToken,
-          space: spaceId,
+          accessToken,
+          spaceId,
         })
       );
       console.log('Successfully signed in');
@@ -109,9 +117,11 @@ const Login = () => {
 
       // 2. Save content into application state
       updateStore(dat);
+      window.sessionStorage.setItem('axiSvgContent', JSON.stringify(dat));
 
       // 3. Go to main app screen
       // …
+      router.push('/');
 
     } catch (err) {
       manageSignInError(err);
@@ -120,8 +130,6 @@ const Login = () => {
   
     return true
   }
-
-  // const loadUserContent = async () => {};
 
   const fetchAxiSvgContent = async (space) => {
     const fieldsToGet = ['title', 'description', 'thumbnail', 'svgFile'];
@@ -169,95 +177,12 @@ const Login = () => {
     // setEntries(entriesWithImageUrls);
   }
 
-  const updateStore = (data) => {
-    console.log('Update store with this data:');
-    console.log(data);
-    // TBD
+  const updateStore = (data: Array<Object>) => {
+    dispatch({
+      type: 'SET_ENTRIES_DATA',
+      payload: data,
+    });
   };
-
-  // const handleClickSignIn = () => {
-  //   // if (isValidCredentials()) {
-  //   //   console.log('This token is valid. Loading your content...');
-  //   //   window.localStorage.setItem('contentfulCreds', JSON.stringify({personalAccessToken: creds.accessToken.value, space: creds.spaceId.value}));
-  //   //   // Load this user's SVG content and go to the main app screen
-  //   //   // loadUserContent()
-  //   //   //   .then(redirect to main app screen…);
-  //   // } else {
-  //   //   console.log('Invalid token or spaceID');
-  //   // }
-
-  //   if (creds.accessToken.value.trim() === '') {
-  //     const updatedCreds = {
-  //       ...creds,
-  //       accessToken: {
-  //         ...creds.accessToken,
-  //         error: 'Personal access token cannot be blank',
-  //       },
-  //     };
-
-  //     setCreds(updatedCreds);
-  //   }
-
-  //   if (creds.spaceId.value.trim() === '') {
-  //     const updatedCreds = {
-  //       ...creds,
-  //       spaceId: {
-  //         ...creds.spaceId,
-  //         error: 'Space ID cannot be blank',
-  //       },
-  //     };
-
-  //     setCreds(updatedCreds);
-  //   }
-
-  //   // checkCredentials()
-  //   //   .then((res) => res.json())
-  //   //   .then((status) => {
-  //   //     if (status.OK) {
-  //   //       window.localStorage.setItem(
-  //   //         'contentfulCreds',
-  //   //         JSON.stringify({
-  //   //           personalAccessToken: creds.accessToken.value,
-  //   //           space: creds.spaceId.value,
-  //   //         })
-  //   //       );
-  //   //       loadUserContent(creds).then(() => {
-  //   //         updateStore();
-  //   //         // Redirect to main app screen
-  //   //         // history.push(…);
-  //   //       });
-  //   //     } else {
-  //   //       // set error message(s)
-  //   //       const error = status.error;
-  //   //       updateFieldErrors(error);
-  //   //     }
-  //   //   });
-
-
-  //   checkCredentials()
-  //     .then(console.log);
-  //     // .then((res) => res.json())
-  //     // .then((status) => {
-  //     //   if (status.OK) {
-  //     //     window.localStorage.setItem(
-  //     //       'contentfulCreds',
-  //     //       JSON.stringify({
-  //     //         personalAccessToken: creds.accessToken.value,
-  //     //         space: creds.spaceId.value,
-  //     //       })
-  //     //     );
-  //     //     loadUserContent(creds).then(() => {
-  //     //       updateStore();
-  //     //       // Redirect to main app screen
-  //     //       // history.push(…);
-  //     //     });
-  //     //   } else {
-  //     //     // set error message(s)
-  //     //     const error = status.error;
-  //     //     updateFieldErrors(error);
-  //     //   }
-  //     // });
-  // };
 
   const handleChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const updatedCreds = {
@@ -271,24 +196,35 @@ const Login = () => {
     setCreds(updatedCreds);
   };
 
-  // useEffect(() => {
-  //   // Retrieve Contentful credentials from window.localStorage
-  //   const credsLocalStorage = JSON.parse(window.localStorage.getItem('contentfulCreds'));
-  //   // If token and space are present
-  //   if (credsLocalStorage) {
-  //     console.log('found creds in local storage', credsLocalStorage);
-  //     // Verify they are valid
-  //     // isValid = getIsValid()
-  //     // if (isValid) {
-  //     //   // load this user's SVG content and go to main app screen
-  //     // } else {
-  //     //   // Show access token and space input fields
-  //     // }
-  //     // If not valid, clear these credentials from localStorage and show the input field
-  //   } else {
-  //     // Show access token and space input fields
-  //   }
-  // });
+  useEffect(() => {
+    // Retrieve Contentful credentials from window.localStorage
+    const credentials = JSON.parse(window.localStorage.getItem('contentfulCreds'));
+    if (credentials) {
+      console.log('Found credentials in local storage');
+      // initClient();
+      // Attempt automatic sign-in; Maybe we can use initClient?
+      // If automatic sign-in does not work, do NOT show field errors
+      // This differs from manual sign-in where, if the user enters
+      // incorrect token/space info, the field should show the error
+    } else {
+      console.log('No credentials found in local storage; Show the sign-in fields');
+      // Display the sign-in fields
+    }
+    // If token and space are present
+    // if () {
+    //   console.log('found creds in local storage', credsLocalStorage);
+    //   // Verify they are valid
+    //   // isValid = getIsValid()
+    //   // if (isValid) {
+    //   //   // load this user's SVG content and go to main app screen
+    //   // } else {
+    //   //   // Show access token and space input fields
+    //   // }
+    //   // If not valid, clear these credentials from localStorage and show the input field
+    // } else {
+    //   // Show access token and space input fields
+    // }
+  }, []);
 
   return (
     <>
@@ -297,18 +233,18 @@ const Login = () => {
           <Spinner />
         ) : (
           <CredentialsBox>
-            <p>Enter your Contentful personal access token and spaceID</p>
+            <p>Enter your Contentful personal access token and space ID</p>
             <div className="field-cont">
               <input
                 className="login-field"
                 placeholder="your-personal-access-token"
                 onChange={handleChangeInput}
-                value={creds.accessToken.value}
+                value={creds[TOKEN].value}
                 name="accessToken"
               />
             </div>
-            {creds.accessToken.error && (
-              <p className="input-field-error">{creds.accessToken.error}</p>
+            {creds[TOKEN].error && (
+              <p className="input-field-error">{creds[TOKEN].error}</p>
             )}
 
             <div className="field-cont">
@@ -316,12 +252,12 @@ const Login = () => {
                 className="login-field"
                 placeholder="your-space-ID"
                 onChange={handleChangeInput}
-                value={creds.spaceId.value}
+                value={creds[SPACE_ID].value}
                 name="spaceId"
               />
             </div>
-            {creds.spaceId.error && (
-              <p className="input-field-error">{creds.spaceId.error}</p>
+            {creds[SPACE_ID].error && (
+              <p className="input-field-error">{creds[SPACE_ID].error}</p>
             )}
 
             {/* <button className="login-button" onClick={handleClickSignIn}> */}
@@ -347,4 +283,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Start;

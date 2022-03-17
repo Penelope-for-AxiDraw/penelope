@@ -1,4 +1,4 @@
-export default function ImageControls({ currentEntry, initImageSelection }) {
+export default function ImageControls({ currentEntry, initImageSelection, signOut }) {
   const {
     images,
     uploadDate,
@@ -30,6 +30,7 @@ export default function ImageControls({ currentEntry, initImageSelection }) {
         <p>Uploaded {formattedUploadDate}</p>
       </div>
       <button onClick={initImageSelection}>Select Another Image</button>
+      <button onClick={signOut}>Sign Out</button>
     </section>
   );
 };
