@@ -8,11 +8,3 @@ export const LoginScreen = styled.div`
   justify-content: center;
   align-items: center;
 `;
-
-export const CredentialsBox = styled.div`
-  width: 480px;
-
-  & > p:first-of-type {
-    margin-bottom: 0.5rem;
-  }
-`;
