@@ -17,11 +17,6 @@ const AuthView = ({
     [SPACE_ID]: false,
   });
 
-  // useEffect(() => {
-  //   const credsLocalStorage = getFromLocalStorage('contentfulCreds');
-  //   console.log('creds', credsLocalStorage);
-  // }, []);
-
   const tokenError = fieldCreds.errors[TOKEN];
   const spaceError = fieldCreds.errors[SPACE_ID];
 

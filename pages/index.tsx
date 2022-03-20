@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from 'react';
-import { createClient } from 'contentful-management';
+// import { createClient } from 'contentful-management';
 import type { NextPage } from "next";
 import AxiDrawControl from "../src/components/AxiDrawControl";
 import ImageControls from "../src/components//ImageControls";
@@ -7,13 +7,14 @@ import ImagePreview from "../src/components/ImagePreview";
 import ImageExplorer from "../src/components/ImageExplorer";
 import { useRouter } from 'next/router';
 import { store } from '../src/providers/store';
+// import { getFromLocalStorage } from '../src/utils';
 
 const Home: NextPage = () => {
   const [listIndex, setlistIndex] = useState(0);
   const [selectingImage, setSelectingImage] = useState(false);
   const router = useRouter();
   const globalState = useContext(store);
-  const { state: { entries } } = globalState;
+  const { state: { entries, user } } = globalState;
 
   // useEffect(() => {
   //   // function onScroll() {
@@ -42,32 +43,38 @@ const Home: NextPage = () => {
     router.push('/start');
   }
 
-  const client = createClient({
-    // This is the access token for this space. Normally you get the token in the Contentful web app
-    accessToken: process.env.NEXT_PUBLIC_PERSONAL_ACCESS_TOKEN || ''
-  });
-
   const placeholder = {
     url: 'fun-pattern.png',
     width: 288,
     height: 432,
   };
 
+  const hasEntries = entries.length > 0;
+
+  useEffect(() => {
+    const noUser = Object.getOwnPropertyNames(user).length === 0;
+
+    if (noUser || !hasEntries) {
+      // Either user or entries is empty; Go back to auth screen
+      router.push('/start');
+    }
+
+  }, [hasEntries, router, user]);
+
   return (
     <main>
       {selectingImage &&
         <ImageExplorer
           dismiss={() => setSelectingImage(false)}
-          entries={entries}
           handleSelect={handleSelectImage}
         />
       }
       <div className="column-left">
-        {entries.length === 0 ? (
+        {!hasEntries ? (
           <TableFlip />
         ) : (
           <>
-            {entries.length && (<ImageControls
+            {hasEntries && (<ImageControls
               currentEntry={entries[listIndex]}
               initImageSelection={openImageSelectionModal}
               signOut={initSignOut}

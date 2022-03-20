@@ -17,14 +17,14 @@ const StateProvider = ({ children }) => {
       case 'SET_ENTRIES_DATA':
         updatedState = {
           ...prevState,
-          entries: action.payload,
+          entries: action.payload.data,
         };
         return updatedState;
 
       case 'SET_USER':
         updatedState = {
           ...prevState,
-          user: action.payload,
+          user: action.payload.data,
         };
         return updatedState;
 

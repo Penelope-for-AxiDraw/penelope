@@ -1,16 +1,16 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { createClient } from 'contentful-management';
 
 import AuthView from '../../src/components/AuthView';
 import { LoginScreen } from './styles';
 import Spinner from '../../src/components/Spinner';
 import { saveToLocalStorage } from '../../src/utils/storage';
+import { store } from '../../src/providers/store';
 import { useRouter } from 'next/router';
-// import { store } from '../../src/providers/store';
 
 const Start = () => {
-  // const globalState = useContext(store);
-  // const { state: { user } } = globalState;
+  const globalState = useContext(store);
+  const { dispatch } = globalState;
   const SPACE_ID = 'spaceId';
   const TOKEN = 'accessToken';
   const isDevMode = process.env.NODE_ENV === 'development';
@@ -61,8 +61,8 @@ const Start = () => {
 
     const { items: assets } = await space.getEnvironment("master")
       .then((environment) => environment.getAssets());
-
-    setIsLoading(false);
+    
+    // TODO: Add some error handling for the above API calls
 
     const entriesWithImageUrls = entries.map(item => {
       const thumbnailID = item.fields.thumbnail['en-US'].sys.id;
@@ -115,9 +115,9 @@ const Start = () => {
         fieldName = SPACE_ID;    
     }
 
-    const errorFormatted = {
-      [fieldName]: fieldErrorMessage,
-    };
+    // const errorFormatted = {
+    //   [fieldName]: fieldErrorMessage,
+    // };
 
     const updatedCreds = {
       ...fieldCreds,
@@ -138,6 +138,15 @@ const Start = () => {
       const client = createClient({ accessToken });
       const space = await client.getSpace(spaceId);
 
+      const user = await client.getCurrentUser();
+      const { email, firstName, lastName, avatarUrl } = user;
+      dispatch({
+        type: 'SET_USER',
+        payload: {
+          data: { email, firstName, lastName, avatarUrl }
+        },
+      });
+
       saveToLocalStorage('contentfulCreds', { accessToken, spaceId });
 
       // 1. Authenticated! Now fetch Axi SVG Content
@@ -145,6 +154,12 @@ const Start = () => {
 
       // 2. Save content into local storage
       saveToLocalStorage('axiSvgContent', data);
+      dispatch({
+        type: 'SET_ENTRIES_DATA',
+        payload: {
+          data,
+        },
+      });
 
       // 3. Go to main app screen
       router.push('/');
@@ -156,7 +171,6 @@ const Start = () => {
   
     return true
   }
-
 
   return (
     <>
