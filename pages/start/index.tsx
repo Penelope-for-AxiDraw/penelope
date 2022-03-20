@@ -5,6 +5,7 @@ import AuthView from '../../src/components/AuthView';
 import { LoginScreen } from './styles';
 import Spinner from '../../src/components/Spinner';
 import { saveToLocalStorage } from '../../src/utils/storage';
+import { useRouter } from 'next/router';
 // import { store } from '../../src/providers/store';
 
 const Start = () => {
@@ -14,10 +15,11 @@ const Start = () => {
   const TOKEN = 'accessToken';
   const isDevMode = process.env.NODE_ENV === 'development';
 
+  const router = useRouter();
+
   const [isLoading, setIsLoading] = useState(false);
   const [isSigningIn, setIsSigningIn] = useState(false);
   const [isAutoSignIn, setIsAutoSignIn] = useState(false);
-  // const [signInError, setSignInError] = useState({ [SPACE_ID]: '', [TOKEN]: '' });
   const [fieldCreds, setFieldCreds] = useState({
     values: {
       [TOKEN]: isDevMode ? process.env.NEXT_PUBLIC_PERSONAL_ACCESS_TOKEN : defaultValue,
@@ -117,9 +119,6 @@ const Start = () => {
       [fieldName]: fieldErrorMessage,
     };
 
-    // console.error('Error: ', errorFormatted);
-    // setSignInError(errorFormatted);
-
     const updatedCreds = {
       ...fieldCreds,
       errors: {
@@ -127,21 +126,10 @@ const Start = () => {
       },
     };
 
-    // console.log('updatedCreds', updatedCreds);
-
     setFieldCreds(updatedCreds);
   }
 
-  // const clearSignInErrors = () => {
-  //   setSignInError({
-  //     [TOKEN]: '',
-  //     [SPACE_ID]: '',
-  //   });
-  // }
-
   const initClientFromInput = async (fieldCreds: Object) => {
-    // clearSignInErrors();
-    // console.log('fieldCreds', fieldCreds);
     const accessToken = fieldCreds.values[TOKEN];
     const spaceId = fieldCreds.values[SPACE_ID];
     setIsSigningIn(true);
@@ -150,30 +138,21 @@ const Start = () => {
       const client = createClient({ accessToken });
       const space = await client.getSpace(spaceId);
 
-      window.localStorage.setItem(
-        'contentfulCreds',
-        JSON.stringify({
-          accessToken,
-          spaceId,
-        })
-      );
-      // console.log('Successfully signed in');
-      // handleSuccess();
+      saveToLocalStorage('contentfulCreds', { accessToken, spaceId });
 
-      // 1. Fetch Axi SVG Content
+      // 1. Authenticated! Now fetch Axi SVG Content
       const data = await fetchAxiSvgContent(space);
 
       // 2. Save content into local storage
-      saveToLocalStorage(data);
-      console.log('fetched content and saved to local storage');
+      saveToLocalStorage('axiSvgContent', data);
+
+      // 3. Go to main app screen
+      router.push('/');
     } catch (err) {
-      // manageSignInError(err);
-      // setSignInError(err);
       updateSignInErrors(err);
-      // setIsSigningIn(false);
+      setIsSigningIn(false);
       // throw err
     }
-    setIsSigningIn(false);
   
     return true
   }
@@ -185,10 +164,8 @@ const Start = () => {
         {isLoading || isAutoSignIn ? (
           <Spinner />
         ) : (
-          // <AuthView handleSuccess={() => setLoading(true)} />
           <AuthView
             attemptSignIn={initClientFromInput}
-            // errors={signInError}
             isSigningIn={isSigningIn}
             fieldCreds={fieldCreds}
             handleChangeInput={handleChangeInput}

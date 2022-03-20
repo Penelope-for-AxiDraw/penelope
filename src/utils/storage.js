@@ -1,5 +1,5 @@
-const saveToLocalStorage = (data) => {
-  window.localStorage.setItem('axiSvgContent', JSON.stringify(data));
+const saveToLocalStorage = (key, data) => {
+  window.localStorage.setItem(key, JSON.stringify(data));
 };
 
 const getFromLocalStorage = (key) => {
