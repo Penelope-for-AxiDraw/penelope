@@ -31,7 +31,7 @@ export default function AxiConnection({ handleConnected, handleDisconnected, han
 
     co.onerror = function (event) {
       handleConnectionError(event);
-      setConnectionError('Could not connect! Is this address correct?');
+      setConnectionError('Connection problem 😭 Please double-check the address and make sure the server is running.');
     };
 
     co.onclose = function (event) {

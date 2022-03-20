@@ -1,18 +1,21 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import Image from 'next/image';
 
 import ModalContainer from "../ModalContainer";
+import { store } from '../../providers/store';
 
-const ImageExplorer = ({ dismiss, listOfImages, handleSelect }) => {
+const ImageExplorer = ({ dismiss, handleSelect }) => {
   const [isGridView, setIsGridView] = useState(true);
+  const globalState = useContext(store);
+  const { state: { entries } } = globalState;
 
   return (
     <ModalContainer title="Image Explorer" dismiss={dismiss}>
       {isGridView ? (
         <div className="explorer-grid">
-          {listOfImages.map((data, index) => (
+          {entries.map((data, index) => (
             <ImageBlock
-              key={data.filename}
+              key={data.images.thumbnail.id}
               imageData={data}
               handleClick={() => handleSelect(index)}
             />
@@ -27,11 +30,9 @@ const ImageExplorer = ({ dismiss, listOfImages, handleSelect }) => {
 
 export default ImageExplorer;
 
-
 const ImageBlock = ({imageData, handleClick}) => {
   const dim = 192;
-  const filename = imageData.filename.replace(/\.[^/.]+$/, "");
-  const {width, height} = imageData;
+  const {width, height} = imageData.images.thumbnail;
 
   const wd = width >= height ? dim : width / height * dim;
   const ht = height >= width ? dim : height / width * dim;
@@ -39,10 +40,9 @@ const ImageBlock = ({imageData, handleClick}) => {
   return (
     <div className="image-block-cont" onClick={handleClick}>
       <div className="explorer-cell" >
-        {/* <img src="https://via.placeholder.com/192x108" /> */}
-        <Image src={imageData.thumbnailUrl} alt="" width={wd} height={ht} />
+        <Image src={imageData.images.thumbnail.url} alt="" width={wd} height={ht} />
       </div>
-      <p>{filename}</p>
+      <p>{imageData.title}</p>
     </div>
   );
 };

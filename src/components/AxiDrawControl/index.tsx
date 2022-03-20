@@ -1,18 +1,23 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 
 import AxiConnection from '../AxiConnection';
 import AxiActions from '../AxiActions';
 
 interface ControlProps {
-  currentSvgData: object;
+  currentSvgData: {
+    images: {
+      svg: {
+        url: string,
+        fileName: string,
+      }
+    },
+  };
 };
 
 const AxiDrawControl = (props:ControlProps) => {
   const { currentSvgData } = props;
-
   const [isConnected, setIsConnected] = useState(false);
   const [connection, setConnection] = useState();
-  const selectRef = useRef(null);
 
   const registerConnection = (ws) => {
     setIsConnected(true);
@@ -34,14 +39,10 @@ const AxiDrawControl = (props:ControlProps) => {
   function sendCommand(cmd: String) {
     if (cmd === "plot") {
       const pattern = /^(.*[\\/])/;
-      const [root_url] = currentSvgData.raw_url.match(pattern);
-      // console.log('root_url', root_url);
-      const { filename } = currentSvgData;
-      // console.log('filename', filename);
-      connection.send(`${cmd}|${root_url}|${filename}`);
-      // console.log("command is 'plot'");
+      const [root_url] = currentSvgData.images.svg.url.match(pattern);
+      const fileName = currentSvgData.images.svg.fileName;
+      connection.send(`${cmd}|${root_url}|${fileName}`);
     } else {
-      // console.log(`command is ${cmd}`);
       connection.send(cmd);
     }
   }
