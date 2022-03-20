@@ -15,20 +15,19 @@ const Home: NextPage = () => {
   const globalState = useContext(store);
   const { state: { entries } } = globalState;
 
-  useEffect(() => {
-    // function onScroll() {
-    //   console.log("scroll!");
-    // }
+  // useEffect(() => {
+  //   // function onScroll() {
+  //   //   console.log("scroll!");
+  //   // }
 
-    // window.addEventListener("scroll", onScroll);
-    const axiSvgContentSessionStorage = window.sessionStorage.getItem('axiSvgContento');
-    console.log('axiSvgContentSessionStorage', axiSvgContentSessionStorage);
+  //   // window.addEventListener("scroll", onScroll);
+  //   const axiSvgContentSessionStorage = window.sessionStorage.getItem('axiSvgContento');
+  //   console.log('axiSvgContentSessionStorage', axiSvgContentSessionStorage);
 
-    // return function unMount() {
-    //   window.removeEventListener("scroll", onScroll);
-    // };
-  }, []);
-
+  //   // return function unMount() {
+  //   //   window.removeEventListener("scroll", onScroll);
+  //   // };
+  // }, []);
 
   const handleSelectImage = (index: number) => {
     setlistIndex(index);

@@ -1,23 +1,198 @@
 import { useState } from 'react';
+import { createClient } from 'contentful-management';
 
-import LoadingView from '../../src/components/LoadingView';
 import AuthView from '../../src/components/AuthView';
 import { LoginScreen } from './styles';
+import Spinner from '../../src/components/Spinner';
+import { saveToLocalStorage } from '../../src/utils/storage';
 // import { store } from '../../src/providers/store';
 
 const Start = () => {
   // const globalState = useContext(store);
   // const { state: { user } } = globalState;
+  const SPACE_ID = 'spaceId';
+  const TOKEN = 'accessToken';
+  const isDevMode = process.env.NODE_ENV === 'development';
 
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isSigningIn, setIsSigningIn] = useState(false);
+  const [isAutoSignIn, setIsAutoSignIn] = useState(false);
+  // const [signInError, setSignInError] = useState({ [SPACE_ID]: '', [TOKEN]: '' });
+  const [fieldCreds, setFieldCreds] = useState({
+    values: {
+      [TOKEN]: isDevMode ? process.env.NEXT_PUBLIC_PERSONAL_ACCESS_TOKEN : defaultValue,
+      [SPACE_ID]: isDevMode ? process.env.NEXT_PUBLIC_SPACE: defaultValue,
+    },
+    errors: {
+      [TOKEN]: '',
+      [SPACE_ID]: '',
+    },
+  });
+
+  const handleChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const updatedCreds = {
+      ...fieldCreds,
+      values: {
+        ...fieldCreds.values,
+        [e.target.name]: e.target.value,        
+      },
+      errors: {
+        [TOKEN]: '',
+        [SPACE_ID]: '',
+      },
+    };
+
+    setFieldCreds(updatedCreds);
+  };
+
+  // Load Axi SVG content from Contentful
+  const fetchAxiSvgContent = async (space) => {
+    setIsLoading(true);
+    const fieldsToGet = ['title', 'description', 'thumbnail', 'svgFile'];
+    const { items: entries } = await space.getEnvironment("master")
+      .then((environment) =>
+        environment.getEntries({
+          content_type: 'axiSvgData',
+          select: fieldsToGet.map(f => `fields.${f}`).join(',')
+        })
+      );
+
+    const { items: assets } = await space.getEnvironment("master")
+      .then((environment) => environment.getAssets());
+
+    setIsLoading(false);
+
+    const entriesWithImageUrls = entries.map(item => {
+      const thumbnailID = item.fields.thumbnail['en-US'].sys.id;
+      const thumbnailAsset = assets.find(asset => asset.sys.id === thumbnailID);
+      const svgID = item.fields.svgFile['en-US'].sys.id;
+      const svgAsset = assets.find(asset => asset.sys.id === svgID);
+
+      return ({
+        description: item.fields.description['en-US'],
+        title: item.fields.title['en-US'],
+        images: {
+          thumbnail: {
+            id: thumbnailAsset?.sys.id,
+            url: `https:${thumbnailAsset.fields.file['en-US'].url}`,
+            fileName: thumbnailAsset?.fields.file['en-US'].fileName,
+            width: thumbnailAsset?.fields.file['en-US'].details.image.width / 2,
+            height: thumbnailAsset?.fields.file['en-US'].details.image.height / 2,
+          },
+          svg: {
+            id: svgAsset?.sys.id,
+            url: `https:${svgAsset.fields.file['en-US'].url}`,
+            fileName: svgAsset?.fields.file['en-US'].fileName,
+            width: svgAsset?.fields.file['en-US'].details.image.width,
+            height: svgAsset?.fields.file['en-US'].details.image.height,
+          }
+        },
+        uploadDate: item.sys.publishedAt,
+      });
+    });
+
+    return entriesWithImageUrls;
+  }
+
+  const updateSignInErrors = (err) => {
+    const errorObj = JSON.parse(err.message);
+    let fieldErrorMessage;
+    let fieldName;
+
+    switch (errorObj.status) {
+      case 404:
+        fieldErrorMessage = 'Could not find this space ID';
+        fieldName = SPACE_ID;
+        break;
+      case 401:
+        fieldErrorMessage = 'This personal access token is not valid';
+        fieldName = TOKEN;
+        break;
+      default:
+        fieldErrorMessage = 'Unknown sign-in error';
+        fieldName = SPACE_ID;    
+    }
+
+    const errorFormatted = {
+      [fieldName]: fieldErrorMessage,
+    };
+
+    // console.error('Error: ', errorFormatted);
+    // setSignInError(errorFormatted);
+
+    const updatedCreds = {
+      ...fieldCreds,
+      errors: {
+        [fieldName]: fieldErrorMessage,
+      },
+    };
+
+    // console.log('updatedCreds', updatedCreds);
+
+    setFieldCreds(updatedCreds);
+  }
+
+  // const clearSignInErrors = () => {
+  //   setSignInError({
+  //     [TOKEN]: '',
+  //     [SPACE_ID]: '',
+  //   });
+  // }
+
+  const initClientFromInput = async (fieldCreds: Object) => {
+    // clearSignInErrors();
+    // console.log('fieldCreds', fieldCreds);
+    const accessToken = fieldCreds.values[TOKEN];
+    const spaceId = fieldCreds.values[SPACE_ID];
+    setIsSigningIn(true);
+
+    try {
+      const client = createClient({ accessToken });
+      const space = await client.getSpace(spaceId);
+
+      window.localStorage.setItem(
+        'contentfulCreds',
+        JSON.stringify({
+          accessToken,
+          spaceId,
+        })
+      );
+      // console.log('Successfully signed in');
+      // handleSuccess();
+
+      // 1. Fetch Axi SVG Content
+      const data = await fetchAxiSvgContent(space);
+
+      // 2. Save content into local storage
+      saveToLocalStorage(data);
+      console.log('fetched content and saved to local storage');
+    } catch (err) {
+      // manageSignInError(err);
+      // setSignInError(err);
+      updateSignInErrors(err);
+      // setIsSigningIn(false);
+      // throw err
+    }
+    setIsSigningIn(false);
+  
+    return true
+  }
+
 
   return (
     <>
       <LoginScreen>
-        {loading ? (
-          <LoadingView />
+        {isLoading || isAutoSignIn ? (
+          <Spinner />
         ) : (
-          <AuthView handleSuccess={() => setLoading(true)} />
+          // <AuthView handleSuccess={() => setLoading(true)} />
+          <AuthView
+            attemptSignIn={initClientFromInput}
+            // errors={signInError}
+            isSigningIn={isSigningIn}
+            fieldCreds={fieldCreds}
+            handleChangeInput={handleChangeInput}
+          />
         )}
       </LoginScreen>
     </>
