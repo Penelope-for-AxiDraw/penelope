@@ -42,6 +42,14 @@ p {
   flex-direction: column;
 }
 
+.column-explore {
+  width: 424px;
+  height: 100vh;
+  background-color: #fafafa;
+  display: flex;
+  flex-direction: column;
+}
+
 section {
   margin: 1rem;
 }
@@ -166,20 +174,33 @@ section div button.connect-btn {
   padding: 0 0.5rem;
 }
 
+.explore-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 2rem;
+  padding: 0 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.explore-header button {
+  width: unset;
+}
+
 .modal-header h4 {
   margin: 0;
 }
 
-.explorer-grid {
+.explore-grid {
   display: grid;
-  grid-template-areas: "a a a";
+  grid-template-areas: "a a";
   gap: 0.5rem;
   grid-auto-columns: 192px;
-  width: calc(576px + 1rem);
+  width: calc(384px + 1rem);
   margin: 0 auto;
 }
 
-.explorer-cell {
+.explore-cell {
   width: 192px;
   height: 192px;
   display: flex;

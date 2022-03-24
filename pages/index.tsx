@@ -5,16 +5,23 @@ import AxiDrawControl from "../src/components/AxiDrawControl";
 import ImageControls from "../src/components//ImageControls";
 import ImagePreview from "../src/components/ImagePreview";
 import ImageExplorer from "../src/components/ImageExplorer";
+import Dashboard from '../src/components/Dashboard';
 import { useRouter } from 'next/router';
+
 import { store } from '../src/providers/store';
+import { DASHBOARD, PLOT } from '../src/constants';
 // import { getFromLocalStorage } from '../src/utils';
 
 const Home: NextPage = () => {
+  // const authMode = 'AUTH';
+  // const plotMode = 'PLOT';
+  const defaultMode = DASHBOARD;
   const [listIndex, setlistIndex] = useState(0);
   const [selectingImage, setSelectingImage] = useState(false);
   const router = useRouter();
   const globalState = useContext(store);
   const { state: { entries, user } } = globalState;
+  const [appMode, setAppMode] = useState(defaultMode);
 
   // useEffect(() => {
   //   // function onScroll() {
@@ -40,7 +47,9 @@ const Home: NextPage = () => {
 
   const initSignOut = () => {
     window.localStorage.removeItem('contentfulCreds');
-    router.push('/start');
+    window.localStorage.removeItem('axiSvgContent');
+    setAppMode(DASHBOARD);
+    // router.push('/start');
   }
 
   const placeholder = {
@@ -56,36 +65,59 @@ const Home: NextPage = () => {
 
     if (noUser || !hasEntries) {
       // Either user or entries is empty; Go back to auth screen
-      router.push('/start');
+      // router.push('/start');
     }
 
   }, [hasEntries, router, user]);
 
+  const updateAppMode = (mode) => {
+    setAppMode(mode);
+  }
+
+  if (appMode === PLOT) {
+    return (
+      <main>
+        {/* {selectingImage &&
+          <ImageExplorer
+            dismiss={() => setSelectingImage(false)}
+            handleSelect={handleSelectImage}
+          />
+        } */}
+        <div className="column-left">
+          {hasEntries ? (
+            <>
+              <ImageControls
+                currentEntry={entries[listIndex]}
+                initImageSelection={openImageSelectionModal}
+                selectingImage={selectingImage}
+                signOut={initSignOut}
+              />
+              <AxiDrawControl
+                currentSvgData={entries[listIndex]}
+              />
+            </>
+          ) : (
+            <NoEntriesNotification initImageSelection={openImageSelectionModal} signOut={initSignOut} selectingImage={selectingImage} />
+          )}
+        </div>
+        {selectingImage && (
+          <div className="column-explore">
+            <section>
+              <ImageExplorer
+                dismiss={() => setSelectingImage(false)}
+                handleSelect={handleSelectImage}
+              />
+            </section>
+          </div>
+        )}
+        {entries.length ? <ImagePreview thumbnail={entries[listIndex].images.thumbnail} /> : <ImagePreview thumbnail={placeholder} />}
+      </main>
+    );
+  }
+
   return (
     <main>
-      {selectingImage &&
-        <ImageExplorer
-          dismiss={() => setSelectingImage(false)}
-          handleSelect={handleSelectImage}
-        />
-      }
-      <div className="column-left">
-        {!hasEntries ? (
-          <TableFlip />
-        ) : (
-          <>
-            {hasEntries && (<ImageControls
-              currentEntry={entries[listIndex]}
-              initImageSelection={openImageSelectionModal}
-              signOut={initSignOut}
-              />)}
-            <AxiDrawControl
-              currentSvgData={entries[listIndex]}
-            />
-          </>
-        )}
-      </div>
-      {entries.length ? <ImagePreview thumbnail={entries[listIndex].images.thumbnail} /> : <ImagePreview thumbnail={placeholder} />}
+      <Dashboard updateAppMode={updateAppMode} />
     </main>
   );
 };
@@ -93,14 +125,19 @@ const Home: NextPage = () => {
 export default Home;
 
 
-const TableFlip = () => {
-  const tableFlipStyle = {
-    margin: '1rem',
-  };
+const NoEntriesNotification = ({ initImageSelection, selectingImage, initSignOut }) => {
+  // const tableFlipStyle = {
+  //   margin: '1rem',
+  // };
 
   return (
-    <div style={tableFlipStyle}>
-      <span>(╯°□°)╯︵ ┻━┻</span>
-    </div>
+    <section>
+      <div>
+        <span>(╯°□°)╯︵ ┻━┻</span>
+        <p>You haven&apos;t uploaded any SVGs yet</p>
+        <button onClick={initImageSelection} disabled={selectingImage}>Let&apos;s Do That!</button>
+        <button onClick={initSignOut}>Sign Out</button>
+      </div>
+    </section>
   );
 }
