@@ -1,21 +1,22 @@
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { createClient } from 'contentful-management';
 
-import AuthView from '../../src/components/AuthView';
+import AuthView from '../AuthView';
 import { LoginScreen } from './styles';
-import Spinner from '../../src/components/Spinner';
-import { saveToLocalStorage } from '../../src/utils/storage';
-import { store } from '../../src/providers/store';
-import { useRouter } from 'next/router';
+import Spinner from '../Spinner';
+import { getFromLocalStorage, saveToLocalStorage } from '../../utils/storage';
+import { store } from '../../providers/store';
+import { PLOT } from '../../constants';
+// import { useRouter } from 'next/router';
 
-const Start = () => {
+const Dashboard = ({ updateAppMode }) => {
   const globalState = useContext(store);
   const { dispatch } = globalState;
   const SPACE_ID = 'spaceId';
   const TOKEN = 'accessToken';
   const isDevMode = process.env.NODE_ENV === 'development';
 
-  const router = useRouter();
+  // const router = useRouter();
 
   const [isLoading, setIsLoading] = useState(false);
   const [isSigningIn, setIsSigningIn] = useState(false);
@@ -161,8 +162,8 @@ const Start = () => {
         },
       });
 
-      // 3. Go to main app screen
-      router.push('/');
+      // 3. Show the main app component
+      updateAppMode(PLOT);
     } catch (err) {
       updateSignInErrors(err);
       setIsSigningIn(false);
@@ -171,6 +172,60 @@ const Start = () => {
   
     return true
   }
+
+  useEffect(() => {
+    // THE CODE INSIDE THIS useEffect IS ALMOST IDENTICAL
+    // TO THE CODE THAT RUNS WHEN USER CLICKS SIGN IN.
+    // MAYBE THEY CAN BE CONSOLIDATED
+    const initClientFromStoredCreds = async () => {
+      // const credentialsLocalStorage = getCredentialsLocalStorage();
+      const credentialsLocalStorage = getFromLocalStorage('contentfulCreds');
+      if (!credentialsLocalStorage) {
+        return;
+      }
+
+      setIsAutoSignIn(true);
+      try {
+        const { accessToken, spaceId } = credentialsLocalStorage;
+        const client = createClient({ accessToken: accessToken });
+        const space = await client.getSpace(spaceId);
+        // console.log('Successfully signed in');
+  
+        const user = await client.getCurrentUser();
+        const { email, firstName, lastName, avatarUrl } = user;
+        dispatch({
+          type: 'SET_USER',
+          payload: {
+            data: { email, firstName, lastName, avatarUrl }
+          },
+        });
+        
+        // saveToLocalStorage('contentfulCreds', { accessToken, spaceId });
+        
+        // 1. Authenticated! Now fetch Axi SVG Content
+        const data = await fetchAxiSvgContent(space);
+  
+        // 2. Save content into local storage
+        saveToLocalStorage('axiSvgContent', data);
+        dispatch({
+          type: 'SET_ENTRIES_DATA',
+          payload: {
+            data,
+          },
+        });
+  
+        // 3. Show the main app component
+        updateAppMode(PLOT);
+      } catch (err) {
+        setIsAutoSignIn(false);
+      }
+    
+      return true
+    }
+
+    initClientFromStoredCreds();
+  }, []);
+
 
   return (
     <>
@@ -190,4 +245,4 @@ const Start = () => {
   );
 };
 
-export default Start;
+export default Dashboard;

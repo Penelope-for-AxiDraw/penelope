@@ -5,6 +5,7 @@ import { store } from '../../../src/providers/store';
 export default function ImageControls({
   currentEntry,
   initImageSelection,
+  selectingImage,
   signOut,
 }) {
   const globalState = useContext(store);
@@ -42,7 +43,7 @@ export default function ImageControls({
         <p>{user.email}</p>
         {/* <Image src={user.avatarUrl} alt="avatar" width={32} height={32} /> */}
       </div>
-      <button onClick={initImageSelection}>Select Another Image</button>
+      <button onClick={initImageSelection} disabled={selectingImage}>Select Another Image</button>
       <button onClick={signOut}>Sign Out</button>
     </section>
   );
