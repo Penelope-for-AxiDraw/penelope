@@ -58,7 +58,6 @@ const AuthView = ({
           disabled={isSigningIn}
         />
       </div>
-
       {spaceError && (
         <p className="input-field-error">{spaceError}</p>
       )}

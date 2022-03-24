@@ -1,14 +1,19 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { createClient } from "contentful-management";
+import { getFromLocalStorage } from "../../utils";
 
-const Uploader = () => {
+const Uploader = ({ cancel }) => {
   const [fileData, setFileData] = useState();
   const [fileName, setFileName] = useState("");
+
+  const credentialsLocalStorage = getFromLocalStorage('contentfulCreds');
+  const { accessToken, spaceId } = credentialsLocalStorage;
+
   const client = createClient({
-    accessToken: process.env.NEXT_PUBLIC_PERSONAL_ACCESS_TOKEN || "",
+    accessToken,
   });
 
-  const spaceID = process.env.NEXT_PUBLIC_SPACE || "";
+  // const spaceId = process.env.NEXT_PUBLIC_SPACE || "";
   const contentType = "axiSvgData";
   const fields = {
     title: {
@@ -17,73 +22,69 @@ const Uploader = () => {
     description: {
       "en-US": `Description of this entry`,
     },
-    width: {
-      "en-US": 432,
-    },
-    height: {
-      "en-US": 432,
-    },
   };
 
   const createNewEntry = () => {
     // Create entry
     client
-      .getSpace(spaceID)
+      .getSpace(spaceId)
       .then((space) => space.getEnvironment("master"))
       .then((environment) => environment.createEntry(contentType, { fields }))
       .then((entry) => console.log(entry))
       .catch(console.error);
-
-    // // Update entry
-    // client
-    //   .getSpace("<space_id>")
-    //   .then((space) => space.getEnvironment("<environment-id>"))
-    //   .then((environment) => environment.getEntry("<entry_id>"))
-    //   .then((entry) => {
-    //     entry.fields.title["en-US"] = "New entry title";
-    //     return entry.update();
-    //   })
-    //   .then((entry) => console.log(`Entry ${entry.sys.id} updated.`))
-    //   .catch(console.error);
   };
 
-  const uploadTxt = () => {
-    const rando = Math.round(Math.random() * 10000);
-    const randomNumbers = new Array(10)
-      .fill(0)
-      .map((_item) => Math.round(Math.random() * 1000))
-      .join(" ");
+  // const updateEntry = (entryId: string) => {
+  //   // Update entry
+  //   client
+  //     .getSpace(spaceId)
+  //     .then((space) => space.getEnvironment("master"))
+  //     .then((environment) => environment.getEntry(entryId))
+  //     .then((entry) => {
+  //       entry.fields.title["en-US"] = "New entry title";
+  //       return entry.update();
+  //     })
+  //     .then((entry) => console.log(`Entry ${entry.sys.id} updated.`))
+  //     .catch(console.error);
+  // };
 
-    client
-      .getSpace(spaceID)
-      .then((space) => space.getEnvironment("master"))
-      .then((environment) =>
-        environment.createAssetFromFiles({
-          fields: {
-            title: {
-              "en-US": `text file ${rando}`,
-            },
-            description: {
-              "en-US": "Asset description",
-            },
-            file: {
-              "en-US": {
-                contentType: "text/plain",
-                fileName: `text-file-${rando}.txt`,
-                file: randomNumbers,
-              },
-            },
-          },
-        })
-      )
-      .then((asset) => asset.processForAllLocales())
-      .then((asset) => asset.publish())
-      .then((blah) => console.log("response:", blah))
-      .catch(console.error);
-  };
+  // const uploadText = () => {
+  //   const rando = Math.round(Math.random() * 10000);
+  //   const randomNumbers = new Array(10)
+  //     .fill(0)
+  //     .map((_item) => Math.round(Math.random() * 1000))
+  //     .join(" ");
+
+  //   client
+  //     .getSpace(spaceId)
+  //     .then((space) => space.getEnvironment("master"))
+  //     .then((environment) =>
+  //       environment.createAssetFromFiles({
+  //         fields: {
+  //           title: {
+  //             "en-US": `text file ${rando}`,
+  //           },
+  //           description: {
+  //             "en-US": "Asset description",
+  //           },
+  //           file: {
+  //             "en-US": {
+  //               contentType: "text/plain",
+  //               fileName: `text-file-${rando}.txt`,
+  //               file: randomNumbers,
+  //             },
+  //           },
+  //         },
+  //       })
+  //     )
+  //     .then((asset) => asset.processForAllLocales())
+  //     .then((asset) => asset.publish())
+  //     .then((blah) => console.log("response:", blah))
+  //     .catch(console.error);
+  // };
 
   // const uploadSvg = () => {
-  //   client.getSpace(spaceID)
+  //   client.getSpace(spaceId)
   //   .then((space) => space.getEnvironment('master'))
   //   .then((environment) => environment.createAssetFromFiles({
   //     fields: {
@@ -111,7 +112,7 @@ const Uploader = () => {
   const uploadSvg = () => {
     if (fileData) {
       client
-        .getSpace(spaceID)
+        .getSpace(spaceId)
         .then((space) => space.getEnvironment("master"))
         .then((environment) =>
           environment.createAssetFromFiles({
@@ -139,36 +140,36 @@ const Uploader = () => {
     }
   };
 
-  const fetchAxiSvgContent = async () => {
-    const { items: entries } = await client
-      .getSpace(spaceID)
-      .then((space) => space.getEnvironment("master"))
-      .then((environment) =>
-        environment.getEntries({ content_type: "axiSvgData" })
-      );
+  // const fetchAxiSvgContent = async () => {
+  //   const { items: entries } = await client
+  //     .getSpace(spaceId)
+  //     .then((space) => space.getEnvironment("master"))
+  //     .then((environment) =>
+  //       environment.getEntries({ content_type: "axiSvgData" })
+  //     );
 
-    const { items: assets } = await client
-      .getSpace(spaceID)
-      .then((space) => space.getEnvironment("master"))
-      .then((environment) => environment.getAssets());
+  //   const { items: assets } = await client
+  //     .getSpace(spaceId)
+  //     .then((space) => space.getEnvironment("master"))
+  //     .then((environment) => environment.getAssets());
 
-    const imageAssetUrls = entries.map(item => {
-      const thumbnailID = item.fields.thumbnail['en-US'].sys.id;
-      const thumbnailAsset = assets.find(asset => asset.sys.id === thumbnailID);
-      const svgID = item.fields.svgFile['en-US'].sys.id;
-      const svgAsset = assets.find(asset => asset.sys.id === svgID);
-      return ({
-        id: item.sys.id,
-        urls: {
-          thumbnail: `https:${thumbnailAsset.fields.file['en-US'].url}`,
-          svg: `https:${svgAsset.fields.file['en-US'].url}`
-        },
-        fileName: svgAsset?.fields.file['en-US'].fileName,
-      });
-    });
+  //   const imageAssetUrls = entries.map(item => {
+  //     const thumbnailID = item.fields.thumbnail['en-US'].sys.id;
+  //     const thumbnailAsset = assets.find(asset => asset.sys.id === thumbnailID);
+  //     const svgID = item.fields.svgFile['en-US'].sys.id;
+  //     const svgAsset = assets.find(asset => asset.sys.id === svgID);
+  //     return ({
+  //       id: item.sys.id,
+  //       urls: {
+  //         thumbnail: `https:${thumbnailAsset.fields.file['en-US'].url}`,
+  //         svg: `https:${svgAsset.fields.file['en-US'].url}`
+  //       },
+  //       fileName: svgAsset?.fields.file['en-US'].fileName,
+  //     });
+  //   });
 
-    console.log('imageAssetUrls', imageAssetUrls);
-  };
+  //   console.log('imageAssetUrls', imageAssetUrls);
+  // };
 
   const queueFile = (e) => {
     // console.log('event', e);
@@ -187,7 +188,7 @@ const Uploader = () => {
       setFileData(rawData);
     };
     reader.readAsArrayBuffer(file);
-    // client.getSpace(spaceID)
+    // client.getSpace(spaceId)
     // .then((space) => space.getEnvironment('master'))
     // .then((environment) => environment.createAssetFromFiles({
     //   fields: {
@@ -215,7 +216,6 @@ const Uploader = () => {
   return (
     <main>
       <div>
-        <button onClick={createNewEntry}>create new entry</button>
         <input
           onChange={queueFile}
           type="file"
@@ -223,11 +223,45 @@ const Uploader = () => {
           name="svgUpload"
           accept="image/svg+xml"
         />
-        <button onClick={uploadSvg} disabled={!fileData}>
+        {/* <button onClick={uploadSvg} disabled={!fileData}>
           Upload SVG File
-        </button>
-        <button onClick={uploadTxt}>Upload Text File</button>
-        <button onClick={fetchAxiSvgContent}>Fetch Content</button>
+        </button> */}
+
+        <div className="field-cont">
+          <input
+            className="login-field"
+            placeholder="Image title"
+            // onChange={doHandleChangeInput}
+            // value={fieldCreds.values[TOKEN]}
+            name="imageTitle"
+            // disabled={isSigningIn}
+          />
+        </div>
+        {/* {tokenError && (
+          <p className="input-field-error">{tokenError}</p>
+        )} */}
+
+        <div className="field-cont">
+          <input
+            className="login-field"
+            placeholder="Description of this work"
+            // onChange={doHandleChangeInput}
+            // value={fieldCreds.values[SPACE_ID]}
+            name="imageDescription"
+            // disabled={isSigningIn}
+          />
+        </div>
+
+        <button onClick={createNewEntry}>Upload this SVG</button>
+        <button onClick={() => cancel()}>Cancel</button>
+        {/* {spaceError && (
+          <p className="input-field-error">{spaceError}</p>
+        )}
+
+        {anyBlankFields && (
+          <p className="input-field-error">Please enter both an access token and a space ID</p>
+        )} */}
+
       </div>
     </main>
   );

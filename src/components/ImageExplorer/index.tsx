@@ -3,32 +3,34 @@ import Image from 'next/image';
 
 // import ModalContainer from "../ModalContainer";
 import { store } from '../../providers/store';
+import Uploader from '../Uploader';
 
 const ImageExplorer = ({ dismiss, handleSelect }) => {
-  const [isGridView, setIsGridView] = useState(true);
   const globalState = useContext(store);
   const { state: { entries } } = globalState;
+  const [uploaderIsOpen, setUploaderIsOpen] = useState(false);
 
   return (
     <>
-      {isGridView ? (
-        <>
-          <div className="explore-header">
-            <h4>Image Explorer</h4>
-            <button onClick={dismiss}>×</button>
-          </div>
-          <div className="explore-grid">
-            {entries.map((data, index) => (
-              <ImageBlock
-                key={data.images.thumbnail.id}
-                imageData={data}
-                handleClick={() => handleSelect(index)}
-              />
-            ))}
-          </div>
-        </>
+      <div className="explore-header">
+        <h4>Explorer</h4>
+        <button onClick={dismiss}>×</button>
+      </div>
+      {uploaderIsOpen ? (
+        <div>
+          <Uploader cancel={() => setUploaderIsOpen(false)} />
+        </div>
       ) : (
-        <div>list view goes here</div>
+        <div className="explore-grid">
+          {entries.map((data, index) => (
+            <ImageBlock
+              key={data.images.thumbnail.id}
+              imageData={data}
+              handleClick={() => handleSelect(index)}
+            />
+          ))}
+          <button onClick={() => setUploaderIsOpen(true)}>Upload New</button>
+        </div>
       )}
     </>
   )

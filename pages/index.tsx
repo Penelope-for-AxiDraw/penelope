@@ -10,7 +10,6 @@ import { useRouter } from 'next/router';
 
 import { store } from '../src/providers/store';
 import { DASHBOARD, PLOT } from '../src/constants';
-// import { getFromLocalStorage } from '../src/utils';
 
 const Home: NextPage = () => {
   // const authMode = 'AUTH';

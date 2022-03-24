@@ -59,13 +59,14 @@ const Dashboard = ({ updateAppMode }) => {
           select: fieldsToGet.map(f => `fields.${f}`).join(',')
         })
       );
-
+    
+    const publishedEntries = entries.filter(item => item.isPublished());
     const { items: assets } = await space.getEnvironment("master")
       .then((environment) => environment.getAssets());
     
     // TODO: Add some error handling for the above API calls
 
-    const entriesWithImageUrls = entries.map(item => {
+    const entriesWithImageUrls = publishedEntries.map(item => {
       const thumbnailID = item.fields.thumbnail['en-US'].sys.id;
       const thumbnailAsset = assets.find(asset => asset.sys.id === thumbnailID);
       const svgID = item.fields.svgFile['en-US'].sys.id;
@@ -185,6 +186,7 @@ const Dashboard = ({ updateAppMode }) => {
       }
 
       setIsAutoSignIn(true);
+      console.log('attempting auto sign-in');
       try {
         const { accessToken, spaceId } = credentialsLocalStorage;
         const client = createClient({ accessToken: accessToken });
@@ -218,6 +220,8 @@ const Dashboard = ({ updateAppMode }) => {
         updateAppMode(PLOT);
       } catch (err) {
         setIsAutoSignIn(false);
+        console.error(err);
+        console.log('auto sign-in failed');
       }
     
       return true
