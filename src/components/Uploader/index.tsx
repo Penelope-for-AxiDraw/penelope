@@ -1,10 +1,26 @@
 import { useContext, useState } from "react";
 import { createClient } from "contentful-management";
+
+import Dropzone from '../Dropzone';
 import { getFromLocalStorage } from "../../utils";
 
 const Uploader = ({ cancel }) => {
   const [fileData, setFileData] = useState();
   const [fileName, setFileName] = useState("");
+  const [isTitleError, setIsTitleError] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
+  const TITLE = 'title';
+  const DESCRIPTION = 'description';
+
+  const [imageInfo, setImageInfo] = useState({
+    values: {
+      [TITLE]: '',
+      [DESCRIPTION]: '',
+    },
+    errors: {
+      [TITLE]: '',
+    }
+  });
 
   const credentialsLocalStorage = getFromLocalStorage('contentfulCreds');
   const { accessToken, spaceId } = credentialsLocalStorage;
@@ -13,26 +29,203 @@ const Uploader = ({ cancel }) => {
     accessToken,
   });
 
-  // const spaceId = process.env.NEXT_PUBLIC_SPACE || "";
-  const contentType = "axiSvgData";
-  const fields = {
-    title: {
-      "en-US": `This is a new entry ${Math.round(Math.random() * 100000)}`,
-    },
-    description: {
-      "en-US": `Description of this entry`,
-    },
-  };
+  // const createNewEntry = () => {
+  //   // Create entry
+  //   client
+  //     .getSpace(spaceId)
+  //     .then((space) => space.getEnvironment("master"))
+  //     .then((environment) => environment.createEntry(contentType, { fields }))
+  //     .then((entry) => console.log(entry))
+  //     .catch(console.error);
+  // };
 
-  const createNewEntry = () => {
+  const createNewEntry = async () => {
+    setIsUploading(true);
+
+    // Upload SVG
+    const svgAssetId = await uploadSvg();
+    // console.log(svgAssetId);
+
+    // Upload PNG thumbnail
+    // const pngAssetId = await uploadPng();
+
     // Create entry
-    client
+    const contentType = "axiSvgData";
+    const fields = {
+      title: {
+        'en-US': imageInfo.values[TITLE],
+      },
+      description: {
+        'en-US': imageInfo.values[DESCRIPTION],
+      },
+      svgFile: {
+        'en-US': {
+          sys: {
+            id: svgAssetId,
+            linkType: 'Asset',
+            type: 'Link'
+          }
+        }
+      }
+      // svgFile: svgAssetId,
+      // thumbnail: {
+      //   "en-US": svgAssetId,
+      // }
+    };
+
+    const newEntry = await client
       .getSpace(spaceId)
       .then((space) => space.getEnvironment("master"))
       .then((environment) => environment.createEntry(contentType, { fields }))
-      .then((entry) => console.log(entry))
+      // .then((entry) => entry.publish())
       .catch(console.error);
+    
+    console.log('newEntry is', newEntry);
+
+    // Associate SVG ID with the new entry    
+    // newEntry.fields['svgFile']['en-US'] = {'sys': {'id': svgAssetId, 'linkType': 'Asset', 'type': 'Link'}};
+    // Object.defineProperty(newEntry.fields, 'svgFile', { value: { 'en-US': {'sys': {'id': svgAssetId, 'linkType': 'Asset', 'type': 'Link'}} }});
+    // Associate PNG ID with the new entry
+    // newEntry.fields['thumbnail']['en-US'] = {'sys': {'id': thumbnailId, 'linkType': 'Asset', 'type': 'Link'}};
+    // await newEntry.update();
+
+    // Update entries in local storage and context
+    // … saveToLocalStorage(…)
+    // … dispatch(…)
   };
+
+  const queueFile = (file) => {
+    setFileName(file.name);
+    const reader = new FileReader();
+    reader.onload = function (readEvt) {
+      const rawData = readEvt.target.result;
+      setFileData(rawData);
+    };
+    reader.readAsArrayBuffer(file);
+  };
+
+  const uploadSvg = async () => {
+    const id = await client
+      .getSpace(spaceId)
+      .then((space) => space.getEnvironment('master'))
+      .then((environment) =>
+        environment.createAssetFromFiles({
+          fields: {
+            title: {
+              'en-US': imageInfo.values[TITLE],
+            },
+            file: {
+              'en-US': {
+                contentType: 'image/svg+xml',
+                fileName,
+                file: fileData,
+              },
+            },
+          },
+        })
+      )
+      .then((asset) => asset.processForAllLocales())
+      .then((asset) => asset.publish())
+      .then(response => response.sys.id)
+      .catch(console.error);
+    
+    return id;
+  };
+
+  const handleChangeInput = (e) => {
+    let blankTitle = false;
+    if (e.target.name === TITLE) {
+      blankTitle = e.target.value.trim() === '';
+    }
+    setIsTitleError(blankTitle);
+
+    const updatedInfo = {
+      ...imageInfo,
+      values: {
+        ...imageInfo.values,
+        [e.target.name]: e.target.value,
+      },
+      errors: {
+        [TITLE]: blankTitle ? 'Image title should be at least 3 characters' : '',
+      }
+    };
+
+    setImageInfo(updatedInfo);
+  };
+
+  const titleError = imageInfo.errors[TITLE];
+  const { values: { title, description }} = imageInfo;
+  const readyToUpload = !isTitleError && fileData && imageInfo.values[TITLE].trim().length !== 0;
+
+  return (
+    <div>
+      <Dropzone
+        onFileAdded={queueFile}
+        disabled={false}
+        acceptedTypes={['.svg']}
+      />
+
+      <div className="field-cont">
+        <input
+          className="input-field"
+          placeholder="Image title"
+          onChange={handleChangeInput}
+          value={title}
+          name={TITLE}
+          // disabled={isUploading}
+        />
+      </div>
+
+      {titleError && (
+        <p className="input-field-error">{titleError}</p>
+      )}
+
+      {/* <div className="field-cont">
+        <input
+          className="input-field"
+          placeholder="Description of this work"
+          // onChange={doHandleChangeInput}
+          // value={description}
+          name="imageDescription"
+          // disabled={isSigningIn}
+        />
+      </div> */}
+
+      <div className="field-cont">
+        <textarea
+          rows={5}
+          cols={33}
+          maxLength={256}
+          placeholder="Description of this work"
+          onChange={handleChangeInput}
+          value={description}
+          name={DESCRIPTION}
+          disabled={isUploading}
+        ></textarea>
+      </div>
+
+      <button onClick={createNewEntry} disabled={!readyToUpload || isUploading}>Upload this SVG</button>
+      {/* <button onClick={() => cancel()}>Cancel</button> */}
+      {/* {spaceError && (
+        <p className="input-field-error">{spaceError}</p>
+      )}
+
+      {anyBlankFields && (
+        <p className="input-field-error">Please enter both an access token and a space ID</p>
+      )} */}
+
+    </div>
+  );
+};
+
+export default Uploader;
+
+
+
+
+
+
+
 
   // const updateEntry = (entryId: string) => {
   //   // Update entry
@@ -109,37 +302,6 @@ const Uploader = ({ cancel }) => {
   //   .catch(console.error)
   // }
 
-  const uploadSvg = () => {
-    if (fileData) {
-      client
-        .getSpace(spaceId)
-        .then((space) => space.getEnvironment("master"))
-        .then((environment) =>
-          environment.createAssetFromFiles({
-            fields: {
-              title: {
-                "en-US": `image-${Math.round(Math.random() * 10000)}`,
-              },
-              description: {
-                "en-US": "Asset description",
-              },
-              file: {
-                "en-US": {
-                  contentType: "image/svg+xml",
-                  fileName,
-                  file: fileData,
-                },
-              },
-            },
-          })
-        )
-        .then((asset) => asset.processForAllLocales())
-        .then((asset) => asset.publish())
-        .then((blah) => console.log("response:", blah))
-        .catch(console.error);
-    }
-  };
-
   // const fetchAxiSvgContent = async () => {
   //   const { items: entries } = await client
   //     .getSpace(spaceId)
@@ -171,100 +333,44 @@ const Uploader = ({ cancel }) => {
   //   console.log('imageAssetUrls', imageAssetUrls);
   // };
 
-  const queueFile = (e) => {
-    // console.log('event', e);
-    // console.log(e.target);
-    // console.log(e.target.files[0]);
-    // const fileRef = e.target.value;
-    // console.log(fileRef.name, fileRef.size);
-    const file = e.target.files[0];
-    setFileName(file.name);
-    const reader = new FileReader();
-    // // let rawData = new ArrayBuffer();
-    reader.onload = function (readEvt) {
-      let rawData = readEvt.target.result;
-      // console.log('file', file);
-      // console.log('fileName', file.name);
-      setFileData(rawData);
-    };
-    reader.readAsArrayBuffer(file);
-    // client.getSpace(spaceId)
-    // .then((space) => space.getEnvironment('master'))
-    // .then((environment) => environment.createAssetFromFiles({
-    //   fields: {
-    //     title: {
-    //       'en-US': `image-${Math.round(Math.random() * 10000)}`
-    //     },
-    //     description: {
-    //       'en-US': 'Asset description'
-    //     },
-    //     file: {
-    //       'en-US': {
-    //         contentType: 'image/svg+xml',
-    //         fileName: 'circle.svg',
-    //         file: '<svg><path fill="red" d="M50 50h150v50H50z"/></svg>'
-    //       }
-    //     }
-    //   }
-    // }))
-    // .then((asset) => asset.processForAllLocales())
-    // .then((asset) => asset.publish())
-    // .then((blah) => console.log('response:', blah))
-    // .catch(console.error)
-  };
-
-  return (
-    <main>
-      <div>
-        <input
-          onChange={queueFile}
-          type="file"
-          id="svgUpload"
-          name="svgUpload"
-          accept="image/svg+xml"
-        />
-        {/* <button onClick={uploadSvg} disabled={!fileData}>
-          Upload SVG File
-        </button> */}
-
-        <div className="field-cont">
-          <input
-            className="login-field"
-            placeholder="Image title"
-            // onChange={doHandleChangeInput}
-            // value={fieldCreds.values[TOKEN]}
-            name="imageTitle"
-            // disabled={isSigningIn}
-          />
-        </div>
-        {/* {tokenError && (
-          <p className="input-field-error">{tokenError}</p>
-        )} */}
-
-        <div className="field-cont">
-          <input
-            className="login-field"
-            placeholder="Description of this work"
-            // onChange={doHandleChangeInput}
-            // value={fieldCreds.values[SPACE_ID]}
-            name="imageDescription"
-            // disabled={isSigningIn}
-          />
-        </div>
-
-        <button onClick={createNewEntry}>Upload this SVG</button>
-        <button onClick={() => cancel()}>Cancel</button>
-        {/* {spaceError && (
-          <p className="input-field-error">{spaceError}</p>
-        )}
-
-        {anyBlankFields && (
-          <p className="input-field-error">Please enter both an access token and a space ID</p>
-        )} */}
-
-      </div>
-    </main>
-  );
-};
-
-export default Uploader;
+  // const queueFile = (e) => {
+  //   // console.log('event', e);
+  //   // console.log(e.target);
+  //   // console.log(e.target.files[0]);
+  //   // const fileRef = e.target.value;
+  //   // console.log(fileRef.name, fileRef.size);
+  //   const file = e.target.files[0];
+  //   setFileName(file.name);
+  //   const reader = new FileReader();
+  //   // // let rawData = new ArrayBuffer();
+  //   reader.onload = function (readEvt) {
+  //     let rawData = readEvt.target.result;
+  //     // console.log('file', file);
+  //     // console.log('fileName', file.name);
+  //     setFileData(rawData);
+  //   };
+  //   reader.readAsArrayBuffer(file);
+  //   // client.getSpace(spaceId)
+  //   // .then((space) => space.getEnvironment('master'))
+  //   // .then((environment) => environment.createAssetFromFiles({
+  //   //   fields: {
+  //   //     title: {
+  //   //       'en-US': `image-${Math.round(Math.random() * 10000)}`
+  //   //     },
+  //   //     description: {
+  //   //       'en-US': 'Asset description'
+  //   //     },
+  //   //     file: {
+  //   //       'en-US': {
+  //   //         contentType: 'image/svg+xml',
+  //   //         fileName: 'circle.svg',
+  //   //         file: '<svg><path fill="red" d="M50 50h150v50H50z"/></svg>'
+  //   //       }
+  //   //     }
+  //   //   }
+  //   // }))
+  //   // .then((asset) => asset.processForAllLocales())
+  //   // .then((asset) => asset.publish())
+  //   // .then((blah) => console.log('response:', blah))
+  //   // .catch(console.error)
+  // };

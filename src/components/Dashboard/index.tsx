@@ -66,69 +66,79 @@ const Dashboard = ({ updateAppMode }) => {
     
     // TODO: Add some error handling for the above API calls
 
-    const entriesWithImageUrls = publishedEntries.map(item => {
-      const thumbnailID = item.fields.thumbnail['en-US'].sys.id;
-      const thumbnailAsset = assets.find(asset => asset.sys.id === thumbnailID);
-      const svgID = item.fields.svgFile['en-US'].sys.id;
-      const svgAsset = assets.find(asset => asset.sys.id === svgID);
+    const entriesWithImageUrls = publishedEntries.filter((item) => {
+      // console.log(item);
+      // return true;
+      return item.fields.hasOwnProperty('svgFile') && item.fields.hasOwnProperty('thumbnail');
+    }).map((item) => {
+      const thumbnailID = item.fields.thumbnail["en-US"].sys.id;
+      const thumbnailAsset = assets.find(
+        (asset) => asset.sys.id === thumbnailID
+      );
+      const svgID = item.fields.svgFile["en-US"].sys.id;
+      const svgAsset = assets.find((asset) => asset.sys.id === svgID);
 
-      return ({
-        description: item.fields.description['en-US'],
-        title: item.fields.title['en-US'],
+      return {
+        description: item.fields.description["en-US"],
+        title: item.fields.title["en-US"],
         images: {
           thumbnail: {
             id: thumbnailAsset?.sys.id,
-            url: `https:${thumbnailAsset.fields.file['en-US'].url}`,
-            fileName: thumbnailAsset?.fields.file['en-US'].fileName,
-            width: thumbnailAsset?.fields.file['en-US'].details.image.width / 2,
-            height: thumbnailAsset?.fields.file['en-US'].details.image.height / 2,
+            url: `https:${thumbnailAsset.fields.file["en-US"].url}`,
+            fileName: thumbnailAsset?.fields.file["en-US"].fileName,
+            width: thumbnailAsset?.fields.file["en-US"].details.image.width / 2,
+            height:
+              thumbnailAsset?.fields.file["en-US"].details.image.height / 2,
           },
           svg: {
             id: svgAsset?.sys.id,
-            url: `https:${svgAsset.fields.file['en-US'].url}`,
-            fileName: svgAsset?.fields.file['en-US'].fileName,
-            width: svgAsset?.fields.file['en-US'].details.image.width,
-            height: svgAsset?.fields.file['en-US'].details.image.height,
-          }
+            url: `https:${svgAsset.fields.file["en-US"].url}`,
+            fileName: svgAsset?.fields.file["en-US"].fileName,
+            width: svgAsset?.fields.file["en-US"].details.image.width,
+            height: svgAsset?.fields.file["en-US"].details.image.height,
+          },
         },
         uploadDate: item.sys.publishedAt,
-      });
+      };
     });
 
     return entriesWithImageUrls;
   }
 
+  // const updateSignInErrors = (err) => {
+  //   const errorObj = JSON.parse(err.message);
+  //   let fieldErrorMessage;
+  //   let fieldName;
+
+  //   switch (errorObj.status) {
+  //     case 404:
+  //       fieldErrorMessage = 'Could not find this space ID';
+  //       fieldName = SPACE_ID;
+  //       break;
+  //     case 401:
+  //       fieldErrorMessage = 'This personal access token is not valid';
+  //       fieldName = TOKEN;
+  //       break;
+  //     default:
+  //       fieldErrorMessage = 'Unknown sign-in error';
+  //       fieldName = SPACE_ID;    
+  //   }
+
+  //   // const errorFormatted = {
+  //   //   [fieldName]: fieldErrorMessage,
+  //   // };
+
+  //   const updatedCreds = {
+  //     ...fieldCreds,
+  //     errors: {
+  //       [fieldName]: fieldErrorMessage,
+  //     },
+  //   };
+
+  //   setFieldCreds(updatedCreds);
+  // }
   const updateSignInErrors = (err) => {
-    const errorObj = JSON.parse(err.message);
-    let fieldErrorMessage;
-    let fieldName;
-
-    switch (errorObj.status) {
-      case 404:
-        fieldErrorMessage = 'Could not find this space ID';
-        fieldName = SPACE_ID;
-        break;
-      case 401:
-        fieldErrorMessage = 'This personal access token is not valid';
-        fieldName = TOKEN;
-        break;
-      default:
-        fieldErrorMessage = 'Unknown sign-in error';
-        fieldName = SPACE_ID;    
-    }
-
-    // const errorFormatted = {
-    //   [fieldName]: fieldErrorMessage,
-    // };
-
-    const updatedCreds = {
-      ...fieldCreds,
-      errors: {
-        [fieldName]: fieldErrorMessage,
-      },
-    };
-
-    setFieldCreds(updatedCreds);
+    console.error(err);
   }
 
   const initClientFromInput = async (fieldCreds: Object) => {
