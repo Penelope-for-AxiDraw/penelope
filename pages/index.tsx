@@ -1,5 +1,4 @@
 import { useContext, useEffect, useState } from 'react';
-// import { createClient } from 'contentful-management';
 import type { NextPage } from "next";
 import AxiDrawControl from "../src/components/AxiDrawControl";
 import ImageControls from "../src/components//ImageControls";
@@ -10,7 +9,6 @@ import { useRouter } from 'next/router';
 
 import { store } from '../src/providers/store';
 import { DASHBOARD, PLOT } from '../src/constants';
-// import { getFromLocalStorage } from '../src/utils';
 
 const Home: NextPage = () => {
   // const authMode = 'AUTH';

@@ -8,7 +8,6 @@ const AuthView = ({
   fieldCreds,
   handleChangeInput,
 }) => {
-  const buttonText = 'Yeah!';
   const SPACE_ID = 'spaceId';
   const TOKEN = 'accessToken';
 
@@ -36,7 +35,7 @@ const AuthView = ({
       <p>Enter your Contentful personal access token and space ID</p>
       <div className="field-cont">
         <input
-          className="login-field"
+          className="input-field"
           placeholder="your-personal-access-token"
           onChange={doHandleChangeInput}
           value={fieldCreds.values[TOKEN]}
@@ -50,7 +49,7 @@ const AuthView = ({
 
       <div className="field-cont">
         <input
-          className="login-field"
+          className="input-field"
           placeholder="your-space-ID"
           onChange={doHandleChangeInput}
           value={fieldCreds.values[SPACE_ID]}
@@ -58,7 +57,6 @@ const AuthView = ({
           disabled={isSigningIn}
         />
       </div>
-
       {spaceError && (
         <p className="input-field-error">{spaceError}</p>
       )}
@@ -72,7 +70,7 @@ const AuthView = ({
         onClick={() => attemptSignIn(fieldCreds)}
         disabled={isSigningIn || anyBlankFields}
       >
-        {buttonText}
+        Yeah!
       </button>
 
       <p className="input-field-hint">

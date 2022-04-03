@@ -88,7 +88,7 @@ export default function AxiConnection({ handleConnected, handleDisconnected, han
         <>
           {/* <div className="address-label">Connection</div> */}
           <div className="field-cont">
-            <input className="address-field" type="text" placeholder='IP address and port' onChange={handleChangeInput} value={address} />
+            <input className="input-field" type="text" placeholder='IP address and port' onChange={handleChangeInput} value={address} />
             <button className="connect-btn" onClick={handleClickConnect}>{buttonText}</button>
           </div>
           {connectionError && <p className="input-field-error">{connectionError}</p>}

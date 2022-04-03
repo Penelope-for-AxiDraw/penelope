@@ -1,21 +1,80 @@
 import { useContext, useState } from 'react';
-import Image from 'next/image';
+import { createClient } from 'contentful-management';
 
-// import ModalContainer from "../ModalContainer";
+import { fetchAxiSvgContent, getFromLocalStorage, saveToLocalStorage } from '../../utils';
 import { store } from '../../providers/store';
+import ImageBlock from '../ImageBlock';
+import Uploader from '../Uploader';
 
 const ImageExplorer = ({ dismiss, handleSelect }) => {
-  const [isGridView, setIsGridView] = useState(true);
   const globalState = useContext(store);
-  const { state: { entries } } = globalState;
+  const { dispatch, state: { entries } } = globalState;
+  const [uploaderIsOpen, setUploaderIsOpen] = useState(false);
+
+  const initDelete = async (index) => {
+    // console.log(index);
+    // console.log(entries[index]);
+
+    const credentialsLocalStorage = getFromLocalStorage('contentfulCreds');
+    if (!credentialsLocalStorage) {
+      return;
+    }
+
+    const entryId = entries[index].id;
+    const svgId = entries[index].images.svg.id;
+    const thumbnailId = entries[index].images.thumbnail.id;
+
+    const { accessToken, spaceId } = credentialsLocalStorage;
+    const client = createClient({ accessToken });
+    const space = await client.getSpace(spaceId);
+
+    await space.getEnvironment('master')
+      .then((environment) => environment.getEntry(entryId))
+      .then((entry) => entry.unpublish())
+      .then((entry) => entry.delete())
+      .catch(console.error)    
+
+    await space.getEnvironment('master')
+      .then((environment) => environment.getAsset(thumbnailId))
+      .then((asset) => asset.unpublish())
+      .then((asset) => asset.delete())
+      .catch(console.error)
+
+    await space.getEnvironment('master')
+      .then((environment) => environment.getAsset(svgId))
+      .then((asset) => asset.unpublish())
+      .then((asset) => asset.delete())
+      .catch(console.error)
+
+    console.log(`Entry ${entryId} and its assets were unpublished and deleted.`);
+    const data = await fetchAxiSvgContent(space);
+
+    // Save content into local storage
+    saveToLocalStorage('axiSvgContent', data);
+
+    // Save content to store
+    dispatch({
+      type: 'SET_ENTRIES_DATA',
+      payload: {
+        data,
+      },
+    });
+  }
 
   return (
     <>
-      {isGridView ? (
+      <div className="explore-header">
+        <h4>Explorer</h4>
+        <button onClick={dismiss}>×</button>
+      </div>
+      {uploaderIsOpen ? (
+        <div>
+          <Uploader dismiss={() => setUploaderIsOpen(false)} />
+        </div>
+      ) : (
         <>
-          <div className="explore-header">
-            <h4>Image Explorer</h4>
-            <button onClick={dismiss}>×</button>
+          <div style={{marginBottom: '0.25rem'}}>
+            <button onClick={() => setUploaderIsOpen(true)}>Upload New</button>          
           </div>
           <div className="explore-grid">
             {entries.map((data, index) => (
@@ -23,32 +82,14 @@ const ImageExplorer = ({ dismiss, handleSelect }) => {
                 key={data.images.thumbnail.id}
                 imageData={data}
                 handleClick={() => handleSelect(index)}
+                initDelete={() => initDelete(index)}
               />
             ))}
           </div>
         </>
-      ) : (
-        <div>list view goes here</div>
       )}
     </>
   )
 };
 
 export default ImageExplorer;
-
-const ImageBlock = ({imageData, handleClick}) => {
-  const dim = 192;
-  const {width, height} = imageData.images.thumbnail;
-
-  const wd = width >= height ? dim : width / height * dim;
-  const ht = height >= width ? dim : height / width * dim;
-
-  return (
-    <div className="image-block-cont" onClick={handleClick}>
-      <div className="explore-cell" >
-        <Image src={imageData.images.thumbnail.url} alt="" width={wd} height={ht} />
-      </div>
-      <p>{imageData.title}</p>
-    </div>
-  );
-};

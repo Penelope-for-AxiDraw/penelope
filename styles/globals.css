@@ -85,15 +85,14 @@ section select {
 }
 
 .image-viewer div {
-  background: tomato;
-  margin: 2rem;
+  margin: 1rem;
 }
 
 main {
   display: flex;
 }
 
-.address-field, .login-field {
+.input-field {
   height: 2rem;
   font-size: 1rem;
   flex-grow: 1;
@@ -119,6 +118,11 @@ section div button.connect-btn {
 .field-cont {
   display: flex;
   margin-top: 0.25rem;
+}
+
+.field-cont textarea {
+  font-size: 1rem;
+  flex-grow: 1;
 }
 
 .connection-container {
@@ -243,4 +247,30 @@ section div button.connect-btn {
 
 a {
   text-decoration: none;
+}
+
+
+
+/* Dropzone Component */
+/* ---------------------------------------------------------------- */
+.dropzone {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  transition: background-color 200ms ease;
+}
+
+.highlight,
+.dropzone:hover {
+  background-color: lightcyan;
+}
+
+.file-input {
+  display: none;
+}
+
+#preview-container img {
+  width: 100%;
 }
