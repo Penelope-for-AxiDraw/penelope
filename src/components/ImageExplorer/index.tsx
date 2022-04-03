@@ -21,16 +21,18 @@ const ImageExplorer = ({ dismiss, handleSelect }) => {
           <Uploader cancel={() => setUploaderIsOpen(false)} />
         </div>
       ) : (
-        <div className="explore-grid">
-          {entries.map((data, index) => (
-            <ImageBlock
-              key={data.images.thumbnail.id}
-              imageData={data}
-              handleClick={() => handleSelect(index)}
-            />
-          ))}
+        <>
+          <div className="explore-grid">
+            {entries.map((data, index) => (
+              <ImageBlock
+                key={data.images.thumbnail.id}
+                imageData={data}
+                handleClick={() => handleSelect(index)}
+              />
+            ))}
+          </div>
           <button onClick={() => setUploaderIsOpen(true)}>Upload New</button>
-        </div>
+        </>
       )}
     </>
   )

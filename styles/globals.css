@@ -85,8 +85,7 @@ section select {
 }
 
 .image-viewer div {
-  background: tomato;
-  margin: 2rem;
+  margin: 1rem;
 }
 
 main {
@@ -270,4 +269,8 @@ a {
 
 .file-input {
   display: none;
+}
+
+#preview-container img {
+  width: 100%;
 }
