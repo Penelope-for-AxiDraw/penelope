@@ -4,10 +4,9 @@ import { createClient } from 'contentful-management';
 import AuthView from '../AuthView';
 import { LoginScreen } from './styles';
 import Spinner from '../Spinner';
-import { getFromLocalStorage, saveToLocalStorage } from '../../utils/storage';
+import { fetchAxiSvgContent, getFromLocalStorage, saveToLocalStorage } from '../../utils';
 import { store } from '../../providers/store';
 import { PLOT } from '../../constants';
-// import { useRouter } from 'next/router';
 
 const Dashboard = ({ updateAppMode }) => {
   const globalState = useContext(store);
@@ -16,15 +15,13 @@ const Dashboard = ({ updateAppMode }) => {
   const TOKEN = 'accessToken';
   const isDevMode = process.env.NODE_ENV === 'development';
 
-  // const router = useRouter();
-
   const [isLoading, setIsLoading] = useState(false);
   const [isSigningIn, setIsSigningIn] = useState(false);
   const [isAutoSignIn, setIsAutoSignIn] = useState(false);
   const [fieldCreds, setFieldCreds] = useState({
     values: {
-      [TOKEN]: isDevMode ? process.env.NEXT_PUBLIC_PERSONAL_ACCESS_TOKEN : defaultValue,
-      [SPACE_ID]: isDevMode ? process.env.NEXT_PUBLIC_SPACE: defaultValue,
+      [TOKEN]: isDevMode ? process.env.NEXT_PUBLIC_PERSONAL_ACCESS_TOKEN : '',
+      [SPACE_ID]: isDevMode ? process.env.NEXT_PUBLIC_SPACE: '',
     },
     errors: {
       [TOKEN]: '',
@@ -48,95 +45,6 @@ const Dashboard = ({ updateAppMode }) => {
     setFieldCreds(updatedCreds);
   };
 
-  // Load Axi SVG content from Contentful
-  const fetchAxiSvgContent = async (space) => {
-    setIsLoading(true);
-    const fieldsToGet = ['title', 'description', 'thumbnail', 'svgFile'];
-    const { items: entries } = await space.getEnvironment("master")
-      .then((environment) =>
-        environment.getEntries({
-          content_type: 'axiSvgData',
-          select: fieldsToGet.map(f => `fields.${f}`).join(',')
-        })
-      );
-    
-    const publishedEntries = entries.filter(item => item.isPublished());
-    const { items: assets } = await space.getEnvironment("master")
-      .then((environment) => environment.getAssets());
-    
-    // TODO: Add some error handling for the above API calls
-
-    const entriesWithImageUrls = publishedEntries.filter((item) => {
-      // console.log(item);
-      // return true;
-      return item.fields.hasOwnProperty('svgFile') && item.fields.hasOwnProperty('thumbnail');
-    }).map((item) => {
-      const thumbnailID = item.fields.thumbnail["en-US"].sys.id;
-      const thumbnailAsset = assets.find(
-        (asset) => asset.sys.id === thumbnailID
-      );
-      const svgID = item.fields.svgFile["en-US"].sys.id;
-      const svgAsset = assets.find((asset) => asset.sys.id === svgID);
-
-      return {
-        description: item.fields.description["en-US"],
-        title: item.fields.title["en-US"],
-        images: {
-          thumbnail: {
-            id: thumbnailAsset?.sys.id,
-            url: `https:${thumbnailAsset.fields.file["en-US"].url}`,
-            fileName: thumbnailAsset?.fields.file["en-US"].fileName,
-            width: thumbnailAsset?.fields.file["en-US"].details.image.width / 2,
-            height:
-              thumbnailAsset?.fields.file["en-US"].details.image.height / 2,
-          },
-          svg: {
-            id: svgAsset?.sys.id,
-            url: `https:${svgAsset.fields.file["en-US"].url}`,
-            fileName: svgAsset?.fields.file["en-US"].fileName,
-            width: svgAsset?.fields.file["en-US"].details.image.width,
-            height: svgAsset?.fields.file["en-US"].details.image.height,
-          },
-        },
-        uploadDate: item.sys.publishedAt,
-      };
-    });
-
-    return entriesWithImageUrls;
-  }
-
-  // const updateSignInErrors = (err) => {
-  //   const errorObj = JSON.parse(err.message);
-  //   let fieldErrorMessage;
-  //   let fieldName;
-
-  //   switch (errorObj.status) {
-  //     case 404:
-  //       fieldErrorMessage = 'Could not find this space ID';
-  //       fieldName = SPACE_ID;
-  //       break;
-  //     case 401:
-  //       fieldErrorMessage = 'This personal access token is not valid';
-  //       fieldName = TOKEN;
-  //       break;
-  //     default:
-  //       fieldErrorMessage = 'Unknown sign-in error';
-  //       fieldName = SPACE_ID;    
-  //   }
-
-  //   // const errorFormatted = {
-  //   //   [fieldName]: fieldErrorMessage,
-  //   // };
-
-  //   const updatedCreds = {
-  //     ...fieldCreds,
-  //     errors: {
-  //       [fieldName]: fieldErrorMessage,
-  //     },
-  //   };
-
-  //   setFieldCreds(updatedCreds);
-  // }
   const updateSignInErrors = (err) => {
     console.error(err);
   }
@@ -162,6 +70,7 @@ const Dashboard = ({ updateAppMode }) => {
       saveToLocalStorage('contentfulCreds', { accessToken, spaceId });
 
       // 1. Authenticated! Now fetch Axi SVG Content
+      setIsLoading(true);
       const data = await fetchAxiSvgContent(space);
 
       // 2. Save content into local storage
@@ -196,7 +105,7 @@ const Dashboard = ({ updateAppMode }) => {
       }
 
       setIsAutoSignIn(true);
-      console.log('attempting auto sign-in');
+      // console.log('attempting auto sign-in');
       try {
         const { accessToken, spaceId } = credentialsLocalStorage;
         const client = createClient({ accessToken: accessToken });
@@ -211,12 +120,11 @@ const Dashboard = ({ updateAppMode }) => {
             data: { email, firstName, lastName, avatarUrl }
           },
         });
-        
-        // saveToLocalStorage('contentfulCreds', { accessToken, spaceId });
-        
+
         // 1. Authenticated! Now fetch Axi SVG Content
+        setIsLoading(true);
         const data = await fetchAxiSvgContent(space);
-  
+
         // 2. Save content into local storage
         saveToLocalStorage('axiSvgContent', data);
         dispatch({
@@ -238,6 +146,7 @@ const Dashboard = ({ updateAppMode }) => {
     }
 
     initClientFromStoredCreds();
+    // TODO: FIX THIS DEPENDENCY ISSUE
   }, []);
 
 

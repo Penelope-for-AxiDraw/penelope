@@ -1,5 +1,4 @@
 import { useContext, useEffect, useState } from 'react';
-// import { createClient } from 'contentful-management';
 import type { NextPage } from "next";
 import AxiDrawControl from "../src/components/AxiDrawControl";
 import ImageControls from "../src/components//ImageControls";
