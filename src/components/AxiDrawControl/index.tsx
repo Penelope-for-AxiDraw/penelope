@@ -2,6 +2,7 @@ import { useState } from "react";
 
 import AxiConnection from '../AxiConnection';
 import AxiActions from '../AxiActions';
+import { PanelSectionHeading } from "../StyledUiCommon/styles";
 
 interface ControlProps {
   currentSvgData: {
@@ -49,7 +50,7 @@ const AxiDrawControl = (props:ControlProps) => {
 
   return (
     <section>
-      <h3 className="mt0">AxiDraw</h3>
+      <PanelSectionHeading>AxiDraw Plotter</PanelSectionHeading>
       <AxiConnection
         handleConnected={registerConnection}
         handleDisconnected={handleDisconnected}

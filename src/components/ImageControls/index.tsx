@@ -1,6 +1,7 @@
-// import Image from 'next/image';
+import Image from 'next/image';
 import { useContext } from 'react';
 import { store } from '../../../src/providers/store';
+import { Button, ImageMetaInfoCont, PanelInfoIcon, PanelSectionHeading } from '../StyledUiCommon/styles';
 
 export default function ImageControls({
   currentEntry,
@@ -9,7 +10,7 @@ export default function ImageControls({
   signOut,
 }) {
   const globalState = useContext(store);
-  const { state: { user } } = globalState;
+  const { state: { entries, user } } = globalState;
 
   const { images, uploadDate, description, title } = currentEntry;
 
@@ -22,29 +23,43 @@ export default function ImageControls({
   const getFormattedUploadDate = (d: Date) => {
     const monthNameShort = dateObj.toLocaleString("en-US", { month: "short" });
 
-    return `${monthNameShort} ${d.getDate()}, ${d.getFullYear()} @ ${d.toLocaleTimeString(
+    return `${d.getDate()} ${monthNameShort} ${d.getFullYear()} ~ ${d.toLocaleTimeString(
       "en-US",
       { hour: "2-digit", minute: "2-digit" }
     )}`;
   };
   const formattedUploadDate = getFormattedUploadDate(dateObj);
 
+  const ImageMetaInfo = () => {
+  };
+
   return (
     <section>
-      <h3 className="mt0">Image Information</h3>
-      <div className="image-meta-cont">
-        {/* <h4>{filename.replace(/\.[^/.]+$/, "")}</h4> */}
-        <h4>{title}</h4>
-        <p>{description}</p>
-        <p>
-          {widthPx}px × {heightPx}px ({widthInch} in × {heightInch} in)
-        </p>
-        <p>Uploaded {formattedUploadDate}</p>
-        <p>{user.email}</p>
-        {/* <Image src={user.avatarUrl} alt="avatar" width={32} height={32} /> */}
-      </div>
-      <button onClick={initImageSelection} disabled={selectingImage}>Select Another Image</button>
-      <button onClick={signOut}>Sign Out</button>
+      <PanelSectionHeading>Project</PanelSectionHeading>
+      <PanelInfoIcon>
+        <div>
+          <Image alt="temp" src={"/icn-square.svg"} width={24} height={24} />
+          {/* <Image alt="temp" src={user.avatarUrl} width={24} height={24} /> */}
+          <span>{user.email}</span>
+        </div>
+        <div onClick={signOut}>×</div>
+      </PanelInfoIcon>
+      <ImageMetaInfoCont>
+        {/* <Image alt="temp" src="/icn-square.svg" width={48} height={48} /> */}
+        <Image alt="temp" src={entries[0].images.thumbnail.url} width={60} height={60} />
+        <div className="specs">
+          <p>{title}</p>
+          <p>
+            {widthPx}px × {heightPx}px ({widthInch} in × {heightInch} in)
+          </p>
+          <p>{formattedUploadDate}</p>
+          <div><p className="description">{description}</p></div>
+        </div>
+      </ImageMetaInfoCont>
+      {/* <button onClick={initImageSelection} disabled={selectingImage}>Load Another Project</button> */}
+      <Button onClick={initImageSelection} disabled={selectingImage} wide>SVG Explorer</Button>
+      <small style={{ color: 'var(--alert)' }}>make this a text-only/outline/icon button?</small>
+      {/* <button onClick={signOut}>Sign Out</button> */}
     </section>
   );
 }

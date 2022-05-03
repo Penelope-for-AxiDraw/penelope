@@ -1,22 +1,36 @@
 import { useState } from 'react';
+import Image from 'next/image';
+
+import { InputContainer, InputsWrapper, StyledButton } from './styles';
+import { InputLabel, PanelInfoIcon } from '../StyledUiCommon/styles';
 
 export default function AxiConnection({ handleConnected, handleDisconnected, handleConnectionError, isConnected }) {
-  const [address, setAddress] = useState('');
+  const [address, setAddress] = useState({
+    axiHost: '',
+    axiPort: '',
+  });
+
   const [connectionError, setConnectionError] = useState('');
-  const [deviceName, setDeviceName] = useState('…');
+  const [deviceName, setDeviceName] = useState('Connected');
   let connection;
 
   const handleChangeInput = (e) => {
     if (connectionError) {
       setConnectionError('');
     }
-    setAddress(e.target.value);
+
+    setAddress(currentAddress => {
+      return {
+        ...currentAddress,
+        [e.target.name]: e.target.value,
+      };
+    });
   };
 
   const getAxiSocket = () => {
-    const [host, port] = address.split(':');
+    const {axiHost, axiPort} = address;
 
-    const co = new WebSocket(`ws://${host}:${port}/`);
+    const co = new WebSocket(`ws://${axiHost}:${axiPort}/`);
     co.onmessage = function (event) {
         const message = JSON.parse(event.data);
         if (message.hasOwnProperty('deviceName')) {
@@ -31,7 +45,7 @@ export default function AxiConnection({ handleConnected, handleDisconnected, han
 
     co.onerror = function (event) {
       handleConnectionError(event);
-      setConnectionError('Connection problem 😭 Please double-check the address and make sure the server is running.');
+      setConnectionError('Yikes! Please double-check the address and make sure the server is running.');
     };
 
     co.onclose = function (event) {
@@ -43,25 +57,23 @@ export default function AxiConnection({ handleConnected, handleDisconnected, han
   };
 
   // This Regex test for host should be double-checked
-  const validateHost = (address) => {
+  const validateHost = (host) => {
     let pattern = /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
-    return pattern.test(address);
+    return pattern.test(host);
   }
   
   // This Regex test for port should be double-checked
-  const validatePort = (portNumber) => {
+  const validatePort = (port) => {
     let pattern = /^((6553[0-5])|(655[0-2][0-9])|(65[0-4][0-9]{2})|(6[0-4][0-9]{3})|([1-5][0-9]{4})|([0-5]{0,5})|([0-9]{1,4}))$/;
-      return pattern.test(portNumber);
+      return pattern.test(port);
   }
 
   const validateConnectionParams = () => {
-    const [host, port] = address.split(':');
-
-    if (!host || !port) {
+    if (!address.axiHost || !address.axiPort) {
       return false;
     }
 
-    return validateHost(host) && validatePort(port);
+    return validateHost(address.axiHost) && validatePort(address.axiPort);
   }
 
   const handleClickConnect = () => {
@@ -69,31 +81,46 @@ export default function AxiConnection({ handleConnected, handleDisconnected, han
     if (isValid) {
       connection = getAxiSocket();
     } else {
-      setConnectionError('Address is badly formatted');
+      setConnectionError('Address is incorrectly formatted');
     }
   };
 
   const buttonText = isConnected ? 'Disconnect' : 'Connect';
+  const connectionInfo = `${deviceName} | ${address.axiHost} : ${address.axiPort}`;
+
+  if (isConnected) {
+    return (
+      <PanelInfoIcon>
+        <div>
+          <Image alt="temp" src={"/icn-square.svg"} width={24} height={24} />
+          <span>{connectionInfo}</span>
+        </div>
+        <div onClick={handleDisconnected}>×</div>
+      </PanelInfoIcon>
+    );
+  }
 
   return (
-    <div className="connection-container">
-      <div className="address-label">Connection</div>
-      {isConnected ? (
-        <div className="connection-details">
-          <p>Plotter / <span className="muted">{deviceName}</span></p>
-          <p>Address / <span className="muted">{address}</span></p>
-          <button className="mt0" onClick={handleDisconnected}>{buttonText}</button>
-        </div>
-      ) : (
-        <>
-          {/* <div className="address-label">Connection</div> */}
-          <div className="field-cont">
-            <input className="input-field" type="text" placeholder='IP address and port' onChange={handleChangeInput} value={address} />
-            <button className="connect-btn" onClick={handleClickConnect}>{buttonText}</button>
-          </div>
-          {connectionError && <p className="input-field-error">{connectionError}</p>}
-        </>
-      )}
-    </div>
+    <>
+      <p className="smallText">
+        To begin plotting, enter the IP address and port of your Axi server. You’ll need to be running the server in the background. Click here to download the server and read the documentation.
+      </p>
+
+      <InputsWrapper>
+        <InputContainer fieldWidth={11.5}>
+          <InputLabel htmlFor="axi-ip-address">host</InputLabel>
+          <input name="axiHost" className="input-field" type="text" placeholder='000.000.000.000' onChange={handleChangeInput} value={address.axiHost} />
+        </InputContainer>
+
+        <InputContainer fieldWidth={4.5}>
+          <InputLabel htmlFor="axi-port">port</InputLabel>
+          <input name="axiPort" className="input-field" type="text" placeholder='0000' onChange={handleChangeInput} value={address.axiPort} />
+        </InputContainer>
+      </InputsWrapper>
+
+      {connectionError && <p className="input-field-error">{connectionError}</p>}
+
+      <StyledButton onClick={handleClickConnect} wide>{buttonText}</StyledButton>
+    </>
   );
 };

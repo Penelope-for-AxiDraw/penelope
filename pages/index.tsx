@@ -14,7 +14,7 @@ const Home: NextPage = () => {
   // const authMode = 'AUTH';
   // const plotMode = 'PLOT';
   const defaultMode = DASHBOARD;
-  const [listIndex, setlistIndex] = useState(0);
+  const [listIndex, setListIndex] = useState(0);
   const [selectingImage, setSelectingImage] = useState(false);
   const router = useRouter();
   const globalState = useContext(store);
@@ -36,7 +36,7 @@ const Home: NextPage = () => {
   // }, []);
 
   const handleSelectImage = (index: number) => {
-    setlistIndex(index);
+    setListIndex(index);
   }
 
   const openImageSelectionModal = () => {
@@ -72,6 +72,15 @@ const Home: NextPage = () => {
     setAppMode(mode);
   }
 
+  const LogoBlock = () => {
+    return (
+      <div className="logo-block">
+        <span>penelope</span><br />
+        <span>a gui for AxiDraw</span>
+      </div>
+    );
+  }
+
   if (appMode === PLOT) {
     return (
       <main>
@@ -82,6 +91,7 @@ const Home: NextPage = () => {
           />
         } */}
         <div className="column-left">
+          <LogoBlock />
           {hasEntries ? (
             <>
               <ImageControls
@@ -99,14 +109,15 @@ const Home: NextPage = () => {
           )}
         </div>
         {selectingImage && (
-          <div className="column-explore">
-            <section>
+          // <div className="column-explore">
+          //   <section>
               <ImageExplorer
                 dismiss={() => setSelectingImage(false)}
                 handleSelect={handleSelectImage}
+                currentIndex={listIndex}
               />
-            </section>
-          </div>
+          //   </section>
+          // </div>
         )}
         {entries.length ? <ImagePreview thumbnail={entries[listIndex].images.thumbnail} /> : <ImagePreview thumbnail={placeholder} />}
       </main>
