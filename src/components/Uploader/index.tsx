@@ -2,6 +2,8 @@ import { useContext, useState } from "react";
 import styled from 'styled-components';
 import { createClient } from "contentful-management";
 
+import { Button, Input, TextArea } from '../StyledUiCommon/styles';
+import { FolderButton, UploaderContainer } from './styles';
 import Dropzone from '../Dropzone';
 import { store } from '../../providers/store';
 import {
@@ -10,9 +12,12 @@ import {
   saveToLocalStorage,
   svgToImage
 } from "../../utils";
-import Spinner from "../Spinner";
 
 const Uploader = ({ dismiss }) => {
+  const TITLE = 'title';
+  const DESCRIPTION = 'description';
+  const UPLOAD_ERROR_MESSAGE = 'We encountered an error while trying to upload your image. Please try again in a moment.';
+
   const globalState = useContext(store);
   const { dispatch } = globalState;
 
@@ -21,8 +26,7 @@ const Uploader = ({ dismiss }) => {
   const [fileName, setFileName] = useState("");
   const [isTitleError, setIsTitleError] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
-  const TITLE = 'title';
-  const DESCRIPTION = 'description';
+  const [uploadError, setUploadError] = useState('');
 
   const [imageInfo, setImageInfo] = useState({
     values: {
@@ -42,6 +46,7 @@ const Uploader = ({ dismiss }) => {
   });
 
   const createNewEntry = async () => {
+    setUploadError('');
     setIsUploading(true);
 
     // Upload SVG
@@ -85,7 +90,10 @@ const Uploader = ({ dismiss }) => {
       .then((space) => space.getEnvironment('master'))
       .then((environment) => environment.createEntry(contentType, { fields }))
       .then((entry) => entry.publish())
-      .catch(console.error);
+      .catch((e) => {
+        console.error(e);
+        setUploadError(UPLOAD_ERROR_MESSAGE);
+      });
 
     // Refresh entries data
     const space = await client.getSpace(spaceId);
@@ -106,8 +114,6 @@ const Uploader = ({ dismiss }) => {
   };
 
   const queueSvgFile = (file) => {
-    const fname = file.name.substring(0, fileName.length - 4);
-    setFileName(fname);
     const reader = new FileReader();
     reader.onload = function (readEvt) {
       const rawData = readEvt.target.result;
@@ -247,57 +253,133 @@ const Uploader = ({ dismiss }) => {
   const readyToUpload = !isTitleError && svgFileData && imageInfo.values[TITLE].trim().length !== 0;
 
   const handleFileAdded = (file) => {
+    const fname = file.name.substring(0, file.name.length - 4);    
+    const updatedInfo = {
+      ...imageInfo,
+      values: {
+        [TITLE]: fname,
+        [DESCRIPTION]: '',
+      },
+      errors: {
+        [TITLE]: '',
+      }
+    };
+
+    setImageInfo(updatedInfo);
+    setFileName(fname);
     queueSvgFile(file);
     queuePngFile(file);
     generateUploadPreview(file);
   }
-  return (
-    <>
-      {isUploading && (
-        <LoadingOverlay>
-          <Spinner fillColor="white" scale={0.75} />
-        </LoadingOverlay>
-      )}
-      <div>
-        <Dropzone
-          onFileAdded={handleFileAdded}
-          disabled={false}
-          acceptedTypes={['.svg']}
-        />
-        <div id="preview-container"></div>
 
-        <div className="field-cont">
-          <input
-            className="input-field"
-            placeholder="Image title"
-            onChange={handleChangeInput}
-            value={title}
-            name={TITLE}
-            disabled={isUploading}
-          />
+  const fileQueued = !!svgFileData;
+
+  // return (
+  //   <>
+  //     {isUploading && (
+  //       <LoadingOverlay>
+  //         <Spinner fillColor="white" scale={0.75} />
+  //       </LoadingOverlay>
+  //     )}
+  //     <div>
+  //       <Dropzone
+  //         onFileAdded={handleFileAdded}
+  //         disabled={false}
+  //         acceptedTypes={['.svg']}
+  //       />
+  //       <div id="preview-container"></div>
+
+  //       <div className="field-cont">
+  //         <input
+  //           className="input-field"
+  //           placeholder="Image title"
+  //           onChange={handleChangeInput}
+  //           value={title}
+  //           name={TITLE}
+  //           disabled={isUploading}
+  //         />
+  //       </div>
+
+  //       {titleError && (
+  //         <p className="input-field-error">{titleError}</p>
+  //       )}
+
+  //       <div className="field-cont">
+  //         <textarea
+  //           rows={5}
+  //           cols={33}
+  //           maxLength={256}
+  //           placeholder="Description of this work"
+  //           onChange={handleChangeInput}
+  //           value={description}
+  //           name={DESCRIPTION}
+  //           disabled={isUploading}
+  //         ></textarea>
+  //       </div>
+
+  //       <button onClick={createNewEntry} disabled={!readyToUpload || isUploading}>Upload this SVG</button>
+  //       <button onClick={() => dismiss()}>You Know What, Never Mind</button>
+  //     </div>
+  //   </>
+  // );
+
+  if (fileQueued) {
+    return (
+      <UploaderContainer>
+        <div style={{ position: 'relative' }}>
+          {/* <FolderButton>x</FolderButton> */}
+          {isUploading && (
+            <div className="upload-overlay">
+              <div className="fade-in-fade-out">uploading</div>
+            </div>
+          )}
+          <div id="preview-container"></div>
         </div>
+        {uploadError && <p className="input-field-error">{uploadError}</p>}
+
+        <Input
+          className="input-field"
+          placeholder="Image Title"
+          onChange={handleChangeInput}
+          value={title}
+          name={TITLE}
+          disabled={isUploading}
+          fieldWidth={24 - 0.5 - 0.125}
+        />
 
         {titleError && (
           <p className="input-field-error">{titleError}</p>
         )}
 
-        <div className="field-cont">
-          <textarea
-            rows={5}
-            cols={33}
-            maxLength={256}
-            placeholder="Description of this work"
-            onChange={handleChangeInput}
-            value={description}
-            name={DESCRIPTION}
-            disabled={isUploading}
-          ></textarea>
-        </div>
+        <TextArea
+          rows={5}
+          cols={33}
+          fieldWidth={24 - 0.5 - 0.125}
+          maxLength={256}
+          placeholder="Description of this artwork"
+          onChange={handleChangeInput}
+          value={description}
+          name={DESCRIPTION}
+          disabled={isUploading}
+        />
 
-        <button onClick={createNewEntry} disabled={!readyToUpload || isUploading}>Upload this SVG</button>
-        <button onClick={() => dismiss()}>You Know What, Never Mind</button>
-      </div>
-    </>
+        <div className="button-bar">
+          <Button variant="secondary" onClick={() => dismiss()}>CANCEL</Button>
+          <Button onClick={createNewEntry} disabled={!readyToUpload || isUploading}>UPLOAD</Button>
+        </div>
+      </UploaderContainer>
+    ); 
+  }
+
+  return (
+    <div className="dropzone-wrapper">
+      <Dropzone
+        onFileAdded={handleFileAdded}
+        disabled={false}
+        acceptedTypes={['.svg']}
+      />
+      <Button variant="secondary" onClick={dismiss}>CANCEL</Button>
+    </div>
   );
 };
 

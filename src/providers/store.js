@@ -3,6 +3,11 @@ import React, { createContext, useReducer } from 'react';
 const initialState = {
   entries: [],
   user: {},
+  disco: {
+    showWarning: false,
+    warningCopy: {},
+    leave: () => {},
+  },
 };
 
 const store = createContext(initialState);
@@ -25,6 +30,13 @@ const StateProvider = ({ children }) => {
         updatedState = {
           ...prevState,
           user: action.payload.data,
+        };
+        return updatedState;
+
+      case 'SET_DEPART':
+        updatedState = {
+          ...prevState,
+          disco: action.payload.data,
         };
         return updatedState;
 

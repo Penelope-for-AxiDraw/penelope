@@ -1,3 +1,6 @@
+import { Button, InputLabel } from '../StyledUiCommon/styles';
+import { ControlsContainer } from './styles';
+
 interface actionsProps {
   sendCommand: (option:string) => void;
 }
@@ -27,11 +30,20 @@ export default function AxiActions(props: actionsProps) {
 
   return (
     <div>
-      <div className="address-label">Controls</div>
-      <button className="mt0" onClick={cmdAlignMode}>Align Mode</button>
-      <button className="mt0" onClick={cmdToggle}>Toggle Pen</button>
-      <button className="mt0" onClick={cmdBeginPlot}>Plot Image</button>
-      {/* <button className="mt0" onClick={cmdGetName}>Get Name</button> */}
+      <ControlsContainer>
+        <InputLabel>Pen Controls</InputLabel>
+        <div className="buttonGroup">
+          <Button onClick={cmdToggle}>Up/Down</Button>
+          <Button onClick={cmdAlignMode}>Align</Button>
+        </div>
+      </ControlsContainer>
+
+      <ControlsContainer>
+        <InputLabel>Plotting</InputLabel>
+        <div className="buttonGroup">
+          <Button onClick={cmdBeginPlot}>Plot Image</Button>
+        </div>
+      </ControlsContainer>
     </div>
   );
 };
