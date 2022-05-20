@@ -44,7 +44,7 @@ export const WarningModalContainer = styled.div`
     padding: 0 0.75rem 0.75rem;
 
     display: flex;
-    justify-content: end;
+    justify-content: flex-end;
 
     & :last-child {
       margin-left: 0.5rem;

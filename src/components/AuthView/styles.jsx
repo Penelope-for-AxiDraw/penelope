@@ -80,7 +80,7 @@ export const MoreInfoBox = styled.div`
   padding: 2rem;
   display: flex;
   flex-direction: column;
-  align-items: end;
+  align-items: flex-end;
   border-radius: 0.25rem;
   border-top-left-radius: 0.25rem;
   border-bottom-left-radius: 0.25rem;
@@ -92,7 +92,7 @@ export const MoreInfoBox = styled.div`
 
   & .more-info-header {
     display: flex;
-    justify-content: end;
+    justify-content: flex-end;
   }
 
   & > div p {

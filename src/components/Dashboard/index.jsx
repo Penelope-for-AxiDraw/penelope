@@ -98,14 +98,12 @@ const Dashboard = ({ updateAppMode }) => {
     // TO THE CODE THAT RUNS WHEN USER CLICKS SIGN IN.
     // MAYBE THEY CAN BE CONSOLIDATED
     const initClientFromStoredCreds = async () => {
-      // const credentialsLocalStorage = getCredentialsLocalStorage();
       const credentialsLocalStorage = getFromLocalStorage('contentfulCreds');
-      if (!credentialsLocalStorage) {
+      if (!credentialsLocalStorage.accessToken || !credentialsLocalStorage.spaceId) {
         return;
       }
 
       setIsAutoSignIn(true);
-      // console.log('attempting auto sign-in');
       try {
         const { accessToken, spaceId } = credentialsLocalStorage;
         const client = createClient({ accessToken: accessToken });
@@ -138,8 +136,7 @@ const Dashboard = ({ updateAppMode }) => {
         updateAppMode(PLOT);
       } catch (err) {
         setIsAutoSignIn(false);
-        console.error(err);
-        console.log('auto sign-in failed');
+        console.error('Auto sign-in failed', err);
       }
     
       return true
@@ -147,7 +144,7 @@ const Dashboard = ({ updateAppMode }) => {
 
     initClientFromStoredCreds();
     // TODO: FIX THIS DEPENDENCY ISSUE
-  }, []);
+  }, [dispatch, updateAppMode]);
 
 
   return (
