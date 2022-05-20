@@ -11,7 +11,8 @@ const MoreInfo = ({ show, infoBoxOpen }) => {
       <div>
         <div className="more-info-header">
           <ClearBtn onClick={show}>
-            <Image alt="temp" src={"/icn-square.svg"} width={24} height={24} />
+            {/* <Image alt="temp" src={"/icn-square.svg"} width={24} height={24} /> */}
+            close
           </ClearBtn>
         </div>
         <div>

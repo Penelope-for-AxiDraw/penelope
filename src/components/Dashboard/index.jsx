@@ -139,12 +139,14 @@ const Dashboard = ({ updateAppMode }) => {
         console.error('Auto sign-in failed', err);
       }
     
-      return true
+      return true;
     }
 
-    initClientFromStoredCreds();
-    // TODO: FIX THIS DEPENDENCY ISSUE
-  }, [dispatch, updateAppMode]);
+    if (!isAutoSignIn) {
+      initClientFromStoredCreds();
+    }
+
+  }, [dispatch, isAutoSignIn, updateAppMode]);
 
 
   return (

@@ -6,7 +6,6 @@ import ImagePreview from "../src/components/ImagePreview";
 import ImageExplorer from "../src/components/ImageExplorer";
 import DepartWarning from '../src/components/DepartWarning';
 import Dashboard from '../src/components/Dashboard';
-import { useRouter } from 'next/router';
 
 import { store } from '../src/providers/store';
 import { DASHBOARD, PLOT } from '../src/constants';
@@ -17,7 +16,6 @@ const Home= () => {
   const defaultMode = DASHBOARD;
   const [listIndex, setListIndex] = useState(0);
   const [selectingImage, setSelectingImage] = useState(false);
-  const router = useRouter();
   const globalState = useContext(store);
   const { dispatch, state: { entries, user, disco } } = globalState;
   const [appMode, setAppMode] = useState(defaultMode);
@@ -71,7 +69,7 @@ const Home= () => {
       // router.push('/start');
     }
 
-  }, [hasEntries, router, user]);
+  }, [hasEntries, user]);
 
   const updateAppMode = (mode) => {
     setAppMode(mode);
