@@ -5,7 +5,6 @@ export default function ImagePreview({ thumbnail, shade }) {
     <div className="image-viewer">
       {shade && <div className="shade-overlay"></div>}
       <img className="image-canv" src={thumbnail.url} alt={thumbnail.fileName} width={thumbnail.width} height={thumbnail.height} />
-      <TurbineSpinner scale={0.5} />
     </div>
   );
 };
