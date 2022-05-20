@@ -5,18 +5,18 @@ import AxiConnection from '../AxiConnection';
 import AxiActions from '../AxiActions';
 import { ControlsSection, PanelSectionHeading } from "../StyledUiCommon/styles";
 
-interface ControlProps {
-  currentSvgData: {
-    images: {
-      svg: {
-        url: string,
-        fileName: string,
-      }
-    },
-  };
-};
+// interface ControlProps {
+//   currentSvgData: {
+//     images: {
+//       svg: {
+//         url: string,
+//         fileName: string,
+//       }
+//     },
+//   };
+// };
 
-const AxiDrawControl = (props:ControlProps) => {
+const AxiDrawControl = (props) => {
   const { currentSvgData } = props;
   const [isConnected, setIsConnected] = useState(false);
   const [connection, setConnection] = useState();
@@ -54,11 +54,11 @@ const AxiDrawControl = (props:ControlProps) => {
     });
   }
 
-  const handleConnectionError = (evt: Event) => {
+  const handleConnectionError = (evt) => {
     console.log("Websocket error:", evt);
   }
 
-  function sendCommand(cmd: String) {
+  function sendCommand(cmd) {
     if (cmd === "plot") {
       const pattern = /^(.*[\\/])/;
       const [root_url] = currentSvgData.images.svg.url.match(pattern);

@@ -1,11 +1,11 @@
 import { Button, InputLabel } from '../StyledUiCommon/styles';
 import { ControlsContainer } from './styles';
 
-interface actionsProps {
-  sendCommand: (option:string) => void;
-}
+// interface actionsProps {
+//   sendCommand: (option:string) => void;
+// }
 
-export default function AxiActions(props: actionsProps) {
+export default function AxiActions(props) {
   const { sendCommand } = props;
 
   const cmdAlignMode = () => {

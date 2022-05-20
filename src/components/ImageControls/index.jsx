@@ -23,7 +23,7 @@ export default function ImageControls({
   const heightPx = heightInch * ppi;
   const dateObj = new Date(uploadDate);
 
-  const getFormattedUploadDate = (d: Date) => {
+  const getFormattedUploadDate = (d) => {
     const monthNameShort = dateObj.toLocaleString("en-US", { month: "short" });
 
     return `${d.getDate()} ${monthNameShort} ${d.getFullYear()} ~ ${d.toLocaleTimeString(

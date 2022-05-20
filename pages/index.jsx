@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from 'react';
-import type { NextPage } from "next";
+// import type { NextPage } from "next";
 import AxiDrawControl from "../src/components/AxiDrawControl";
 import ImageControls from "../src/components//ImageControls";
 import ImagePreview from "../src/components/ImagePreview";
@@ -11,7 +11,7 @@ import { useRouter } from 'next/router';
 import { store } from '../src/providers/store';
 import { DASHBOARD, PLOT } from '../src/constants';
 
-const Home: NextPage = () => {
+const Home= () => {
   // const authMode = 'AUTH';
   // const plotMode = 'PLOT';
   const defaultMode = DASHBOARD;
@@ -22,7 +22,7 @@ const Home: NextPage = () => {
   const { dispatch, state: { entries, user, disco } } = globalState;
   const [appMode, setAppMode] = useState(defaultMode);
 
-  const handleSelectImage = (index: number) => {
+  const handleSelectImage = (index) => {
     setListIndex(index);
   }
 

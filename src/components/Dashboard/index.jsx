@@ -29,7 +29,7 @@ const Dashboard = ({ updateAppMode }) => {
     },
   });
 
-  const handleChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChangeInput = (e) => {
     const updatedCreds = {
       ...fieldCreds,
       values: {
@@ -49,7 +49,7 @@ const Dashboard = ({ updateAppMode }) => {
     console.error(err);
   }
 
-  const initClientFromInput = async (fieldCreds: Object) => {
+  const initClientFromInput = async (fieldCreds) => {
     const accessToken = fieldCreds.values[TOKEN];
     const spaceId = fieldCreds.values[SPACE_ID];
     setIsSigningIn(true);

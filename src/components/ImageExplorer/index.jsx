@@ -83,7 +83,7 @@ const ImageExplorer = ({ dismiss, handleSelect, currentIndex }) => {
           <>
             <div className="explorer-body">
               <div className="explorer-grid">
-                {entries.map((data, index: number) => (
+                {entries.map((data, index) => (
                   <ImageBlock
                     key={data.images.thumbnail.id}
                     imageData={data}
