@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import { useContext } from 'react';
 import { store } from '../../../src/providers/store';
-import { Button, ImageMetaInfoCont, PanelInfoIcon, PanelSectionHeading } from '../StyledUiCommon/styles';
+import { Button, ControlsSection, ImageMetaInfoCont, PanelInfoIcon, PanelSectionHeading } from '../StyledUiCommon/styles';
 
 export default function ImageControls({
   currentEntry,
@@ -15,9 +15,12 @@ export default function ImageControls({
   const { images, uploadDate, description, title } = currentEntry;
 
   // const { width: widthPx, height: heightPx } = images.thumbnail;
-  const widthPx = images.thumbnail.width;
-  const heightPx = images.thumbnail.height;
+  // const widthPx = images.thumbnail.width;
+  // const heightPx = images.thumbnail.height;
   const { width: widthInch, height: heightInch } = images.svg;
+  const ppi = 72;
+  const widthPx = widthInch * ppi;
+  const heightPx = heightInch * ppi;
   const dateObj = new Date(uploadDate);
 
   const getFormattedUploadDate = (d: Date) => {
@@ -34,7 +37,7 @@ export default function ImageControls({
   };
 
   return (
-    <section>
+    <ControlsSection>
       <PanelSectionHeading>Project</PanelSectionHeading>
       <PanelInfoIcon>
         <div>
@@ -56,10 +59,7 @@ export default function ImageControls({
           <div><p className="description">{description}</p></div>
         </div>
       </ImageMetaInfoCont>
-      {/* <button onClick={initImageSelection} disabled={selectingImage}>Load Another Project</button> */}
       <Button onClick={initImageSelection} disabled={selectingImage} wide>SVG Explorer</Button>
-      <small style={{ color: 'var(--alert)' }}>make this a text-only/outline/icon button?</small>
-      {/* <button onClick={signOut}>Sign Out</button> */}
-    </section>
+    </ControlsSection>
   );
 }

@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import Image from 'next/image';
 
-import { SubPrompt, Prompt } from './styles';
+import { SubPrompt, Prompt, DropzoneContainer } from './styles';
 
 const Dropzone = ({
   disabled,
@@ -61,30 +61,28 @@ const Dropzone = ({
   const uploadIconUrl = '/icn-upload.svg';
 
   return (
-    <>
-      <div
-        className={`dropzone ${highlight ? 'highlight' : ''}`}
-        onDragOver={onDragOver}
-        onDragLeave={onDragLeave}
-        onDrop={onDrop}
-        onClick={openFileDialog}
-        role="button"
-        tabIndex={0}
-        onKeyPress={handleKeypress}
-        style={{ cursor: disabled ? 'default' : 'pointer' }}
-      >
-        <input
-          ref={fileInputRef}
-          className="file-input"
-          type="file"
-          accept={accept}
-          onChange={handleInputChange}
-        />
-        <Image alt="cloud upload icon" src={uploadIconUrl} width={48} height={48} />
-        <Prompt>Drag &amp; drop your SVG file</Prompt>
-        <SubPrompt>or just click here to select a file</SubPrompt>
-      </div>
-    </>
+    <DropzoneContainer
+      onDragOver={onDragOver}
+      onDragLeave={onDragLeave}
+      onDrop={onDrop}
+      onClick={openFileDialog}
+      role="button"
+      tabIndex={0}
+      onKeyPress={handleKeypress}
+      style={{ cursor: disabled ? 'default' : 'pointer' }}
+      highlight={highlight}
+    >
+      <input
+        ref={fileInputRef}
+        className="file-input"
+        type="file"
+        accept={accept}
+        onChange={handleInputChange}
+      />
+      <Prompt>drag &amp; drop an SVG here</Prompt>
+      <Image alt="" src="/icn-square.svg" width={120} height={120} />
+      <SubPrompt>Or click anywhere in this area to browse your files</SubPrompt>
+    </DropzoneContainer>
   );
 };
 

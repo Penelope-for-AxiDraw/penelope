@@ -40,7 +40,7 @@ export const ImageCardContainer = styled.div`
 
 export const DeleteOverlay = styled.div`
   position: absolute;
-  z-index: 100;
+  z-index: 101;
   width: 100%;
   height: 100%;
   background-color: rgb(27, 27, 34, 0.96);

@@ -3,7 +3,11 @@ import styled from 'styled-components';
 export const ExplorerContainer = styled.div`
   width: 27rem;
   height: 100vh;
+  position: absolute;
+  top: 0;
+  left: 22rem;
   background-color: #fafafa;
+  z-index: 102;
   display: flex;
   flex-direction: column;
 
@@ -30,7 +34,7 @@ export const ExplorerContainer = styled.div`
 
   & .explorer-header {
     height: 5.125rem;
-    padding: 0 0 0 1.5rem;
+    padding: 0 1.5rem 0;
 
     & > div {
       display: flex;

@@ -3,11 +3,20 @@ import Image from 'next/image';
 
 import { InputContainer, InputsWrapper, StyledButton } from './styles';
 import { InputLabel, PanelInfoIcon } from '../StyledUiCommon/styles';
+import { getFromLocalStorage, saveToLocalStorage } from '../../utils';
 
-export default function AxiConnection({ handleConnected, handleDisconnected, handleConnectionError, isConnected }) {
+export default function AxiConnection({
+  handleConnected,
+  initDisconnect,
+  handleConnectionError,
+  isConnected
+}) {
+  const creds = getFromLocalStorage('axidrawCreds');
+  const hasCreds = creds?.axiHost && creds?.axiPort;
+
   const [address, setAddress] = useState({
-    axiHost: '',
-    axiPort: '',
+    axiHost: hasCreds ? creds.axiHost : '',
+    axiPort: hasCreds ? creds.axiPort : '',
   });
 
   const [connectionError, setConnectionError] = useState('');
@@ -41,6 +50,8 @@ export default function AxiConnection({ handleConnected, handleDisconnected, han
     co.onopen = function (event) {
       // console.log(`Websocket is now open on ${co.url}!`);
       handleConnected(co);
+      console.log({ axiHost, axiPort });
+      saveToLocalStorage('axidrawCreds', { axiHost, axiPort });
     };
 
     co.onerror = function (event) {
@@ -49,8 +60,7 @@ export default function AxiConnection({ handleConnected, handleDisconnected, han
     };
 
     co.onclose = function (event) {
-      // console.log("WebSocket is now closed.");
-      handleDisconnected();
+      console.log("WebSocket is now closed.");
     };
 
     return co;
@@ -95,7 +105,7 @@ export default function AxiConnection({ handleConnected, handleDisconnected, han
           <Image alt="temp" src={"/icn-square.svg"} width={24} height={24} />
           <span>{connectionInfo}</span>
         </div>
-        <div onClick={handleDisconnected}>×</div>
+        <div onClick={initDisconnect}>×</div>
       </PanelInfoIcon>
     );
   }

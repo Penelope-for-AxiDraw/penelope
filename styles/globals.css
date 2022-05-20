@@ -33,6 +33,9 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: var(--dark-gray);
+  background-image: url('/screencap-1531535695-inverse.jpg');
+  background-size: cover;
+  background-position: 0 -2rem;
 }
 
 code {
@@ -77,9 +80,9 @@ p {
   flex-direction: column;
 } */
 
-section {
+/* section {
   margin: 2rem;
-}
+} */
 
 /* section button {
   margin-top: 1rem;
@@ -101,8 +104,10 @@ section select {
 }
 
 .image-viewer {
-  color: #111;
+  /* color: #111; */
   flex-grow: 1;
+  position: relative;
+  background-color: #fafafa;
 }
 
 .image-canv {
@@ -111,9 +116,9 @@ section select {
   /* box-shadow: 1px 1px 10px 2px rgb(52 52 52 / 20%); */
 }
 
-.image-viewer div {
+/* .image-viewer div {
   margin: 1rem;
-}
+} */
 
 main {
   display: flex;
@@ -142,7 +147,7 @@ main {
   width: 100px;
 } */
 
-.field-cont {
+/* .field-cont {
   display: flex;
   margin-top: 0.25rem;
 }
@@ -150,6 +155,23 @@ main {
 .field-cont textarea {
   font-size: 1rem;
   flex-grow: 1;
+} */
+
+.button-bar {
+  display: flex;
+  margin-top: 0.5rem;
+}
+
+.button-bar button {
+  flex-grow: 1;
+}
+
+.button-bar button:first-child {
+  margin-right: 0.25rem;
+}
+
+.button-bar button:last-child {
+  margin-left: 0.25rem;
 }
 
 .connection-container {
@@ -269,14 +291,14 @@ a {
 
 /* Dropzone Component */
 /* ---------------------------------------------------------------- */
-.dropzone {
+/* .dropzone {
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
   transition: background-color 200ms ease;
-}
+} */
 
 .highlight,
 .dropzone:hover {
@@ -287,6 +309,13 @@ a {
   display: none;
 }
 
+#preview-container {
+  width: calc(24rem - 0.125rem);
+  height: calc(24rem - 0.125rem);
+  /* padding: 2rem; */
+  border: 1px solid rgb(107, 0, 255, 0.20);
+}
+
 #preview-container img {
   width: 100%;
 }
@@ -294,4 +323,40 @@ a {
 .smallText {
   font-size: 0.875rem;
   line-height: 1.4;
+}
+
+.dropzone-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+}
+
+.dropzone-wrapper button {
+  margin-top: 0.5rem;
+}
+
+.shade-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgb(27, 27, 34, 0.84);
+}
+
+@keyframes fade {
+  /* 0%,100% { opacity: 0 }
+  50% { opacity: 1 } */
+  0%,100% { border-color: rgb(255 255 255 / 0%) }
+  50% { border-color: rgb(255 255 255 / 100%) }
+}
+
+@keyframes spinit {
+  from {
+    transform: rotate(0);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
 }

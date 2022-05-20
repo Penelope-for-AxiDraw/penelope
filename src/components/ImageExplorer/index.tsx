@@ -75,31 +75,30 @@ const ImageExplorer = ({ dismiss, handleSelect, currentIndex }) => {
           </div>
           <p>Upload and manage your SVG images</p>
         </div>
-        <div className="explorer-body">
-            {uploaderIsOpen ? (
-              <div>
-                <Uploader dismiss={() => setUploaderIsOpen(false)} />
+        {uploaderIsOpen ? (
+          <div className="explorer-body">
+            <Uploader dismiss={() => setUploaderIsOpen(false)} />
+          </div>
+        ) : (
+          <>
+            <div className="explorer-body">
+              <div className="explorer-grid">
+                {entries.map((data, index: number) => (
+                  <ImageBlock
+                    key={data.images.thumbnail.id}
+                    imageData={data}
+                    handleClick={() => handleSelect(index)}
+                    initDelete={() => initDelete(index)}
+                    isActive={index === currentIndex}
+                  />
+                ))}
               </div>
-            ) : (
-              <>
-                <div className="explorer-grid">
-                  {entries.map((data, index) => (
-                    <ImageBlock
-                      key={data.images.thumbnail.id}
-                      imageData={data}
-                      handleClick={() => handleSelect(index)}
-                      initDelete={() => initDelete(index)}
-                      isActive={index === currentIndex}
-                    />
-                  ))}
-                </div>
-              </>
-            )}
-        </div>
-        <div className="explorer-footer">
-          {/* <button onClick={() => setUploaderIsOpen(true)}>Upload an SVG</button> */}
-          <Button onClick={() => setUploaderIsOpen(true)} wd={24}>Upload an SVG</Button>
-        </div>
+            </div>
+            <div className="explorer-footer">
+              <Button onClick={() => setUploaderIsOpen(true)} wd={24}>Upload an SVG</Button>
+            </div>
+          </>
+        )}
     </ExplorerContainer>
   )
 };

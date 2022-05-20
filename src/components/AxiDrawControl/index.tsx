@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 
+import { store } from '../../providers/store';
 import AxiConnection from '../AxiConnection';
 import AxiActions from '../AxiActions';
-import { PanelSectionHeading } from "../StyledUiCommon/styles";
+import { ControlsSection, PanelSectionHeading } from "../StyledUiCommon/styles";
 
 interface ControlProps {
   currentSvgData: {
@@ -19,6 +20,8 @@ const AxiDrawControl = (props:ControlProps) => {
   const { currentSvgData } = props;
   const [isConnected, setIsConnected] = useState(false);
   const [connection, setConnection] = useState();
+  const globalState = useContext(store);
+  const { dispatch } = globalState;
 
   const registerConnection = (ws) => {
     setIsConnected(true);
@@ -26,11 +29,29 @@ const AxiDrawControl = (props:ControlProps) => {
     setConnection(ws);
   };
 
-  const handleDisconnected = () => {
-    if (isConnected) {
-      connection.close();
-    }
-    setIsConnected(false);
+  const initDisconnect = () => {
+    const warningCopy = {
+      title: 'Disconnect?',
+      text: 'Are you sure you want to disconnect from AxiDraw?',
+    };
+
+    const leave = () => {
+      if (isConnected) {
+        connection.close();
+      }
+      setIsConnected(false);
+    };
+
+    dispatch({
+      type: 'SET_DEPART',
+      payload: {
+        data: {
+          showWarning: true,
+          warningCopy,
+          leave,
+        }
+      }
+    });
   }
 
   const handleConnectionError = (evt: Event) => {
@@ -49,16 +70,16 @@ const AxiDrawControl = (props:ControlProps) => {
   }
 
   return (
-    <section>
+    <ControlsSection>
       <PanelSectionHeading>AxiDraw Plotter</PanelSectionHeading>
       <AxiConnection
         handleConnected={registerConnection}
-        handleDisconnected={handleDisconnected}
+        initDisconnect={initDisconnect}
         handleConnectionError={handleConnectionError}
         isConnected={isConnected}
       />
       {isConnected && <AxiActions sendCommand={sendCommand} />}
-    </section>
+    </ControlsSection>
   );
 };
 

@@ -4,6 +4,7 @@ import AxiDrawControl from "../src/components/AxiDrawControl";
 import ImageControls from "../src/components//ImageControls";
 import ImagePreview from "../src/components/ImagePreview";
 import ImageExplorer from "../src/components/ImageExplorer";
+import DepartWarning from '../src/components/DepartWarning';
 import Dashboard from '../src/components/Dashboard';
 import { useRouter } from 'next/router';
 
@@ -18,22 +19,8 @@ const Home: NextPage = () => {
   const [selectingImage, setSelectingImage] = useState(false);
   const router = useRouter();
   const globalState = useContext(store);
-  const { state: { entries, user } } = globalState;
+  const { dispatch, state: { entries, user, disco } } = globalState;
   const [appMode, setAppMode] = useState(defaultMode);
-
-  // useEffect(() => {
-  //   // function onScroll() {
-  //   //   console.log("scroll!");
-  //   // }
-
-  //   // window.addEventListener("scroll", onScroll);
-  //   const axiSvgContentSessionStorage = window.sessionStorage.getItem('axiSvgContento');
-  //   console.log('axiSvgContentSessionStorage', axiSvgContentSessionStorage);
-
-  //   // return function unMount() {
-  //   //   window.removeEventListener("scroll", onScroll);
-  //   // };
-  // }, []);
 
   const handleSelectImage = (index: number) => {
     setListIndex(index);
@@ -44,10 +31,28 @@ const Home: NextPage = () => {
   }
 
   const initSignOut = () => {
-    window.localStorage.removeItem('contentfulCreds');
-    window.localStorage.removeItem('axiSvgContent');
-    setAppMode(DASHBOARD);
-    // router.push('/start');
+    const warningCopy = {
+      title: 'Sign out?',
+      text: 'Are you sure you want to sign out of your account?',
+    };
+
+    const leave = () => {
+      window.localStorage.removeItem('contentfulCreds');
+      window.localStorage.removeItem('axidrawCreds');
+      window.localStorage.removeItem('axiSvgContent');
+      setAppMode(DASHBOARD);  
+    };
+
+    dispatch({
+      type: 'SET_DEPART',
+      payload: {
+        data: {
+          showWarning: true,
+          warningCopy,
+          leave,
+        }
+      }
+    });
   }
 
   const placeholder = {
@@ -81,15 +86,34 @@ const Home: NextPage = () => {
     );
   }
 
+  const dismissDepartModal = () => {
+    dispatch({
+      type: 'SET_DEPART',
+      payload: {
+        data: {
+          showWarning: false,
+          warningCopy: {},
+          leave: () => {},
+        }
+      }
+    });
+  };
+
+  const initLeave = () => {
+    disco.leave();
+    dismissDepartModal();
+  }
+
   if (appMode === PLOT) {
     return (
       <main>
-        {/* {selectingImage &&
-          <ImageExplorer
-            dismiss={() => setSelectingImage(false)}
-            handleSelect={handleSelectImage}
+        {disco.showWarning && (
+          <DepartWarning
+            warningCopy={disco.warningCopy}
+            dismiss={dismissDepartModal}
+            leave={initLeave}
           />
-        } */}
+        )}
         <div className="column-left">
           <LogoBlock />
           {hasEntries ? (
@@ -109,17 +133,13 @@ const Home: NextPage = () => {
           )}
         </div>
         {selectingImage && (
-          // <div className="column-explore">
-          //   <section>
-              <ImageExplorer
-                dismiss={() => setSelectingImage(false)}
-                handleSelect={handleSelectImage}
-                currentIndex={listIndex}
-              />
-          //   </section>
-          // </div>
+          <ImageExplorer
+            dismiss={() => setSelectingImage(false)}
+            handleSelect={handleSelectImage}
+            currentIndex={listIndex}
+          />
         )}
-        {entries.length ? <ImagePreview thumbnail={entries[listIndex].images.thumbnail} /> : <ImagePreview thumbnail={placeholder} />}
+        {entries.length ? <ImagePreview thumbnail={entries[listIndex].images.thumbnail} shade={selectingImage} /> : <div><h3>¯\_(ツ)_/¯</h3></div>}
       </main>
     );
   }
@@ -135,10 +155,6 @@ export default Home;
 
 
 const NoEntriesNotification = ({ initImageSelection, selectingImage, initSignOut }) => {
-  // const tableFlipStyle = {
-  //   margin: '1rem',
-  // };
-
   return (
     <section>
       <div>

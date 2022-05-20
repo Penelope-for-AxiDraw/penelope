@@ -53,7 +53,7 @@ const Button = styled(ClearBtn)`
   border-radius: 2px;
 
   ${(props) => (props.disabled
-    ? css`opacity: 0.75;`
+    ? css`opacity: 0.84;`
     : css`opacity: 1;`)}
 
   transition: opacity 160ms ease-in-out;
@@ -188,6 +188,49 @@ const InputLabel = styled.label`
   margin-left: 0.125rem;
 `;
 
+const Input = styled.input`
+  height: 1.875rem;
+  font-size: 1rem;
+  padding-left: 0.375rem;
+  ${(props) => props.fieldWidth && `width: ${props.fieldWidth}rem;`}
+  border-radius: 2px;
+  border-width: 1px;
+  border-top-color: rgba(107, 0, 255, 0.32);
+  border-bottom-color: rgba(107, 0, 255, 0.32);
+  border-left-color: rgba(107, 0, 255, 0.32);
+  border-right-color: rgba(107, 0, 255, 0.32);
+
+  &:focus-visible {
+    outline-color: rgba(107, 0, 255, 0.64);
+    outline-width: 1px;
+    outline-style: inset;
+  }
+`;
+
+const TextArea = styled.textarea`
+  font-size: 1rem;
+  padding-left: 0.375rem;
+  ${(props) => props.fieldWidth && `width: ${props.fieldWidth}rem;`}
+  ${(props) => props.fieldHeight && `height: ${props.fieldHeight}rem;`}
+  resize: none;
+  border-radius: 2px;
+  border-width: 1px;
+  border-top-color: rgba(107, 0, 255, 0.32);
+  border-bottom-color: rgba(107, 0, 255, 0.32);
+  border-left-color: rgba(107, 0, 255, 0.32);
+  border-right-color: rgba(107, 0, 255, 0.32);
+
+  &:focus-visible {
+    outline-color: rgba(107, 0, 255, 0.64);
+    outline-width: 1px;
+    outline-style: inset;
+  }
+`;
+
+const ControlsSection = styled.section`
+  margin: 2rem;
+`;
+
 export {
   ClearBtn,
   Button,
@@ -195,7 +238,10 @@ export {
   PanelInfoIcon,
   ImageMetaInfoCont,
   InputLabel,
+  Input,
   IconButton,
+  TextArea,
+  ControlsSection,
   // OutlineBtn,
   // IconBtn,
   // LinkButton,
