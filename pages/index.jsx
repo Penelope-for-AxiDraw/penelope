@@ -14,14 +14,21 @@ const Home= () => {
   // const authMode = 'AUTH';
   // const plotMode = 'PLOT';
   const defaultMode = DASHBOARD;
-  const [listIndex, setListIndex] = useState(0);
+  // const [listIndex, setListIndex] = useState(0);
   const [selectingImage, setSelectingImage] = useState(false);
   const globalState = useContext(store);
-  const { dispatch, state: { entries, user, disco } } = globalState;
+  const { dispatch, state: { currentEntryIndex, entries, user, disco } } = globalState;
   const [appMode, setAppMode] = useState(defaultMode);
 
   const handleSelectImage = (index) => {
-    setListIndex(index);
+    // setListIndex(index);
+
+    dispatch({
+      type: 'SET_ENTRY',
+      payload: {
+        data: index
+      }
+    });
   }
 
   const openImageSelectionModal = () => {
@@ -117,13 +124,13 @@ const Home= () => {
           {hasEntries ? (
             <>
               <ImageControls
-                currentEntry={entries[listIndex]}
+                currentEntry={entries[currentEntryIndex]}
                 initImageSelection={openImageSelectionModal}
                 selectingImage={selectingImage}
                 signOut={initSignOut}
               />
               <AxiDrawControl
-                currentSvgData={entries[listIndex]}
+                currentSvgData={entries[currentEntryIndex]}
               />
             </>
           ) : (
@@ -134,10 +141,10 @@ const Home= () => {
           <ImageExplorer
             dismiss={() => setSelectingImage(false)}
             handleSelect={handleSelectImage}
-            currentIndex={listIndex}
+            currentIndex={currentEntryIndex}
           />
         )}
-        {entries.length ? <ImagePreview thumbnail={entries[listIndex].images.thumbnail} shade={selectingImage} /> : <div><h3>¯\_(ツ)_/¯</h3></div>}
+        {entries.length ? <ImagePreview thumbnail={entries[currentEntryIndex].images.thumbnail} shade={selectingImage} /> : <div><h3>¯\_(ツ)_/¯</h3></div>}
       </main>
     );
   }

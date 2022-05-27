@@ -15,9 +15,6 @@ const ImageExplorer = ({ dismiss, handleSelect, currentIndex }) => {
   const [uploaderIsOpen, setUploaderIsOpen] = useState(false);
 
   const initDelete = async (index) => {
-    // console.log(index);
-    // console.log(entries[index]);
-
     const credentialsLocalStorage = getFromLocalStorage('contentfulCreds');
     if (!credentialsLocalStorage) {
       return;

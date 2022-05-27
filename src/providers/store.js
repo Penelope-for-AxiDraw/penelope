@@ -2,6 +2,7 @@ import React, { createContext, useReducer } from 'react';
 
 const initialState = {
   entries: [],
+  currentEntryIndex: 0,
   user: {},
   disco: {
     showWarning: false,
@@ -37,6 +38,13 @@ const StateProvider = ({ children }) => {
         updatedState = {
           ...prevState,
           disco: action.payload.data,
+        };
+        return updatedState;
+
+      case 'SET_ENTRY':
+        updatedState = {
+          ...prevState,
+          currentEntryIndex: action.payload.data,
         };
         return updatedState;
 

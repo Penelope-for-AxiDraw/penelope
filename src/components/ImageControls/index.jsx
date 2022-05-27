@@ -10,7 +10,7 @@ export default function ImageControls({
   signOut,
 }) {
   const globalState = useContext(store);
-  const { state: { entries, user } } = globalState;
+  const { state: { currentEntryIndex, entries, user } } = globalState;
 
   const { images, uploadDate, description, title } = currentEntry;
 
@@ -33,9 +33,6 @@ export default function ImageControls({
   };
   const formattedUploadDate = getFormattedUploadDate(dateObj);
 
-  const ImageMetaInfo = () => {
-  };
-
   return (
     <ControlsSection>
       <PanelSectionHeading>Project</PanelSectionHeading>
@@ -49,7 +46,7 @@ export default function ImageControls({
       </PanelInfoIcon>
       <ImageMetaInfoCont>
         {/* <Image alt="temp" src="/icn-square.svg" width={48} height={48} /> */}
-        <Image alt="temp" src={entries[0].images.thumbnail.url} width={60} height={60} />
+        <Image alt="temp" src={entries[currentEntryIndex].images.thumbnail.url} width={60} height={60} />
         <div className="specs">
           <p>{title}</p>
           <p>

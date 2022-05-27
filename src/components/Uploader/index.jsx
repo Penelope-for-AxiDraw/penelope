@@ -12,6 +12,7 @@ import {
   saveToLocalStorage,
   svgToImage
 } from "../../utils";
+import BurstSpinner from "../BurstSpinner";
 
 const Uploader = ({ dismiss }) => {
   const TITLE = 'title';
@@ -101,12 +102,19 @@ const Uploader = ({ dismiss }) => {
 
     // Save content into local storage
     saveToLocalStorage('axiSvgContent', data);
+
     // Save content to store
     dispatch({
       type: 'SET_ENTRIES_DATA',
       payload: {
         data,
       },
+    });
+    dispatch({
+      type: 'SET_ENTRY',
+      payload: {
+        data: 0
+      }
     });
 
     // Dismiss uploader UI
@@ -328,9 +336,10 @@ const Uploader = ({ dismiss }) => {
       <UploaderContainer>
         <div style={{ position: 'relative' }}>
           {/* <FolderButton>x</FolderButton> */}
-          {isUploading && (
+          {!isUploading && (
             <div className="upload-overlay">
-              <div className="fade-in-fade-out">uploading</div>
+              <BurstSpinner />
+            {/* <div className="fade-in-fade-out">uploading</div> */}
             </div>
           )}
           <div id="preview-container"></div>

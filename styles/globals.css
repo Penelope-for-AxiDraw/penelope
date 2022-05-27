@@ -359,3 +359,13 @@ a {
     transform: rotate(360deg);
   }
 }
+
+.burstSpinnerContainer {
+  width: 160px;
+  height: 160px;
+}
+
+.burstSpinnerContainer canvas {
+  width: 160px;
+  height: 160px;
+}

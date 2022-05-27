@@ -28,6 +28,7 @@ export const ExplorerContainer = styled.div`
     grid-template-areas: "a a";
     gap: 2rem;
     grid-auto-columns: 176px;
+    grid-auto-rows: 216px;
     width: calc(352px + 2rem);
     margin-top: 0.5rem;
   }
