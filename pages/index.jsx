@@ -9,6 +9,7 @@ import Dashboard from '../src/components/Dashboard';
 
 import { store } from '../src/providers/store';
 import { DASHBOARD, PLOT } from '../src/constants';
+import NavButtonGroup from '../src/components/NavButtonGroup';
 
 const Home= () => {
   // const authMode = 'AUTH';
@@ -17,8 +18,9 @@ const Home= () => {
   // const [listIndex, setListIndex] = useState(0);
   const [selectingImage, setSelectingImage] = useState(false);
   const globalState = useContext(store);
-  const { dispatch, state: { currentEntryIndex, entries, user, disco } } = globalState;
   const [appMode, setAppMode] = useState(defaultMode);
+  const [navIndex, setNavIndex] = useState(0);
+  const { dispatch, state: { currentEntryIndex, entries, user, disco } } = globalState;
 
   const handleSelectImage = (index) => {
     // setListIndex(index);
@@ -85,8 +87,7 @@ const Home= () => {
   const LogoBlock = () => {
     return (
       <div className="logo-block">
-        <span>penelope</span><br />
-        <span>a gui for AxiDraw</span>
+        <h1>penelope</h1>
       </div>
     );
   }
@@ -107,7 +108,12 @@ const Home= () => {
   const initLeave = () => {
     disco.leave();
     dismissDepartModal();
-  }
+  };
+
+  const selectTab = (index) => {
+    setNavIndex(index);
+    console.log('index', index);
+  };
 
   if (appMode === PLOT) {
     return (
@@ -121,6 +127,10 @@ const Home= () => {
         )}
         <div className="column-left">
           <LogoBlock />
+          <NavButtonGroup
+            selectTab={selectTab}
+            navIndex={navIndex}
+           />
           {hasEntries ? (
             <>
               <ImageControls
