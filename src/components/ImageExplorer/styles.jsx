@@ -1,12 +1,7 @@
 import styled from 'styled-components';
 
 export const ExplorerContainer = styled.div`
-  width: 27rem;
-  height: 100vh;
-  position: absolute;
-  top: 0;
-  left: 22rem;
-  background-color: #fafafa;
+  background-color: rgb(255 255 255 / 0.4);
   z-index: 102;
   display: flex;
   flex-direction: column;
@@ -20,7 +15,6 @@ export const ExplorerContainer = styled.div`
     overflow-y: auto;
     display: flex;
     justify-content: center;
-    height: calc(100vh - 4.5rem - 5.125rem);
   }
 
   & .explorer-grid {

@@ -9,7 +9,7 @@ const NavButtonGroup = ({ navIndex, selectTab }) => {
   const navOptions = [
     {
       text: 'Setup',
-      icon: (i) => <ToolsIcon width={iconSize} height={iconSize} fill={navIndex == i ? light: dark}  />,
+      icon: (i) => <ToolsIcon width={0.8 * iconSize} height={0.8 * iconSize} fill={navIndex == i ? light: dark}  />,
     },
     {
       text: 'Images',
@@ -33,21 +33,6 @@ const NavButtonGroup = ({ navIndex, selectTab }) => {
           <span>{option.text}</span>
         </StyledNavIconButton>
       ))}
-
-      {/* <StyledNavIconButton className={navIndex === 0 ? 'active' : ''}>
-        <Image alt="temp" src={"/icn-square.svg"} width={20} height={20} />
-        <span>Setup</span>
-      </StyledNavIconButton>
-
-      <StyledNavIconButton className={navIndex === 1 ? 'active' : ''}>
-        <Image alt="temp" src={"/icn-square.svg"} width={20} height={20} />
-        <span>Images</span>
-      </StyledNavIconButton>
-
-      <StyledNavIconButton className={navIndex === 2 ? 'active' : ''}>
-        <Image alt="temp" src={"/icn-square.svg"} width={20} height={20} />
-        <span>Info</span>
-      </StyledNavIconButton> */}
     </ButtonGroupContainer>
   );
 };

@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import { useContext } from 'react';
 import { store } from '../../../src/providers/store';
-import { Button, ControlsSection, ImageMetaInfoCont, PanelInfoIcon, PanelSectionHeading } from '../StyledUiCommon/styles';
+import { Button, NavSection, ImageMetaInfoCont, PanelInfoIcon, PanelSectionHeading } from '../StyledUiCommon/styles';
 
 export default function ImageControls({
   currentEntry,
@@ -34,7 +34,7 @@ export default function ImageControls({
   const formattedUploadDate = getFormattedUploadDate(dateObj);
 
   return (
-    <ControlsSection>
+    <NavSection>
       <PanelSectionHeading>Project</PanelSectionHeading>
       <PanelInfoIcon>
         <div>
@@ -57,6 +57,6 @@ export default function ImageControls({
         </div>
       </ImageMetaInfoCont>
       <Button onClick={initImageSelection} disabled={selectingImage} wide>SVG Explorer</Button>
-    </ControlsSection>
+    </NavSection>
   );
 }

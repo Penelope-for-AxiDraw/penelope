@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from 'react';
 // import type { NextPage } from "next";
 import AxiDrawControl from "../src/components/AxiDrawControl";
-import ImageControls from "../src/components//ImageControls";
+import Session from "../src/components/Session";
 import ImagePreview from "../src/components/ImagePreview";
 import ImageExplorer from "../src/components/ImageExplorer";
 import DepartWarning from '../src/components/DepartWarning';
@@ -131,7 +131,22 @@ const Home= () => {
             selectTab={selectTab}
             navIndex={navIndex}
            />
-          {hasEntries ? (
+           {navIndex === 0 && (
+            <Session
+              signOut={initSignOut}
+              title="Account &amp; Plotter Connection"
+            />
+           )}
+           {navIndex === 1 && (
+            <ImageExplorer
+              sendCommand={() => alert("PLOT THIS!")}
+              handleSelect={handleSelectImage}
+              currentIndex={currentEntryIndex}
+              title="Explore Your SVGs"
+            />
+           )}
+           {navIndex === 2 && <p>three</p>}
+          {/* {hasEntries ? (
             <>
               <ImageControls
                 currentEntry={entries[currentEntryIndex]}
@@ -145,15 +160,15 @@ const Home= () => {
             </>
           ) : (
             <NoEntriesNotification initImageSelection={openImageSelectionModal} signOut={initSignOut} selectingImage={selectingImage} />
-          )}
+          )} */}
         </div>
-        {selectingImage && (
+        {/* {selectingImage && (
           <ImageExplorer
             dismiss={() => setSelectingImage(false)}
             handleSelect={handleSelectImage}
             currentIndex={currentEntryIndex}
           />
-        )}
+        )} */}
         {entries.length ? <ImagePreview thumbnail={entries[currentEntryIndex].images.thumbnail} shade={selectingImage} /> : <div><h3>¯\_(ツ)_/¯</h3></div>}
       </main>
     );

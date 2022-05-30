@@ -60,21 +60,33 @@ const Button = styled(ClearBtn)`
 `;
 
 const IconButton = styled(ClearBtn)`
-    color: red;
+  height: 3.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  border-radius: 0.125rem;
+  position: relative;
+  background: var(--purple);
+
+  & svg {
+    position: absolute;
+    left: 1.125rem;
+    top: 1.125rem;
+  }
+
+  & span {
+    color: #fff;
+  }
 `;
 
-// const OutlineBtn = styled(ClearBtn)`
-//   font-family: 'Averta Bold';
-//   border: 1px solid var(--deep-sky-blue);
-//   color: var(--deep-sky-blue);
-  
-//   padding: var(--px8);
-//   border-radius: 2px;
 
-//   ${(props) => (props.disabled
-//     ? css`opacity: 0.5;`
-//     : css`opacity: 1;`)}  
-// `;
+const OutlineBtn = styled(Button)`
+  background: rgb(249 246 252 / 0.32);
+
+  border: 1px solid var(--dark-purple);
+  color: var(--dark-purple);
+`;
 
 // const IconBtn = styled.button`
 //   cursor: pointer;
@@ -129,8 +141,7 @@ const IconButton = styled(ClearBtn)`
 
 const PanelSectionHeading = styled.h1`
   font-size: 0.875rem;
-  margin-bottom: 1rem;
-  text-transform: uppercase;
+  margin-bottom: 1.5rem;
   color: var(--blek);
 `;
 
@@ -152,34 +163,23 @@ const PanelInfoIcon = styled.div`
   }
 `;
 
-const ImageMetaInfoCont = styled.div`
+const SessionInfoCont = styled.div`
   display: flex;
   align-items: start;
-  margin-bottom: 2rem;
 
   & p {
-    margin-bottom: 0.5rem;
-    margin-top: 0.5rem;
     margin: 0;
+    line-height: normal;
   }
 
-  & p:first-child {
-    font-weight: bold;
-  }
-
-  & p.description {
-    font-weight: normal;
+  & button {
+    font-size: 0.875rem;
+    color: var(--purple);
   }
 
   & .specs {
     margin-left: 0.75rem;
-
-    p {
-      font-size: 0.875rem;
-      line-height: 1.4;
-    }
   }
-
 `;
 
 const InputLabel = styled.label`
@@ -227,22 +227,41 @@ const TextArea = styled.textarea`
   }
 `;
 
-const ControlsSection = styled.section`
+
+const NavSection = styled.section`
   margin: 2rem;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  & .info {
+    line-height: normal;
+    font-size: 0.875rem;
+    margin: 0 0 1rem;
+  }
+`;
+
+const Divider = styled.hr`
+  border: 0px solid var(--dark-purple);
+  border-width: 0;
+  border-top-width: 0.0625rem;
+  opacity: 0.16;
+  margin: 2rem 0;
 `;
 
 export {
-  ClearBtn,
   Button,
+  ClearBtn,
+  Divider,
   PanelSectionHeading,
   PanelInfoIcon,
-  ImageMetaInfoCont,
+  SessionInfoCont,
   InputLabel,
   Input,
   IconButton,
   TextArea,
-  ControlsSection,
-  // OutlineBtn,
+  NavSection,
+  OutlineBtn,
   // IconBtn,
   // LinkButton,
   // InlineTextButton,

@@ -1,15 +1,18 @@
 import { useState } from 'react';
 import Image from 'next/image';
 
-import { InputContainer, InputsWrapper, StyledButton } from './styles';
-import { InputLabel, PanelInfoIcon } from '../StyledUiCommon/styles';
+import { InputContainer, InputsWrapper, StyledAxiConnection } from './styles';
+import { ClearBtn, IconButton, InputLabel, PanelInfoIcon, SessionInfoCont } from '../StyledUiCommon/styles';
 import { getFromLocalStorage, saveToLocalStorage } from '../../utils';
+import { NetworkWiredIcon, PlugIcon } from '../Icons';
+import AxiActions from '../AxiActions';
 
 export default function AxiConnection({
   handleConnected,
   initDisconnect,
   handleConnectionError,
-  isConnected
+  isConnected,
+  sendCommand,
 }) {
   const creds = getFromLocalStorage('axidrawCreds');
   const hasCreds = creds?.axiHost && creds?.axiPort;
@@ -20,7 +23,7 @@ export default function AxiConnection({
   });
 
   const [connectionError, setConnectionError] = useState('');
-  const [deviceName, setDeviceName] = useState('Connected');
+  const [deviceName, setDeviceName] = useState();
   let connection;
 
   const handleChangeInput = (e) => {
@@ -95,42 +98,65 @@ export default function AxiConnection({
     }
   };
 
-  const buttonText = isConnected ? 'Disconnect' : 'Connect';
-  const connectionInfo = `${deviceName} | ${address.axiHost} : ${address.axiPort}`;
+  const buttonText = isConnected ? 'Disconnect' : 'Connect!';
+  const connectionInfo = `${address.axiHost} : ${address.axiPort}`;
+
+  const cmdBeginPlot = () => {
+    console.log('begin plotting yay!');
+    sendCommand('plot');
+  }
 
   if (isConnected) {
     return (
-      <PanelInfoIcon>
+      <StyledAxiConnection>
         <div>
-          <Image alt="temp" src={"/icn-square.svg"} width={24} height={24} />
-          <span>{connectionInfo}</span>
+          <p className="info">Connected to AxiDraw</p>
+          <SessionInfoCont>
+            <NetworkWiredIcon width={40} height={40} fill={'#4400A3'} />
+            <div className="specs">
+              {deviceName && <p>{deviceName}</p>}
+              <p>{connectionInfo}</p>
+              <ClearBtn onClick={initDisconnect}>disconnect</ClearBtn>
+            </div>
+          </SessionInfoCont>
+          <AxiActions sendCommand={sendCommand} />
         </div>
-        <div onClick={initDisconnect}>×</div>
-      </PanelInfoIcon>
+
+        <IconButton className="cta" variant="alternate" onClick={cmdBeginPlot} wide>
+          <PlugIcon width={24} height={24} fill='#fff' />
+          <span>Plot It!</span>
+        </IconButton>
+      </StyledAxiConnection>
     );
   }
 
   return (
-    <>
-      <p className="smallText">
-        To begin plotting, enter the IP address and port of your Axi server. You’ll need to be running the server in the background. Click here to download the server and read the documentation.
-      </p>
+    <StyledAxiConnection>
+      <div>
+        <p className="info">AxiDraw Connection</p>
+        <InputsWrapper>
+          <InputContainer fieldWidth={11.5}>
+            <InputLabel htmlFor="axi-ip-address">host ip address</InputLabel>
+            <input name="axiHost" className="input-field" type="text" placeholder='000.000.000.000' onChange={handleChangeInput} value={address.axiHost} />
+          </InputContainer>
 
-      <InputsWrapper>
-        <InputContainer fieldWidth={11.5}>
-          <InputLabel htmlFor="axi-ip-address">host</InputLabel>
-          <input name="axiHost" className="input-field" type="text" placeholder='000.000.000.000' onChange={handleChangeInput} value={address.axiHost} />
-        </InputContainer>
+          <InputContainer fieldWidth={4.75}>
+            <InputLabel htmlFor="axi-port">port</InputLabel>
+            <input name="axiPort" className="input-field" type="text" placeholder='0000' onChange={handleChangeInput} value={address.axiPort} />
+          </InputContainer>
+        </InputsWrapper>
 
-        <InputContainer fieldWidth={4.5}>
-          <InputLabel htmlFor="axi-port">port</InputLabel>
-          <input name="axiPort" className="input-field" type="text" placeholder='0000' onChange={handleChangeInput} value={address.axiPort} />
-        </InputContainer>
-      </InputsWrapper>
+        {connectionError && <p className="input-field-error">{connectionError}</p>}
 
-      {connectionError && <p className="input-field-error">{connectionError}</p>}
+        <p className="smallText">
+          To begin plotting, enter the IP address and port of your Axi server. You’ll need to be running the server in the background. Click here to download the server and read the documentation.
+        </p>
+      </div>
 
-      <StyledButton onClick={handleClickConnect} wide>{buttonText}</StyledButton>
-    </>
+      <IconButton className="cta" variant="alternate" onClick={handleClickConnect} wide>
+        <PlugIcon width={24} height={24} fill='#fff' />
+        <span>{buttonText}</span>
+      </IconButton>
+    </StyledAxiConnection>
   );
 };

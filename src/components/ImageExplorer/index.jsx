@@ -2,14 +2,15 @@ import { useContext, useState } from 'react';
 import { createClient } from 'contentful-management';
 import Image from 'next/image';
 
-import { Button, ClearBtn } from '../StyledUiCommon/styles';
+import { Button, ClearBtn, IconButton, NavSection, OutlineBtn, PanelSectionHeading } from '../StyledUiCommon/styles';
 import { ExplorerContainer } from './styles';
 import { fetchAxiSvgContent, getFromLocalStorage, saveToLocalStorage } from '../../utils';
 import { store } from '../../providers/store';
 import ImageBlock from '../ImageCard';
 import Uploader from '../Uploader';
+import { PlugIcon } from '../Icons';
 
-const ImageExplorer = ({ dismiss, handleSelect, currentIndex }) => {
+const ImageExplorer = ({ currentIndex, handleSelect, title, sendCommand }) => {
   const globalState = useContext(store);
   const { dispatch, state: { entries } } = globalState;
   const [uploaderIsOpen, setUploaderIsOpen] = useState(false);
@@ -61,42 +62,86 @@ const ImageExplorer = ({ dismiss, handleSelect, currentIndex }) => {
     });
   }
 
+  // return (
+  //   <NavSection>
+  //     <PanelSectionHeading>
+  //       {title}
+  //       <OutlineBtn onClick={() => setUploaderIsOpen(true)}>Upload a New SVG</OutlineBtn>
+  //     </PanelSectionHeading>
+  //     <ExplorerContainer>
+  //       {uploaderIsOpen ? (
+  //         <div className="explorer-body">
+  //           <Uploader dismiss={() => setUploaderIsOpen(false)} />
+  //         </div>
+  //       ) : (
+  //         <>
+  //           <div className="explorer-body">
+  //             <div className="explorer-grid">
+  //               {entries.map((data, index) => (
+  //                 <ImageBlock
+  //                   key={data.images.thumbnail.id}
+  //                   imageData={data}
+  //                   handleClick={() => handleSelect(index)}
+  //                   initDelete={() => initDelete(index)}
+  //                   isActive={index === currentIndex}
+  //                 />
+  //               ))}
+  //             </div>
+  //           </div>
+  //           <div className="explorer-footer">
+  //             <Button onClick={() => setUploaderIsOpen(true)} wd={24}>Upload an SVG</Button>
+  //           </div>
+  //         </>
+  //       )}
+  //     </ExplorerContainer>
+  //   </NavSection>
+  // )
+
+  // THIS IS DUPLICATED, YOU SHOULD CONSOLIDATE
+  const cmdBeginPlot = () => {
+    console.log('begin plotting yay!');
+    sendCommand('plot');
+  }
+
   return (
-    <ExplorerContainer>
-        <div className="explorer-header">
-          <div>
-            <h4>SVG Explorer</h4>
-            <ClearBtn onClick={dismiss}>
-              <Image alt="temp" src={"/icn-square.svg"} width={24} height={24} />
-            </ClearBtn>
-          </div>
-          <p>Upload and manage your SVG images</p>
-        </div>
-        {uploaderIsOpen ? (
-          <div className="explorer-body">
-            <Uploader dismiss={() => setUploaderIsOpen(false)} />
-          </div>
-        ) : (
-          <>
+    <>
+      <NavSection>
+        <PanelSectionHeading>{title}</PanelSectionHeading>
+        <OutlineBtn onClick={() => setUploaderIsOpen(true)}>Upload a New SVG</OutlineBtn>
+      </NavSection>
+
+      <NavSection>
+        <ExplorerContainer>
+          {uploaderIsOpen ? (
             <div className="explorer-body">
-              <div className="explorer-grid">
-                {entries.map((data, index) => (
-                  <ImageBlock
-                    key={data.images.thumbnail.id}
-                    imageData={data}
-                    handleClick={() => handleSelect(index)}
-                    initDelete={() => initDelete(index)}
-                    isActive={index === currentIndex}
-                  />
-                ))}
+              <Uploader dismiss={() => setUploaderIsOpen(false)} />
+            </div>
+          ) : (
+            <>
+              <div className="explorer-body">
+                <div className="explorer-grid">
+                  {entries.map((data, index) => (
+                    <ImageBlock
+                      key={data.images.thumbnail.id}
+                      imageData={data}
+                      handleClick={() => handleSelect(index)}
+                      initDelete={() => initDelete(index)}
+                      isActive={index === currentIndex}
+                    />
+                  ))}
+                </div>
               </div>
-            </div>
-            <div className="explorer-footer">
-              <Button onClick={() => setUploaderIsOpen(true)} wd={24}>Upload an SVG</Button>
-            </div>
-          </>
-        )}
-    </ExplorerContainer>
+            </>
+          )}
+        </ExplorerContainer>
+      </NavSection>
+      <NavSection>
+        <IconButton className="cta" variant="alternate" onClick={cmdBeginPlot} wide>
+            <PlugIcon width={24} height={24} fill='#fff' />
+            <span>Plot It!</span>
+        </IconButton>
+      </NavSection>
+    </>
   )
 };
 

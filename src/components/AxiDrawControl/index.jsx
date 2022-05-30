@@ -2,19 +2,7 @@ import { useContext, useState } from "react";
 
 import { store } from '../../providers/store';
 import AxiConnection from '../AxiConnection';
-import AxiActions from '../AxiActions';
-import { ControlsSection, PanelSectionHeading } from "../StyledUiCommon/styles";
-
-// interface ControlProps {
-//   currentSvgData: {
-//     images: {
-//       svg: {
-//         url: string,
-//         fileName: string,
-//       }
-//     },
-//   };
-// };
+import { PanelSectionHeading } from "../StyledUiCommon/styles";
 
 const AxiDrawControl = (props) => {
   const { currentSvgData } = props;
@@ -70,16 +58,13 @@ const AxiDrawControl = (props) => {
   }
 
   return (
-    <ControlsSection>
-      <PanelSectionHeading>AxiDraw Plotter</PanelSectionHeading>
-      <AxiConnection
-        handleConnected={registerConnection}
-        initDisconnect={initDisconnect}
-        handleConnectionError={handleConnectionError}
-        isConnected={isConnected}
-      />
-      {isConnected && <AxiActions sendCommand={sendCommand} />}
-    </ControlsSection>
+    <AxiConnection
+      handleConnected={registerConnection}
+      initDisconnect={initDisconnect}
+      handleConnectionError={handleConnectionError}
+      isConnected={isConnected}
+      sendCommand={sendCommand}
+    />
   );
 };
 

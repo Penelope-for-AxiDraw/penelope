@@ -1,4 +1,5 @@
-import { Button, InputLabel } from '../StyledUiCommon/styles';
+import { useState } from 'react';
+import { InputLabel, OutlineBtn } from '../StyledUiCommon/styles';
 import { ControlsContainer } from './styles';
 
 // interface actionsProps {
@@ -6,6 +7,11 @@ import { ControlsContainer } from './styles';
 // }
 
 export default function AxiActions(props) {
+  // const [penUp, setPenUp] = useState(true);
+  const penUp = true;
+  const RAISE = 'Raise Pen';
+  const LOWER = 'Lower Pen';
+
   const { sendCommand } = props;
 
   const cmdAlignMode = () => {
@@ -18,30 +24,13 @@ export default function AxiActions(props) {
     sendCommand('toggle');
   }
 
-  const cmdBeginPlot = () => {
-    console.log('begin plotting yay!');
-    sendCommand('plot');
-  }
-
-  const cmdGetName = () => {
-    // console.log('get name');
-    sendCommand('get_name');
-  }
-
   return (
     <div>
       <ControlsContainer>
         <InputLabel>Pen Controls</InputLabel>
-        <div className="buttonGroup">
-          <Button onClick={cmdToggle}>Up/Down</Button>
-          <Button onClick={cmdAlignMode}>Align</Button>
-        </div>
-      </ControlsContainer>
-
-      <ControlsContainer>
-        <InputLabel>Plotting</InputLabel>
-        <div className="buttonGroup">
-          <Button onClick={cmdBeginPlot}>Plot Image</Button>
+        <div className="button-group">
+          <OutlineBtn onClick={cmdToggle}>{penUp ? LOWER : RAISE }</OutlineBtn>
+          <OutlineBtn onClick={cmdAlignMode}>Align Pen</OutlineBtn>
         </div>
       </ControlsContainer>
     </div>

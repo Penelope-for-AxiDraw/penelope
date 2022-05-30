@@ -1,5 +1,20 @@
 import styled from 'styled-components'
-import { Button } from '../StyledUiCommon/styles';
+// import { Button } from '../StyledUiCommon/styles';
+
+export const StyledAxiConnection = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 0;
+  justify-content: space-between;
+
+  & .info {
+    margin-top: 0;
+  }
+
+  & button.cta {
+    margin-bottom: 3rem;
+  }
+`;
 
 export const InputContainer = styled.div`
   input {
@@ -24,7 +39,7 @@ export const InputContainer = styled.div`
   }
 
   &:nth-child(2) {   
-    padding-left: 0.75rem;
+    padding-left: 0.5rem;
   }
 `;
 
@@ -32,11 +47,6 @@ export const InputsWrapper = styled.div`
   display: flex;
 
   & > p.field-error {
-    color: orange;
     font-size: 48px;
   }
-`;
-
-export const StyledButton = styled(Button)`
-  margin-top: 0.75rem;
 `;
