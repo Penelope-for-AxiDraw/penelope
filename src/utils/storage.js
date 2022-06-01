@@ -3,8 +3,16 @@ const saveToLocalStorage = (key, data) => {
 };
 
 const getFromLocalStorage = (key) => {
-  const data = JSON.parse(window.localStorage.getItem(key));
-  return data || {};
+  if (typeof window !== 'undefined') {
+    try {
+      const data = JSON.parse(window.localStorage.getItem(key));
+      return data;
+    } catch (e) {
+      // do nothing
+    }
+  }
+
+  return {};
 }
 
 export {

@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from 'react';
 // import type { NextPage } from "next";
-import AxiDrawControl from "../src/components/AxiDrawControl";
+// import AxiDrawControl from "../src/components/AxiDrawControl";
 import Session from "../src/components/Session";
 import ImagePreview from "../src/components/ImagePreview";
 import SvgExplorer from "../src/components/SvgExplorer";
@@ -113,7 +113,6 @@ const Home= () => {
 
   const selectTab = (index) => {
     setNavIndex(index);
-    console.log('index', index);
   };
 
   if (appMode === PLOT) {

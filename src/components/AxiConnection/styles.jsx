@@ -46,3 +46,20 @@ export const InputsWrapper = styled.div`
     font-size: 48px;
   }
 `;
+
+export const ControlsContainer = styled.div`
+  margin-top: 1.5rem;
+
+  & .button-group {
+    display: flex;
+    margin-top: 0.5rem;
+
+    button {
+      flex: 1 1 0;
+    }
+
+    button:not(:last-child) {
+      margin-right: 0.5rem;
+    }
+  }
+`;

@@ -1,4 +1,8 @@
 import React, { createContext, useReducer } from 'react';
+import { getFromLocalStorage } from '../utils';
+
+const creds = getFromLocalStorage('axidrawCreds');
+const hasCreds = creds?.host && creds?.port;
 
 const initialState = {
   entries: [],
@@ -10,6 +14,11 @@ const initialState = {
     leave: () => {},
   },
   isConnected: false,
+  axiAddress: {
+    host: hasCreds ? creds.host : '',
+    port: hasCreds ? creds.port : '',
+  },
+  axiConnectionError: '',
 };
 
 const store = createContext(initialState);
@@ -53,6 +62,20 @@ const StateProvider = ({ children }) => {
         updatedState = {
           ...prevState,
           isConnected: action.payload.data,
+        };
+        return updatedState;
+
+      case 'SET_AXI_ADDRESS':
+        updatedState = {
+          ...prevState,
+          axiAddress: action.payload.data,
+        };
+        return updatedState;
+
+      case 'SET_CONNECTION_ERROR':
+        updatedState = {
+          ...prevState,
+          axiConnectionError: action.payload.data,
         };
         return updatedState;
 
