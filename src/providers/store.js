@@ -9,6 +9,7 @@ const initialState = {
     warningCopy: {},
     leave: () => {},
   },
+  isConnected: false,
 };
 
 const store = createContext(initialState);
@@ -23,7 +24,7 @@ const StateProvider = ({ children }) => {
       case 'SET_ENTRIES_DATA':
         updatedState = {
           ...prevState,
-          entries: action.payload.data,
+          entries: [...action.payload.data,...action.payload.data,...action.payload.data],
         };
         return updatedState;
 
@@ -45,6 +46,13 @@ const StateProvider = ({ children }) => {
         updatedState = {
           ...prevState,
           currentEntryIndex: action.payload.data,
+        };
+        return updatedState;
+
+      case 'SET_CONNECTED':
+        updatedState = {
+          ...prevState,
+          isConnected: action.payload.data,
         };
         return updatedState;
 

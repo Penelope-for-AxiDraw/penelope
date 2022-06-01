@@ -6,13 +6,17 @@ import { PanelSectionHeading } from "../StyledUiCommon/styles";
 
 const AxiDrawControl = (props) => {
   const { currentSvgData } = props;
-  const [isConnected, setIsConnected] = useState(false);
   const [connection, setConnection] = useState();
   const globalState = useContext(store);
-  const { dispatch } = globalState;
+  const { dispatch, state: { isConnected} } = globalState;
 
   const registerConnection = (ws) => {
-    setIsConnected(true);
+    dispatch({
+      type: 'SET_CONNECTED',
+      payload: {
+        data: true,
+      }
+    });
     ws.send('get_name');
     setConnection(ws);
   };
@@ -27,7 +31,12 @@ const AxiDrawControl = (props) => {
       if (isConnected) {
         connection.close();
       }
-      setIsConnected(false);
+      dispatch({
+        type: 'SET_CONNECTED',
+        payload: {
+          data: false,
+        }
+      });  
     };
 
     dispatch({
@@ -62,7 +71,6 @@ const AxiDrawControl = (props) => {
       handleConnected={registerConnection}
       initDisconnect={initDisconnect}
       handleConnectionError={handleConnectionError}
-      isConnected={isConnected}
       sendCommand={sendCommand}
     />
   );

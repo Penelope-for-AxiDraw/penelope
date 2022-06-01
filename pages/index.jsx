@@ -3,13 +3,14 @@ import { useContext, useEffect, useState } from 'react';
 import AxiDrawControl from "../src/components/AxiDrawControl";
 import Session from "../src/components/Session";
 import ImagePreview from "../src/components/ImagePreview";
-import ImageExplorer from "../src/components/ImageExplorer";
+import SvgExplorer from "../src/components/SvgExplorer";
 import DepartWarning from '../src/components/DepartWarning';
 import Dashboard from '../src/components/Dashboard';
 
 import { store } from '../src/providers/store';
 import { DASHBOARD, PLOT } from '../src/constants';
 import NavButtonGroup from '../src/components/NavButtonGroup';
+import ImageDetails from '../src/components/ImageDetails';
 
 const Home= () => {
   // const authMode = 'AUTH';
@@ -138,14 +139,18 @@ const Home= () => {
             />
            )}
            {navIndex === 1 && (
-            <ImageExplorer
+            <SvgExplorer
               sendCommand={() => alert("PLOT THIS!")}
               handleSelect={handleSelectImage}
-              currentIndex={currentEntryIndex}
               title="Explore Your SVGs"
             />
            )}
-           {navIndex === 2 && <p>three</p>}
+           {navIndex === 2 && (
+            <ImageDetails
+              sendCommand={() => alert("PLOT THIS!")}
+              title="Image Details"
+            />
+           )}
           {/* {hasEntries ? (
             <>
               <ImageControls
@@ -163,7 +168,7 @@ const Home= () => {
           )} */}
         </div>
         {/* {selectingImage && (
-          <ImageExplorer
+          <SvgExplorer
             dismiss={() => setSelectingImage(false)}
             handleSelect={handleSelectImage}
             currentIndex={currentEntryIndex}

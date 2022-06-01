@@ -1,19 +1,19 @@
-import { useState } from 'react';
-import Image from 'next/image';
-
+import { useContext, useState } from 'react';
 import { InputContainer, InputsWrapper, StyledAxiConnection } from './styles';
-import { ClearBtn, IconButton, InputLabel, PanelInfoIcon, SessionInfoCont } from '../StyledUiCommon/styles';
+import { ClearBtn, IconButton, InputLabel, NavSection, SessionInfoCont } from '../StyledUiCommon/styles';
 import { getFromLocalStorage, saveToLocalStorage } from '../../utils';
 import { NetworkWiredIcon, PlugIcon } from '../Icons';
 import AxiActions from '../AxiActions';
+import { store } from '../../providers/store';
 
 export default function AxiConnection({
   handleConnected,
   initDisconnect,
   handleConnectionError,
-  isConnected,
   sendCommand,
 }) {
+  const globalState = useContext(store);
+  const { state: { isConnected } } = globalState;
   const creds = getFromLocalStorage('axidrawCreds');
   const hasCreds = creds?.axiHost && creds?.axiPort;
 
@@ -93,12 +93,13 @@ export default function AxiConnection({
     const isValid = validateConnectionParams(address);
     if (isValid) {
       connection = getAxiSocket();
+      window.axidrawConnection = connection;
     } else {
       setConnectionError('Address is incorrectly formatted');
     }
   };
 
-  const buttonText = isConnected ? 'Disconnect' : 'Connect!';
+  // const buttonText = isConnected ? 'Disconnect' : 'Connect!';
   const connectionInfo = `${address.axiHost} : ${address.axiPort}`;
 
   const cmdBeginPlot = () => {
@@ -131,32 +132,36 @@ export default function AxiConnection({
   }
 
   return (
-    <StyledAxiConnection>
-      <div>
-        <p className="info">AxiDraw Connection</p>
-        <InputsWrapper>
-          <InputContainer fieldWidth={11.5}>
-            <InputLabel htmlFor="axi-ip-address">host ip address</InputLabel>
-            <input name="axiHost" className="input-field" type="text" placeholder='000.000.000.000' onChange={handleChangeInput} value={address.axiHost} />
-          </InputContainer>
+    <>
+      <StyledAxiConnection>
+        <div>
+          <p className="info">AxiDraw Connection</p>
+          <InputsWrapper>
+            <InputContainer fieldWidth={11.5}>
+              <InputLabel htmlFor="axi-ip-address">host ip address</InputLabel>
+              <input name="axiHost" className="input-field" type="text" placeholder='000.000.000.000' onChange={handleChangeInput} value={address.axiHost} />
+            </InputContainer>
 
-          <InputContainer fieldWidth={4.75}>
-            <InputLabel htmlFor="axi-port">port</InputLabel>
-            <input name="axiPort" className="input-field" type="text" placeholder='0000' onChange={handleChangeInput} value={address.axiPort} />
-          </InputContainer>
-        </InputsWrapper>
+            <InputContainer fieldWidth={4.75}>
+              <InputLabel htmlFor="axi-port">port</InputLabel>
+              <input name="axiPort" className="input-field" type="text" placeholder='0000' onChange={handleChangeInput} value={address.axiPort} />
+            </InputContainer>
+          </InputsWrapper>
 
-        {connectionError && <p className="input-field-error">{connectionError}</p>}
+          {connectionError && <p className="input-field-error">{connectionError}</p>}
 
-        <p className="smallText">
-          To begin plotting, enter the IP address and port of your Axi server. You’ll need to be running the server in the background. Click here to download the server and read the documentation.
-        </p>
-      </div>
+          <p className="smallText">
+            To begin plotting, enter the IP address and port of your Axi server. You’ll need to be running the server in the background. Click here to download the server and read the documentation.
+          </p>
+        </div>
 
-      <IconButton className="cta" variant="alternate" onClick={handleClickConnect} wide>
-        <PlugIcon width={24} height={24} fill='#fff' />
-        <span>{buttonText}</span>
-      </IconButton>
-    </StyledAxiConnection>
+      </StyledAxiConnection>
+      {/* <NavSection>
+        <IconButton className="cta" variant="alternate" onClick={handleClickConnect} wide>
+          <PlugIcon width={24} height={24} fill='#fff' />
+          <span>{buttonText}</span>
+        </IconButton>
+      </NavSection> */}
+    </>
   );
 };

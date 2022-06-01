@@ -10,10 +10,6 @@ export const StyledAxiConnection = styled.div`
   & .info {
     margin-top: 0;
   }
-
-  & button.cta {
-    margin-bottom: 3rem;
-  }
 `;
 
 export const InputContainer = styled.div`

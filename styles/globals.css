@@ -16,7 +16,8 @@
   --lavender: #EEDBFF;
   --light-lavender: #F9F6FC;
   --purple: #6B00FF;
-  --grurple: #807a99;
+  --muted-purple: rgb(107 0 255 / 50%);
+  --grurple: #6D638C;
 }
 
 body,

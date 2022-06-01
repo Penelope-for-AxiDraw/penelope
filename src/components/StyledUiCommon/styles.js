@@ -141,7 +141,7 @@ const OutlineBtn = styled(Button)`
 
 const PanelSectionHeading = styled.h1`
   font-size: 0.875rem;
-  margin-bottom: 1.5rem;
+  margin: 2rem 0 1rem;
   color: var(--blek);
 `;
 
@@ -229,15 +229,39 @@ const TextArea = styled.textarea`
 
 
 const NavSection = styled.section`
-  margin: 2rem;
-  height: 100%;
+  margin: 0 2rem;
   display: flex;
   flex-direction: column;
+
+  &.main-area {
+    flex-grow: 1;
+  }
+
+  &.gallery {
+    margin: 0;
+    overflow-y: auto;
+    padding-left: 2rem;
+    background-color: rgb(255 255 255 / 0.4);
+  }
+
+  &.gallery-cta-footer {
+    padding-top: 1rem;
+    box-shadow: 0px -4px 8px -6px rgb(0 0 0 / 25%);
+    z-index: 105;
+  }
+
+  &.gallery-section-header {
+    padding-bottom: 1rem;
+  }
 
   & .info {
     line-height: normal;
     font-size: 0.875rem;
     margin: 0 0 1rem;
+  }
+
+  & button.cta {
+    margin-bottom: 5rem;
   }
 `;
 
@@ -247,6 +271,7 @@ const Divider = styled.hr`
   border-top-width: 0.0625rem;
   opacity: 0.16;
   margin: 2rem 0;
+  ${(props) => props.spacing && `margin-top: ${props.spacing}rem; margin-bottom: ${props.spacing}rem;`}
 `;
 
 export {
