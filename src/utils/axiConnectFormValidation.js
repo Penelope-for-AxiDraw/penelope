@@ -10,10 +10,12 @@ const validatePort = (port) => {
   return pattern.test(port);
 }
 
-export const validateConnectionParams = (address) => {
+const validateConnectionParams = (address) => {
   if (!address.host || !address.port) {
     return false;
   }
 
   return validateHost(address.host) && validatePort(address.port);
 }
+
+export default validateConnectionParams;

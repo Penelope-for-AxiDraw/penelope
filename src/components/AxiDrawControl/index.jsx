@@ -1,15 +1,13 @@
 import { useContext, useState } from 'react';
 import { store } from '../../providers/store';
-// import AxiConnection from '../AxiConnection';
 import { ControlsContainer, InputContainer, InputsWrapper, StyledAxiConnection } from './styles';
-import { ClearBtn, IconButton, InputLabel, OutlineBtn, SessionInfoCont } from '../StyledUiCommon/styles';
-import { getFromLocalStorage, saveToLocalStorage } from '../../utils';
+import { ClearBtn, InputLabel, OutlineBtn, SessionInfoCont } from '../StyledUiCommon/styles';
 import { NetworkWiredIcon } from '../Icons';
 
 const AxiDrawControl = (props) => {
-  const { axiWebsocket, deviceName } = props;
+  const { deviceName } = props;
   const globalState = useContext(store);
-  const { dispatch, state: { isConnected, axiAddress, axiConnectionError } } = globalState;
+  const { dispatch, state: { axiConnection, isConnected, axiAddress, axiConnectionError } } = globalState;
   const penUp = true;
   const RAISE = 'Raise Pen';
   const LOWER = 'Lower Pen';
@@ -22,14 +20,20 @@ const AxiDrawControl = (props) => {
 
     const leave = () => {
       if (isConnected) {
-        axiWebsocket.close();
+        axiConnection.close();
+        dispatch({
+          type: 'SET_CONNECTED',
+          payload: {
+            data: false,
+          }
+        });
+        dispatch({
+          type: 'SET_AXI_CONNECTION',
+          payload: {
+            data: {},
+          }
+        });
       }
-      dispatch({
-        type: 'SET_CONNECTED',
-        payload: {
-          data: false,
-        }
-      });  
     };
 
     dispatch({
@@ -84,8 +88,8 @@ const AxiDrawControl = (props) => {
           <ControlsContainer>
             <InputLabel>Pen Controls</InputLabel>
             <div className="button-group">
-              <OutlineBtn onClick={() => axiWebsocket.send('toggle')}>{penUp ? LOWER : RAISE }</OutlineBtn>
-              <OutlineBtn onClick={() => axiWebsocket.send('align')}>Align Pen</OutlineBtn>
+              <OutlineBtn onClick={() => axiConnection.send('toggle')}>{penUp ? LOWER : RAISE }</OutlineBtn>
+              <OutlineBtn onClick={() => axiConnection.send('align')}>Align Pen</OutlineBtn>
             </div>
           </ControlsContainer>
         </div>

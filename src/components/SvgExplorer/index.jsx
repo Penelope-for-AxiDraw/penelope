@@ -4,15 +4,15 @@ import { createClient } from 'contentful-management';
 
 import { IconButton, NavSection, OutlineBtn, PanelSectionHeading } from '../StyledUiCommon/styles';
 import { ExplorerGrid } from './styles';
-import { fetchAxiSvgContent, getFromLocalStorage, saveToLocalStorage } from '../../utils';
+import { fetchAxiSvgContent, getFromLocalStorage, plot, saveToLocalStorage } from '../../utils';
 import { store } from '../../providers/store';
 import ImageBlock from '../ImageCard';
 import Uploader from '../Uploader';
 import { PlugIcon } from '../Icons';
 
-const SvgExplorer = ({ handleSelect, title, sendCommand }) => {
+const SvgExplorer = ({ handleSelect, title }) => {
   const globalState = useContext(store);
-  const { dispatch, state: { currentEntryIndex, entries, isConnected } } = globalState;
+  const { dispatch, state: { axiConnection, currentEntryIndex, entries, isConnected } } = globalState;
   const [uploaderIsOpen, setUploaderIsOpen] = useState(false);
 
   const initDelete = async (index) => {
@@ -62,12 +62,6 @@ const SvgExplorer = ({ handleSelect, title, sendCommand }) => {
     });
   }
 
-  // THIS IS DUPLICATED, YOU SHOULD CONSOLIDATE
-  const cmdBeginPlot = () => {
-    console.log('begin plotting yay!');
-    sendCommand('plot');
-  }
-
   const blankHeightStyle = isConnected ? {} : { height: '8rem' };
 
   return (
@@ -91,7 +85,7 @@ const SvgExplorer = ({ handleSelect, title, sendCommand }) => {
       </NavSection>
       <NavSection className="gallery-cta-footer" style={blankHeightStyle}>
         {isConnected && (
-          <IconButton className="cta" variant="alternate" onClick={cmdBeginPlot} wide>
+          <IconButton className="cta" variant="alternate" onClick={() => plot(entries[currentEntryIndex], axiConnection)} wide>
               <PlugIcon width={24} height={24} fill='#fff' />
               <span>Plot It!</span>
           </IconButton>

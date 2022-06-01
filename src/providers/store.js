@@ -19,6 +19,7 @@ const initialState = {
     port: hasCreds ? creds.port : '',
   },
   axiConnectionError: '',
+  axiConnection: {},
 };
 
 const store = createContext(initialState);
@@ -76,6 +77,13 @@ const StateProvider = ({ children }) => {
         updatedState = {
           ...prevState,
           axiConnectionError: action.payload.data,
+        };
+        return updatedState;
+
+      case 'SET_AXI_CONNECTION':
+        updatedState = {
+          ...prevState,
+          axiConnection: action.payload.data,
         };
         return updatedState;
 

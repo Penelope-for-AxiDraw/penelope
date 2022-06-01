@@ -1,6 +1,4 @@
 import { useContext, useEffect, useState } from 'react';
-// import type { NextPage } from "next";
-// import AxiDrawControl from "../src/components/AxiDrawControl";
 import Session from "../src/components/Session";
 import ImagePreview from "../src/components/ImagePreview";
 import SvgExplorer from "../src/components/SvgExplorer";
@@ -13,10 +11,7 @@ import NavButtonGroup from '../src/components/NavButtonGroup';
 import ImageDetails from '../src/components/ImageDetails';
 
 const Home= () => {
-  // const authMode = 'AUTH';
-  // const plotMode = 'PLOT';
   const defaultMode = DASHBOARD;
-  // const [listIndex, setListIndex] = useState(0);
   const [selectingImage, setSelectingImage] = useState(false);
   const globalState = useContext(store);
   const [appMode, setAppMode] = useState(defaultMode);
@@ -24,18 +19,12 @@ const Home= () => {
   const { dispatch, state: { currentEntryIndex, entries, user, disco } } = globalState;
 
   const handleSelectImage = (index) => {
-    // setListIndex(index);
-
     dispatch({
       type: 'SET_ENTRY',
       payload: {
         data: index
       }
     });
-  }
-
-  const openImageSelectionModal = () => {
-    setSelectingImage(true);
   }
 
   const initSignOut = () => {
@@ -139,14 +128,12 @@ const Home= () => {
            )}
            {navIndex === 1 && (
             <SvgExplorer
-              sendCommand={() => alert("PLOT THIS!")}
               handleSelect={handleSelectImage}
               title="Explore Your SVGs"
             />
            )}
            {navIndex === 2 && (
             <ImageDetails
-              sendCommand={() => alert("PLOT THIS!")}
               title="Image Details"
             />
            )}
