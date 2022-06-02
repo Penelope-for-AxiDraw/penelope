@@ -34,7 +34,7 @@ const StateProvider = ({ children }) => {
       case 'SET_ENTRIES_DATA':
         updatedState = {
           ...prevState,
-          entries: [...action.payload.data,...action.payload.data,...action.payload.data],
+          entries: action.payload.data,
         };
         return updatedState;
 

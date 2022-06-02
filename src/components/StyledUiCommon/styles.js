@@ -274,6 +274,17 @@ const Divider = styled.hr`
   ${(props) => props.spacing && `margin-top: ${props.spacing}rem; margin-bottom: ${props.spacing}rem;`}
 `;
 
+const ScreenShade = styled.div`
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  background: rgb(0 0 0 / 64%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 104;
+`;
+
 export {
   Button,
   ClearBtn,
@@ -287,6 +298,7 @@ export {
   TextArea,
   NavSection,
   OutlineBtn,
+  ScreenShade,
   // IconBtn,
   // LinkButton,
   // InlineTextButton,

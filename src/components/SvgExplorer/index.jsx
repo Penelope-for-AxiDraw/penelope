@@ -13,7 +13,7 @@ import { PlugIcon } from '../Icons';
 const SvgExplorer = ({ handleSelect, title }) => {
   const globalState = useContext(store);
   const { dispatch, state: { axiConnection, currentEntryIndex, entries, isConnected } } = globalState;
-  const [uploaderIsOpen, setUploaderIsOpen] = useState(false);
+  const [uploaderIsOpen, setUploaderIsOpen] = useState(true);//false);
 
   const initDelete = async (index) => {
     const credentialsLocalStorage = getFromLocalStorage('contentfulCreds');
@@ -66,6 +66,7 @@ const SvgExplorer = ({ handleSelect, title }) => {
 
   return (
     <>
+      {uploaderIsOpen && <Uploader />}
       <NavSection className="gallery-section-header">
         <PanelSectionHeading>{title}</PanelSectionHeading>
         <OutlineBtn onClick={() => setUploaderIsOpen(true)}>Upload a New SVG</OutlineBtn>

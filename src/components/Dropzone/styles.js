@@ -3,7 +3,7 @@ import styled from 'styled-components';
 const Prompt = styled.h4`
   font-size: 1.5rem;
   margin: 0 0 1.5rem;
-  font-weight: normal;
+  font-weight: 600;
 `;
 
 const SubPrompt = styled.p`

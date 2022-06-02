@@ -1,16 +1,5 @@
 import styled from 'styled-components';
 
-export const DepartWarningContainer = styled.div`
-  position: absolute;
-  width: 100vw;
-  height: 100vh;
-  background: rgb(0 0 0 / 64%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 104;
-`;
-
 export const WarningModalContainer = styled.div`
   width: 21rem;
   background: #fff;

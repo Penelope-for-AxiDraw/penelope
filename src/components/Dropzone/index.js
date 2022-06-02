@@ -57,8 +57,6 @@ const Dropzone = ({
       openFileDialog();
     }
   };
-  
-  const uploadIconUrl = '/icn-upload.svg';
 
   return (
     <DropzoneContainer

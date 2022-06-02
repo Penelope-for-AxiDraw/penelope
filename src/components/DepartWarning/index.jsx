@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import { Button, ClearBtn } from '../StyledUiCommon/styles';
-import { DepartWarningContainer, WarningModalContainer } from './styles';
+import { WarningModalContainer } from './styles';
+import { ScreenShade } from '../StyledUiCommon/styles';
 
 const DepartWarning = ({
   warningCopy={},
@@ -8,7 +9,7 @@ const DepartWarning = ({
   leave=()=>{},
 }) => {
   return (
-    <DepartWarningContainer>
+    <ScreenShade>
       <WarningModalContainer>
         <div className="warning-modal-header">
           <h4>{warningCopy.title}</h4>
@@ -24,7 +25,7 @@ const DepartWarning = ({
           <Button onClick={leave}>YES</Button>
         </div>
       </WarningModalContainer>
-    </DepartWarningContainer>
+    </ScreenShade>
   );
 };
 
