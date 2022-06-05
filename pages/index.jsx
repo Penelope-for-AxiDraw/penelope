@@ -128,6 +128,7 @@ const Home= () => {
            )}
            {navIndex === 1 && (
             <SvgExplorer
+              goToConnect={() => selectTab(0)}
               handleSelect={handleSelectImage}
               title="Explore Your SVGs"
             />
@@ -135,6 +136,7 @@ const Home= () => {
            {navIndex === 2 && (
             <ImageDetails
               title="Image Details"
+              goToConnect={() => selectTab(0)}
             />
            )}
           {/* {hasEntries ? (

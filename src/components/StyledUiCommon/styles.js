@@ -42,6 +42,7 @@ const ClearBtn = styled.button`
 
   ${props => props.wide && 'width: 100%;'}
   ${props => props.wd && `width: ${props.wd}rem;`}
+  ${(props) => props.disabled && 'cursor: unset;'}
 `;
 
 const Button = styled(ClearBtn)`
@@ -77,6 +78,7 @@ const IconButton = styled(ClearBtn)`
 
   & span {
     color: #fff;
+    font-weight: 600;
   }
 `;
 
@@ -240,7 +242,7 @@ const NavSection = styled.section`
   &.gallery {
     margin: 0;
     overflow-y: auto;
-    padding-left: 2rem;
+    padding: 0 2rem;
     background-color: rgb(255 255 255 / 0.4);
   }
 
@@ -248,6 +250,31 @@ const NavSection = styled.section`
     padding-top: 1rem;
     box-shadow: 0px -4px 8px -6px rgb(0 0 0 / 25%);
     z-index: 105;
+
+    & p.blurb {
+      font-size: 14px;
+      margin-top: 0;
+
+      & button {
+        font-size: 14px;
+        color: var(--dark-purple);
+      }
+    }
+  }
+
+  &.info-cta-footer {
+    padding-top: 1rem;
+    z-index: 106;
+
+    & p.blurb {
+      font-size: 14px;
+      margin-top: 0;
+
+      & button {
+        font-size: 14px;
+        color: var(--dark-purple);
+      }
+    }
   }
 
   &.gallery-section-header {

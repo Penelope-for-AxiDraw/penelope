@@ -29,7 +29,7 @@ const StyledNavIconButton = styled(ClearBtn)`
     font-size: 0.875rem;
 
     &:nth-child(2) {
-      margin-left: 0.375rem;
+      margin-left: 0.5rem;
     }
   }
 

@@ -2,8 +2,8 @@ import { useContext, useState } from "react";
 import styled from 'styled-components';
 import { createClient } from "contentful-management";
 
-import { Button, Input, ScreenShade, TextArea } from '../StyledUiCommon/styles';
-import { FolderButton, UploaderContainer } from './styles';
+import { Button, Input, OutlineBtn, ScreenShade, TextArea } from '../StyledUiCommon/styles';
+import { FieldsContainer, UploaderContainer } from './styles';
 import Dropzone from '../Dropzone';
 import { store } from '../../providers/store';
 import {
@@ -13,6 +13,7 @@ import {
   svgToImage
 } from "../../utils";
 import BurstSpinner from "../BurstSpinner";
+import { BASELINE_DIMENSION } from "../../constants";
 
 const Uploader = ({ dismiss }) => {
   const TITLE = 'title';
@@ -24,7 +25,7 @@ const Uploader = ({ dismiss }) => {
 
   const [svgFileData, setSvgFileData] = useState();
   const [pngFileData, setPngFileData] = useState();
-  const [fileName, setFileName] = useState("");
+  const [fileName, setFileName] = useState('');
   const [isTitleError, setIsTitleError] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [uploadError, setUploadError] = useState('');
@@ -163,7 +164,16 @@ const Uploader = ({ dismiss }) => {
           }
 
           const img = document.createElement('img');
-          img.src = base64image;
+          img.src = base64image.dataUrl;
+          const wd = base64image.width;
+          const ht = base64image.height;
+          const size = BASELINE_DIMENSION * 15;
+          if (wd > ht) {
+            img.setAttribute('width', size);
+          } else {
+            img.setAttribute('height', size);
+          }
+
           document.getElementById('preview-container').appendChild(img);
         })
         .catch(function (err) {
@@ -337,46 +347,48 @@ const Uploader = ({ dismiss }) => {
         <UploaderContainer>
           <div style={{ position: 'relative' }}>
             {/* <FolderButton>x</FolderButton> */}
-            {!isUploading && (
-              <div className="upload-overlay">
-                <BurstSpinner />
-                {/* <div className="fade-in-fade-out">uploading</div> */}
-              </div>
+            {isUploading && (
+              <BurstSpinner />
             )}
             <div id="preview-container"></div>
           </div>
-          {uploadError && <p className="input-field-error">{uploadError}</p>}
+          <FieldsContainer>
+            <p className="fields-title">File Info</p>
+            <Input
+              className="input-field"
+              placeholder="Image Title"
+              onChange={handleChangeInput}
+              value={title}
+              name={TITLE}
+              disabled={isUploading}
+              // fieldWidth={24 - 0.5 - 0.125}
+            />
 
-          <Input
-            className="input-field"
-            placeholder="Image Title"
-            onChange={handleChangeInput}
-            value={title}
-            name={TITLE}
-            disabled={isUploading}
-            fieldWidth={24 - 0.5 - 0.125}
-          />
+            {titleError && (
+              <p className="input-field-error">{titleError}</p>
+            )}
 
-          {titleError && (
-            <p className="input-field-error">{titleError}</p>
-          )}
+            <TextArea
+              rows={5}
+              cols={33}
+              // fieldWidth={24 - 0.5 - 0.125}
+              maxLength={256}
+              placeholder="Description of this artwork"
+              onChange={handleChangeInput}
+              value={description}
+              name={DESCRIPTION}
+              disabled={isUploading}
+            />
+            
+            {uploadError && <p className="input-field-error">{uploadError}</p>}
 
-          <TextArea
-            rows={5}
-            cols={33}
-            fieldWidth={24 - 0.5 - 0.125}
-            maxLength={256}
-            placeholder="Description of this artwork"
-            onChange={handleChangeInput}
-            value={description}
-            name={DESCRIPTION}
-            disabled={isUploading}
-          />
+            <div className="button-bar">
+              {/* <Button variant="secondary" onClick={dismiss}>Cancel</Button> */}
+              <OutlineBtn onClick={dismiss} disabled={isUploading}>Cancel</OutlineBtn>
+              <Button onClick={createNewEntry} disabled={!readyToUpload || isUploading}>Upload</Button>
+            </div>
 
-          <div className="button-bar">
-            <Button variant="secondary" onClick={() => dismiss()}>CANCEL</Button>
-            <Button onClick={createNewEntry} disabled={!readyToUpload || isUploading}>UPLOAD</Button>
-          </div>
+          </FieldsContainer>
         </UploaderContainer>
       ) : (
         <div className="dropzone-wrapper">
@@ -384,8 +396,8 @@ const Uploader = ({ dismiss }) => {
             onFileAdded={handleFileAdded}
             disabled={false}
             acceptedTypes={['.svg']}
+            dismiss={dismiss}
           />
-          <Button variant="secondary" onClick={dismiss}>CANCEL</Button>
         </div>
       )}
     </ScreenShade>

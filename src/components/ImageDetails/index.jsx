@@ -1,12 +1,13 @@
 import { useContext } from 'react';
-import { Divider, IconButton, NavSection, PanelSectionHeading } from '../StyledUiCommon/styles';
+import { ClearBtn, Divider, IconButton, NavSection, PanelSectionHeading } from '../StyledUiCommon/styles';
 import { store } from '../../providers/store';
 import { PlugIcon } from '../Icons';
 import Image from 'next/image';
-import { InfoContainer } from './styles';
+import { ImageContainer, InfoContainer } from './styles';
 import { plot } from '../../utils';
+import { BASELINE_DIMENSION } from '../../constants';
 
-const ImageDetails = ({ title }) => {
+const ImageDetails = ({ goToConnect, title }) => {
   const globalState = useContext(store);
   const { state: { axiConnection, currentEntryIndex, entries, isConnected } } = globalState;
   const entry = entries[currentEntryIndex];
@@ -35,20 +36,20 @@ const ImageDetails = ({ title }) => {
       </NavSection>
 
       <NavSection className="main-area">
-        <div>
+        <ImageContainer>
           <Image
             src={images.thumbnail.url}
             alt={images.title}
-            width={96}
-            height={96}
+            width={7.5 * BASELINE_DIMENSION}
+            height={7.5 * BASELINE_DIMENSION}
           />
-        </div>
+        </ImageContainer>
         <InfoContainer>
           <p className="info-label">File Name</p>
           <p>{imageTitle}</p>
 
           <p className="info-label">Description</p>
-          <p>{description}</p>
+          <p>{description ? description : '-'}</p>
 
           <p className="info-label">Size</p>
           <p>{widthPx}px × {heightPx}px ({widthInch} in × {heightInch} in)</p>
@@ -59,12 +60,14 @@ const ImageDetails = ({ title }) => {
         <Divider spacing={1.5} />
       </NavSection>
 
-      <NavSection style={blankHeightStyle}>
-        {isConnected && (
+      <NavSection className="info-cta-footer" style={blankHeightStyle}>
+        {isConnected ? (
           <IconButton className="cta" variant="alternate" onClick={() => plot(entries[currentEntryIndex], axiConnection)} wide>
             <PlugIcon width={24} height={24} fill='#fff' />
             <span>Plot It!</span>
           </IconButton>
+        ) : (
+          <p className="blurb">To begin plotting, <ClearBtn onClick={goToConnect}>connect to AxiDraw</ClearBtn>.</p>
         )}
       </NavSection>
     </>

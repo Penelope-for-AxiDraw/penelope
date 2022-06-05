@@ -1,5 +1,10 @@
 import styled from 'styled-components';
 
+export const ImageContainer = styled.div`
+  background: #fff;
+  display: flex;
+`;
+
 export const InfoContainer = styled.div`
   margin-top: 1rem;
 

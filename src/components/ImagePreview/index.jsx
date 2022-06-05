@@ -1,12 +1,13 @@
 import Image from "next/image";
+import { ImagePaper, ImagePreviewContainer } from "./styles";
 
 
 export default function ImagePreview({ thumbnail, shade }) {
   return (
-    <div className="image-viewer">
-      <div className="image-paper">
+    <ImagePreviewContainer>
+      <ImagePaper>
         <Image className="image-canv" src={thumbnail.url} alt={thumbnail.fileName} width={thumbnail.width} height={thumbnail.height} />
-      </div>
-    </div>
+      </ImagePaper>
+    </ImagePreviewContainer>
   );
 };

@@ -103,18 +103,17 @@ section select {
   margin-top: 0;
 }
 
-.image-viewer {
-  /* color: #111; */
+/* .image-viewer {
   flex-grow: 1;
   position: relative;
   background-color: var(--grurple);
-}
+} */
 
-.image-paper {
+/* .image-paper {
   display: inline-block;
   margin: 1rem;
   background: #fafafa;
-}
+} */
 
 /* .image-canv {
   margin: 1rem;
@@ -165,6 +164,7 @@ main {
 .button-bar {
   display: flex;
   margin-top: 0.5rem;
+  margin-top: auto;
 }
 
 .button-bar button {
@@ -315,15 +315,18 @@ a {
 }
 
 #preview-container {
-  width: calc(24rem - 0.125rem);
-  height: calc(24rem - 0.125rem);
   /* padding: 2rem; */
+  width: calc(22.5rem - 0.125rem - 3rem);
+  height: calc(22.5rem - 0.125rem - 3rem);
+  display: flex;
+  justify-content: center;
+  align-items: center;
   border: 1px solid rgb(107, 0, 255, 0.20);
 }
 
-#preview-container img {
+/* #preview-container img {
   width: 100%;
-}
+} */
 
 .smallText {
   font-size: 0.875rem;
@@ -367,11 +370,14 @@ a {
 }
 
 .burstSpinnerContainer {
-  width: 160px;
-  height: 160px;
+  width: calc(20rem - 0.5rem);
+  height: calc(20rem - 0.5rem);
+  position: absolute;
+  left: 0;
+  top: 0;
 }
 
 .burstSpinnerContainer canvas {
-  width: 160px;
-  height: 160px;
+  width: calc(20rem - 0.5rem);
+  height: calc(20rem - 0.5rem);
 }

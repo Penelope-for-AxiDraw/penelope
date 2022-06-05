@@ -84,9 +84,9 @@ export default function AxiConnection({
 
         {axiConnectionError && <p className="input-field-error">{axiConnectionError}</p>}
 
-        <p className="smallText">
+        <small>
           To begin plotting, enter the IP address and port of your Axi server. You’ll need to be running the server in the background. Click here to download the server and read the documentation.
-        </p>
+        </small>
       </div>
     </StyledAxiConnection>
   );

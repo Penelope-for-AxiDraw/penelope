@@ -1,8 +1,8 @@
 const PLOT = 'plotMode';
 const DASHBOARD = 'dashboardMode';
 const TWO_PI = 2 * Math.PI;
-const SPINNER_CANVAS_WD = 320;
-const SPINNER_CANVAS_HT = 320;
+const SPINNER_CANVAS_WD = 640;
+const SPINNER_CANVAS_HT = 640;
 const BASELINE_DIMENSION = 16;
 
 export {

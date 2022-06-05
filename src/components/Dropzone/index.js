@@ -1,10 +1,13 @@
 import React, { useState, useRef } from 'react';
 import Image from 'next/image';
 
-import { SubPrompt, Prompt, DropzoneContainer } from './styles';
+import { SubPrompt, Prompt, DropzoneContainer, DropzoneZone } from './styles';
+import { OutlineBtn } from '../StyledUiCommon/styles';
+import { UploadIcon } from '../Icons';
 
 const Dropzone = ({
   disabled,
+  dismiss,
   onFileAdded,
   acceptedTypes,
 }) => {
@@ -59,27 +62,30 @@ const Dropzone = ({
   };
 
   return (
-    <DropzoneContainer
-      onDragOver={onDragOver}
-      onDragLeave={onDragLeave}
-      onDrop={onDrop}
-      onClick={openFileDialog}
-      role="button"
-      tabIndex={0}
-      onKeyPress={handleKeypress}
-      style={{ cursor: disabled ? 'default' : 'pointer' }}
-      highlight={highlight}
-    >
-      <input
-        ref={fileInputRef}
-        className="file-input"
-        type="file"
-        accept={accept}
-        onChange={handleInputChange}
-      />
-      <Prompt>drag &amp; drop an SVG here</Prompt>
-      <Image alt="" src="/icn-square.svg" width={120} height={120} />
-      <SubPrompt>Or click anywhere in this area to browse your files</SubPrompt>
+    <DropzoneContainer>
+      <DropzoneZone
+        onDragOver={onDragOver}
+        onDragLeave={onDragLeave}
+        onDrop={onDrop}
+        onClick={openFileDialog}
+        role="button"
+        tabIndex={0}
+        onKeyPress={handleKeypress}
+        style={{ cursor: disabled ? 'default' : 'pointer' }}
+        highlight={highlight}
+      >
+        <input
+          ref={fileInputRef}
+          className="file-input"
+          type="file"
+          accept={accept}
+          onChange={handleInputChange}
+        />
+        <Prompt>drag &amp; drop an SVG here</Prompt>
+        <UploadIcon width="5rem" height="5rem" fill="var(--dark-purple)" />
+        <SubPrompt>Or click anywhere in this area to browse your files</SubPrompt>
+      </DropzoneZone>
+      <OutlineBtn onClick={dismiss}>Cancel</OutlineBtn>
     </DropzoneContainer>
   );
 };

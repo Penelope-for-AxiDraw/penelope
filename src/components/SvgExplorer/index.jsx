@@ -2,7 +2,7 @@ import { useContext, useState } from 'react';
 import { createClient } from 'contentful-management';
 // import Image from 'next/image';
 
-import { IconButton, NavSection, OutlineBtn, PanelSectionHeading } from '../StyledUiCommon/styles';
+import { ClearBtn, IconButton, NavSection, OutlineBtn, PanelSectionHeading } from '../StyledUiCommon/styles';
 import { ExplorerGrid } from './styles';
 import { fetchAxiSvgContent, getFromLocalStorage, plot, saveToLocalStorage } from '../../utils';
 import { store } from '../../providers/store';
@@ -10,10 +10,10 @@ import ImageBlock from '../ImageCard';
 import Uploader from '../Uploader';
 import { PlugIcon } from '../Icons';
 
-const SvgExplorer = ({ handleSelect, title }) => {
+const SvgExplorer = ({ goToConnect, handleSelect, title }) => {
   const globalState = useContext(store);
   const { dispatch, state: { axiConnection, currentEntryIndex, entries, isConnected } } = globalState;
-  const [uploaderIsOpen, setUploaderIsOpen] = useState(true);//false);
+  const [uploaderIsOpen, setUploaderIsOpen] = useState(false);
 
   const initDelete = async (index) => {
     const credentialsLocalStorage = getFromLocalStorage('contentfulCreds');
@@ -66,7 +66,7 @@ const SvgExplorer = ({ handleSelect, title }) => {
 
   return (
     <>
-      {uploaderIsOpen && <Uploader />}
+      {uploaderIsOpen && <Uploader dismiss={() => setUploaderIsOpen(false)} />}
       <NavSection className="gallery-section-header">
         <PanelSectionHeading>{title}</PanelSectionHeading>
         <OutlineBtn onClick={() => setUploaderIsOpen(true)}>Upload a New SVG</OutlineBtn>
@@ -90,6 +90,14 @@ const SvgExplorer = ({ handleSelect, title }) => {
               <PlugIcon width={24} height={24} fill='#fff' />
               <span>Plot It!</span>
           </IconButton>
+        )}
+        {isConnected ? (
+          <IconButton className="cta" variant="alternate" onClick={() => plot(entries[currentEntryIndex], axiConnection)} wide>
+              <PlugIcon width={24} height={24} fill='#fff' />
+              <span>Plot It!</span>
+          </IconButton>
+        ): (
+          <p className="blurb">To begin plotting, <ClearBtn onClick={goToConnect}>connect to AxiDraw</ClearBtn>.</p>
         )}
       </NavSection>
     </>

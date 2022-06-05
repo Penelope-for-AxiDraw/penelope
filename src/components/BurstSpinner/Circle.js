@@ -15,14 +15,18 @@ class Circle {
     this.x = 0;
     this.y = 0;
     this.opacity = 1;
+    // this.fadeCount = 0;
   }
 
-  update(elapsed, cX, cY) {
+  update(elapsed, cX, cY, fadeAmount) {
+    // if (this.fadeCount < 240) {
+    //   this.fadeCount++;
+    // }
     const t = ((this.t0 + elapsed) % this.duration) / this.duration;
     const distance = minDist + t * (maxDist + this.radius - minDist);
     this.x = cX + distance * Math.cos(this.angle);
     this.y = cY + distance * Math.sin(this.angle);
-    this.opacity = t <= 0.75 ? 1 : 1 - (t - 0.75) / 0.25;
+    this.opacity = fadeAmount * (t <= 0.75 ? 1 : 1 - (t - 0.75) / 0.25);
   }
 
   render(ctx) {
