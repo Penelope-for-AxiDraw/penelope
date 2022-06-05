@@ -3,10 +3,11 @@ import { getFromLocalStorage } from '../utils';
 
 const creds = getFromLocalStorage('axidrawCreds');
 const hasCreds = creds?.host && creds?.port;
+const entryIndex = getFromLocalStorage('entryIndex');
 
 const initialState = {
   entries: [],
-  currentEntryIndex: 0,
+  currentEntryIndex: entryIndex || 0,
   user: {},
   disco: {
     showWarning: false,

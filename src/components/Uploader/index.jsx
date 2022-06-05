@@ -117,6 +117,7 @@ const Uploader = ({ dismiss }) => {
         data: 0
       }
     });
+    saveToLocalStorage('entryIndex', 0);
 
     // Dismiss uploader UI
     dismiss();

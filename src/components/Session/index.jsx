@@ -40,8 +40,6 @@ export default function Session({
     });
 
     websocketConnection.send('get_name');
-    // setAxiConnection(websocketConnection);
-    // window.sessionStorage.setItem('axiConnection', websocketConnection);
   };
 
   const registerError = (err, msg) => {

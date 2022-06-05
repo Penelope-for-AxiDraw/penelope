@@ -9,10 +9,10 @@ import { store } from '../src/providers/store';
 import { DASHBOARD, PLOT } from '../src/constants';
 import NavButtonGroup from '../src/components/NavButtonGroup';
 import ImageDetails from '../src/components/ImageDetails';
+import { saveToLocalStorage } from '../src/utils';
 
 const Home= () => {
   const defaultMode = DASHBOARD;
-  const [selectingImage, setSelectingImage] = useState(false);
   const globalState = useContext(store);
   const [appMode, setAppMode] = useState(defaultMode);
   const [navIndex, setNavIndex] = useState(0);
@@ -25,6 +25,7 @@ const Home= () => {
         data: index
       }
     });
+    saveToLocalStorage('entryIndex', index);
   }
 
   const initSignOut = () => {
@@ -37,7 +38,9 @@ const Home= () => {
       window.localStorage.removeItem('contentfulCreds');
       window.localStorage.removeItem('axidrawCreds');
       window.localStorage.removeItem('axiSvgContent');
-      setAppMode(DASHBOARD);  
+      window.localStorage.removeItem('entryIndex');
+      window.sessionStorage.removeItem('navIndex');
+      setAppMode(DASHBOARD);
     };
 
     dispatch({
@@ -60,15 +63,24 @@ const Home= () => {
 
   const hasEntries = entries.length > 0;
 
+  // useEffect(() => {
+  //   const noUser = Object.getOwnPropertyNames(user).length === 0;
+
+  //   if (noUser || !hasEntries) {
+  //     // Either user or entries is empty; Go back to auth screen
+  //     // router.push('/start');
+  //   }
+
+  // }, [hasEntries, user]);
+
   useEffect(() => {
-    const noUser = Object.getOwnPropertyNames(user).length === 0;
-
-    if (noUser || !hasEntries) {
-      // Either user or entries is empty; Go back to auth screen
-      // router.push('/start');
+    // Go to most recent tab from session on page load
+    let index;
+    if (typeof window !== 'undefined') {
+      index = window.sessionStorage.getItem('navIndex') || 0;
     }
-
-  }, [hasEntries, user]);
+    setNavIndex(JSON.parse(index));
+  }, []);
 
   const updateAppMode = (mode) => {
     setAppMode(mode);
@@ -102,6 +114,7 @@ const Home= () => {
 
   const selectTab = (index) => {
     setNavIndex(index);
+    window.sessionStorage.setItem('navIndex', index);
   };
 
   if (appMode === PLOT) {
@@ -162,7 +175,7 @@ const Home= () => {
             currentIndex={currentEntryIndex}
           />
         )} */}
-        {entries.length ? <ImagePreview thumbnail={entries[currentEntryIndex].images.thumbnail} shade={selectingImage} /> : <div><h3>¯\_(ツ)_/¯</h3></div>}
+        {entries.length ? <ImagePreview thumbnail={entries[currentEntryIndex].images.thumbnail} /> : <div><h3>¯\_(ツ)_/¯</h3></div>}
       </main>
     );
   }

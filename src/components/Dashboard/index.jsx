@@ -99,7 +99,7 @@ const Dashboard = ({ updateAppMode }) => {
     // MAYBE THEY CAN BE CONSOLIDATED
     const initClientFromStoredCreds = async () => {
       const credentialsLocalStorage = getFromLocalStorage('contentfulCreds');
-      if (!credentialsLocalStorage.accessToken || !credentialsLocalStorage.spaceId) {
+      if (!credentialsLocalStorage?.accessToken || !credentialsLocalStorage?.spaceId) {
         return;
       }
 

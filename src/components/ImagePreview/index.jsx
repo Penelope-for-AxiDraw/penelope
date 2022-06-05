@@ -2,7 +2,7 @@ import Image from "next/image";
 import { ImagePaper, ImagePreviewContainer } from "./styles";
 
 
-export default function ImagePreview({ thumbnail, shade }) {
+export default function ImagePreview({ thumbnail }) {
   return (
     <ImagePreviewContainer>
       <ImagePaper>

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Image from 'next/image';
 
-import { Button, ClearBtn, Input } from "../StyledUiCommon/styles";
+import { ClearBtn, IconButton, Input } from "../StyledUiCommon/styles";
 import { ButtonInlineText, CredentialsBox, MoreInfoBox, Welcome } from "./styles";
 
 
@@ -11,8 +11,7 @@ const MoreInfo = ({ show, infoBoxOpen }) => {
       <div>
         <div className="more-info-header">
           <ClearBtn onClick={show}>
-            {/* <Image alt="temp" src={"/icn-square.svg"} width={24} height={24} /> */}
-            close
+            dismiss
           </ClearBtn>
         </div>
         <div>
@@ -134,7 +133,7 @@ const AuthView = ({
             )}
           </section>
 
-          <Button
+          {/* <Button
             className="login-button"
             onClick={() => attemptSignIn(fieldCreds)}
             disabled={isSigningIn || anyBlankFields}
@@ -142,7 +141,11 @@ const AuthView = ({
             wide
           >
             Let&apos;s Begin
-          </Button>
+          </Button> */}
+          <IconButton className="cta" variant="alternate" onClick={() => attemptSignIn(fieldCreds)} disabled={isSigningIn || anyBlankFields} wide>
+            <span>Let&apos;s Begin</span>
+          </IconButton>
+
 
           <p className="input-field-hint">
             Not sure what the heck this is?{" "}
