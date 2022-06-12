@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { Button, ClearBtn } from '../StyledUiCommon/styles';
+import { Button, ClearBtn, OutlineBtn } from '../StyledUiCommon/styles';
 import { WarningModalContainer } from './styles';
 import { ScreenShade } from '../StyledUiCommon/styles';
 import { XMarkIcon } from '../Icons';
@@ -22,7 +22,7 @@ const DepartWarning = ({
           <p>{warningCopy.text}</p>
         </div>
         <div className="warning-modal-footer">
-          <Button variant="secondary" onClick={dismiss}>CANCEL</Button>
+          <OutlineBtn onClick={dismiss}>CANCEL</OutlineBtn>
           <Button onClick={leave}>YES</Button>
         </div>
       </WarningModalContainer>

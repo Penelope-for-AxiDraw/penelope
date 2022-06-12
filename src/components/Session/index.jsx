@@ -1,7 +1,7 @@
 import { useContext, useState } from 'react';
 import { store } from '../../providers/store';
 import { ClearBtn, NavSection, SessionInfoCont, PanelSectionHeading, Divider, IconButton } from '../StyledUiCommon/styles';
-import { PlugIcon, UserCircleIcon } from '../Icons';
+import { PlayIcon, PlugIcon, UserCircleIcon } from '../Icons';
 import AxiDrawControl from '../AxiDrawControl';
 import validateConnectionParams from '../../utils/axiConnectFormValidation';
 import { plot, saveToLocalStorage } from '../../utils';
@@ -110,7 +110,7 @@ export default function Session({
       {isConnected ? (
         <NavSection>
           <IconButton className="cta" variant="alternate" onClick={() => plot(entries[currentEntryIndex], axiConnection)} wide>
-            <PlugIcon width="1.5rem" height="1.5rem" fill='#fff' />
+            <PlayIcon width="1.5rem" height="1.5rem" fill='#fff' />
             <span>Plot It!</span>
           </IconButton>
         </NavSection>

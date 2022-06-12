@@ -3,10 +3,10 @@ import { createClient } from 'contentful-management';
 
 import AuthView from '../AuthView';
 import { LoginScreen } from './styles';
-import Spinner from '../Spinner';
 import { fetchAxiSvgContent, getFromLocalStorage, saveToLocalStorage } from '../../utils';
 import { store } from '../../providers/store';
 import { PLOT } from '../../constants';
+import BurstSpinner from '../BurstSpinner';
 
 const Dashboard = ({ updateAppMode }) => {
   const globalState = useContext(store);
@@ -108,7 +108,6 @@ const Dashboard = ({ updateAppMode }) => {
         const { accessToken, spaceId } = credentialsLocalStorage;
         const client = createClient({ accessToken: accessToken });
         const space = await client.getSpace(spaceId);
-        // console.log('Successfully signed in');
   
         const user = await client.getCurrentUser();
         const { email, firstName, lastName, avatarUrl } = user;
@@ -148,12 +147,13 @@ const Dashboard = ({ updateAppMode }) => {
 
   }, [dispatch, isAutoSignIn, updateAppMode]);
 
-
   return (
     <>
       <LoginScreen>
         {isLoading || isAutoSignIn ? (
-          <Spinner />
+          <div className="dashboard-spinner">
+            <BurstSpinner rgb={[47, 47, 60]} />
+          </div>
         ) : (
           <AuthView
             attemptSignIn={initClientFromInput}

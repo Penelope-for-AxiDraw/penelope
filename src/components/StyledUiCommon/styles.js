@@ -71,9 +71,10 @@ const IconButton = styled(ClearBtn)`
   background: var(--purple);
 
   & svg {
-    position: absolute;
-    left: 1.125rem;
-    top: 1.125rem;
+    // position: absolute;
+    // left: 1.125rem;
+    // top: 1.125rem;
+    margin-right: 0.5rem;
   }
 
   & span {

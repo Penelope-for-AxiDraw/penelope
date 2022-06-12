@@ -8,7 +8,7 @@ import { fetchAxiSvgContent, getFromLocalStorage, plot, saveToLocalStorage } fro
 import { store } from '../../providers/store';
 import ImageBlock from '../ImageCard';
 import Uploader from '../Uploader';
-import { PlugIcon } from '../Icons';
+import { PlayIcon } from '../Icons';
 
 const SvgExplorer = ({ goToConnect, handleSelect, title }) => {
   const globalState = useContext(store);
@@ -85,15 +85,9 @@ const SvgExplorer = ({ goToConnect, handleSelect, title }) => {
         </ExplorerGrid>
       </NavSection>
       <NavSection className="gallery-cta-footer" style={blankHeightStyle}>
-        {isConnected && (
-          <IconButton className="cta" variant="alternate" onClick={() => plot(entries[currentEntryIndex], axiConnection)} wide>
-              <PlugIcon width={24} height={24} fill='#fff' />
-              <span>Plot It!</span>
-          </IconButton>
-        )}
         {isConnected ? (
           <IconButton className="cta" variant="alternate" onClick={() => plot(entries[currentEntryIndex], axiConnection)} wide>
-              <PlugIcon width={24} height={24} fill='#fff' />
+              <PlayIcon width={24} height={24} fill='#fff' />
               <span>Plot It!</span>
           </IconButton>
         ): (

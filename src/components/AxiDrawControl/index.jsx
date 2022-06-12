@@ -116,7 +116,9 @@ const AxiDrawControl = (props) => {
         {axiConnectionError && <p className="input-field-error">{axiConnectionError}</p>}
 
         <p className="smallText">
-          To begin plotting, enter the IP address and port of your Axi server. You’ll need to be running the server in the background. Click here to download the server and read the documentation.
+          To begin plotting, enter the IP address and port of your Axi server. You’ll need to be running the server in the background.
+          <a href="https://github.com/computershawn/penelope-server" target="_blank" rel="noreferrer">Click here</a>{" "}
+          to download the server and read the documentation.
         </p>
       </div>
     </StyledAxiConnection>

@@ -12,9 +12,9 @@ export const Welcome = styled.div`
 '`;
 
 export const CredentialsBox = styled.div`
-  background: url('./panorama.png'), linear-gradient(0deg, var(--light-lavender) 0%, var(--lavender) 100%);
+  background: linear-gradient(0deg, var(--light-lavender) 0%, var(--lavender) 100%);
   width: 24rem;
-  height: 28rem;
+  height: 24rem;
   padding: 2rem;
   display: flex;
   align-items: center;
@@ -42,7 +42,7 @@ export const CredentialsBox = styled.div`
       // border-right-color: var(--lavender);
     }
 
-    & :not(:first-child) {
+    & > :not(:first-child) {
       margin-top: 0.75rem;
     }
 
@@ -64,7 +64,7 @@ export const MoreInfoBox = styled.div`
   color: var(--blek);
   background-color: #fff;
   width: 24rem;
-  height: 28rem;
+  height: 24rem;
   // outline: 0.0625rem solid var(--blek);
   padding: 2rem;
   display: flex;

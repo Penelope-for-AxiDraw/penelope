@@ -14,7 +14,7 @@ for (let i = 0; i < 48; i++) {
   defaultCircles.push(new Circle(duration));
 }
 
-const BurstSpinner = () => {
+const BurstSpinner = ({ rgb=[68, 0, 163] }) => {
   const canvasRef = useRef(null)  
   const circles = defaultCircles;
   const fadeInStart = Date.now();
@@ -44,7 +44,8 @@ const BurstSpinner = () => {
     const opa = fadeTimer < fadeDuration ? 0.86 * fadeTimer / fadeDuration : 0.86;
 
     ctx.clearRect(0, 0, SPINNER_CANVAS_WD, SPINNER_CANVAS_HT);
-    drawBackground(ctx, `rgb(68 0 163 / ${opa})`);
+    // drawBackground(ctx, `rgb(68 0 163 / ${opa})`);
+    drawBackground(ctx, `rgb(${rgb[0]} ${rgb[1]} ${rgb[2]} / ${opa})`);
     
     const elapsed = Date.now() % duration;
     circles.forEach(circ => {

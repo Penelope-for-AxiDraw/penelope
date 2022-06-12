@@ -17,7 +17,7 @@ const Home= () => {
   const globalState = useContext(store);
   const [appMode, setAppMode] = useState(defaultMode);
   const [navIndex, setNavIndex] = useState(0);
-  const { dispatch, state: { currentEntryIndex, entries, user, disco } } = globalState;
+  const { dispatch, state: { currentEntryIndex, entries, disco } } = globalState;
 
   const handleSelectImage = (index) => {
     dispatch({

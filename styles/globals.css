@@ -375,3 +375,9 @@ a {
   width: calc(20rem - 0.5rem);
   height: calc(20rem - 0.5rem);
 }
+
+.dashboard-spinner {
+  position: relative;
+  width: 312px;
+  height: 312px;
+}

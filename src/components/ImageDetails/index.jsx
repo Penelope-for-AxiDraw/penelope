@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import { ClearBtn, Divider, IconButton, NavSection, PanelSectionHeading } from '../StyledUiCommon/styles';
 import { store } from '../../providers/store';
-import { PlugIcon } from '../Icons';
+import { PlayIcon } from '../Icons';
 import Image from 'next/image';
 import { ImageContainer, InfoContainer } from './styles';
 import { plot } from '../../utils';
@@ -63,7 +63,7 @@ const ImageDetails = ({ goToConnect, title }) => {
       <NavSection className="info-cta-footer" style={blankHeightStyle}>
         {isConnected ? (
           <IconButton className="cta" variant="alternate" onClick={() => plot(entries[currentEntryIndex], axiConnection)} wide>
-            <PlugIcon width={24} height={24} fill='#fff' />
+            <PlayIcon width={24} height={24} fill='#fff' />
             <span>Plot It!</span>
           </IconButton>
         ) : (
