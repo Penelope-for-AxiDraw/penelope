@@ -10,7 +10,10 @@ const AxiDrawControl = (props) => {
   const { dispatch, state: { axiConnection, isConnected, axiAddress, axiConnectionError } } = globalState;
   const penUp = true;
   const RAISE = 'Raise Pen';
-  const LOWER = 'Lower Pen';
+  // const LOWER = 'Lower Pen';
+  // TODO: Ping AxiDraw to get up/down status of the pen, and
+  // change the raise/lower button's text
+  const LOWER = 'Toggle Pen';
 
   const initDisconnect = () => {
     const warningCopy = {
