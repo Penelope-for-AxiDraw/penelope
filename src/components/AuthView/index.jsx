@@ -60,7 +60,7 @@ const MoreInfo = ({ show, infoBoxOpen }) => {
             </a>{" "}
             to learn about how to set that up. You&apos;ll also need to download
             and run the{" "}
-            <a href="" target="_blank">
+            <a href="https://github.com/computershawn/penelope-server" target="_blank" rel="noreferrer">
               Penelope Python app
             </a>{" "}
             on your computer.
