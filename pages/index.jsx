@@ -10,6 +10,7 @@ import { DASHBOARD, PLOT } from '../src/constants';
 import NavButtonGroup from '../src/components/NavButtonGroup';
 import ImageDetails from '../src/components/ImageDetails';
 import { saveToLocalStorage } from '../src/utils';
+import PenelopeLogo from '../src/components/PenelopeLogo';
 
 const Home= () => {
   const defaultMode = DASHBOARD;
@@ -89,7 +90,7 @@ const Home= () => {
   const LogoBlock = () => {
     return (
       <div className="logo-block">
-        <h1>penelope</h1>
+        <PenelopeLogo height={40} fill="var(--dark-purple)" />
       </div>
     );
   }

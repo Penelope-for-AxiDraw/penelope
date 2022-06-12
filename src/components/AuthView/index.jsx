@@ -3,6 +3,8 @@ import Image from 'next/image';
 
 import { ClearBtn, IconButton, Input } from "../StyledUiCommon/styles";
 import { ButtonInlineText, CredentialsBox, MoreInfoBox, Welcome } from "./styles";
+import { XMarkIcon } from "../Icons";
+import PenelopeLogo from "../PenelopeLogo";
 
 
 const MoreInfo = ({ show, infoBoxOpen }) => {
@@ -11,7 +13,7 @@ const MoreInfo = ({ show, infoBoxOpen }) => {
       <div>
         <div className="more-info-header">
           <ClearBtn onClick={show}>
-            dismiss
+            <XMarkIcon fill='var(--dark-purple)' width='1rem' height='1rem' />
           </ClearBtn>
         </div>
         <div>
@@ -103,8 +105,8 @@ const AuthView = ({
     <Welcome isOpen={showMoreInfo}>
       <CredentialsBox infoBoxOpen={showMoreInfo}>
         <div className="ui-container">
-          <div className="logo-container">
-            <h1 style={{ margin: 0 }}>🌮 penelope ~ logo 🍕</h1>
+          <div style={{lineHeight:'0'}}>
+            <PenelopeLogo height={60} fill="var(--dark-purple)" />
           </div>
           <p className="form-description">Enter your personal access token and space ID</p>
           <section>

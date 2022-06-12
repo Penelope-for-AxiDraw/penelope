@@ -22,7 +22,7 @@
 
 body,
 html {
-  background-color: #fdfdfd;
+  background-color: var(--grurple);
   padding: 0;
   margin: 0;
 }
@@ -46,12 +46,6 @@ code {
   font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif;
 }
 
-/* h1, h2, h3, h4,
-p,
-strong {
-  color: #fefefe;
-} */
-
 p {
   line-height: 1.4rem;
 }
@@ -69,7 +63,7 @@ p {
 }
 
 .logo-block {
-  margin: 0 2rem;
+  margin: 2rem 0 1.5rem 2rem;
 }
 
 /* .column-explore {
