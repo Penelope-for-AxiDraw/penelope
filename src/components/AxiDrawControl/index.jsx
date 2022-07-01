@@ -4,16 +4,13 @@ import { ControlsContainer, InputContainer, InputsWrapper, StyledAxiConnection }
 import { ClearBtn, InputLabel, OutlineBtn, SessionInfoCont } from '../StyledUiCommon/styles';
 import { NetworkWiredIcon } from '../Icons';
 
-const AxiDrawControl = (props) => {
-  const { deviceName } = props;
+const AxiDrawControl = () => {
   const globalState = useContext(store);
-  const { dispatch, state: { axiConnection, isConnected, axiAddress, axiConnectionError } } = globalState;
-  const penUp = true;
+  const { dispatch, state: { axiConnection, isConnected, axiAddress, axiConnectionError, deviceName, penUp } } = globalState;
   const RAISE = 'Raise Pen';
-  // const LOWER = 'Lower Pen';
+  const LOWER = 'Lower Pen';
   // TODO: Ping AxiDraw to get up/down status of the pen, and
   // change the raise/lower button's text
-  const LOWER = 'Toggle Pen';
 
   const initDisconnect = () => {
     const warningCopy = {
@@ -24,18 +21,6 @@ const AxiDrawControl = (props) => {
     const leave = () => {
       if (isConnected) {
         axiConnection.close();
-        dispatch({
-          type: 'SET_CONNECTED',
-          payload: {
-            data: false,
-          }
-        });
-        dispatch({
-          type: 'SET_AXI_CONNECTION',
-          payload: {
-            data: {},
-          }
-        });
       }
     };
 
@@ -75,6 +60,17 @@ const AxiDrawControl = (props) => {
     });
   };
 
+  const handleToggle = () => {
+    axiConnection.send('toggle');
+
+    dispatch({
+      type: 'SET_PEN_UP',
+      payload: {
+        data: !penUp
+      },
+    });
+  }
+
   if (isConnected) {
     return (
       <StyledAxiConnection>
@@ -83,7 +79,7 @@ const AxiDrawControl = (props) => {
           <SessionInfoCont>
             <NetworkWiredIcon width={40} height={40} fill={'#4400A3'} />
             <div className="specs">
-              {deviceName && <p>{deviceName}</p>}
+              <p>{deviceName}</p>
               <p>{axiAddress.host} : {axiAddress.port}</p>
               <ClearBtn onClick={initDisconnect}>disconnect</ClearBtn>
             </div>
@@ -91,7 +87,7 @@ const AxiDrawControl = (props) => {
           <ControlsContainer>
             <InputLabel>Pen Controls</InputLabel>
             <div className="button-group">
-              <OutlineBtn onClick={() => axiConnection.send('toggle')}>{penUp ? LOWER : RAISE }</OutlineBtn>
+              <OutlineBtn onClick={handleToggle}>{penUp ? LOWER : RAISE }</OutlineBtn>
               <OutlineBtn onClick={() => axiConnection.send('align')}>Align Pen</OutlineBtn>
             </div>
           </ControlsContainer>
