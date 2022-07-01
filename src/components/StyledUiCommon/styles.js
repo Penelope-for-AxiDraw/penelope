@@ -289,6 +289,7 @@ const NavSection = styled.section`
   }
 
   & button.cta {
+    margin-top: 1rem;
     margin-bottom: 5rem;
   }
 `;

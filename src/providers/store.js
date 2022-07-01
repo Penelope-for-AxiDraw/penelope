@@ -21,6 +21,8 @@ const initialState = {
   },
   axiConnectionError: '',
   axiConnection: {},
+  penUp: true,
+  deviceName: '…',
 };
 
 const store = createContext(initialState);
@@ -85,6 +87,20 @@ const StateProvider = ({ children }) => {
         updatedState = {
           ...prevState,
           axiConnection: action.payload.data,
+        };
+        return updatedState;
+
+      case 'SET_DEVICE_NAME':
+        updatedState = {
+          ...prevState,
+          deviceName: action.payload.data,
+        };
+        return updatedState;
+
+      case 'SET_PEN_UP':
+        updatedState = {
+          ...prevState,
+          penUp: action.payload.data,
         };
         return updatedState;
 

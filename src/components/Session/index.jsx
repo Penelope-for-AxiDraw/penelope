@@ -10,7 +10,6 @@ export default function Session({
   signOut,
   title,
 }) {
-  const [deviceName, setDeviceName] = useState('');
   const globalState = useContext(store);
   const {
     dispatch,
@@ -40,6 +39,7 @@ export default function Session({
     });
 
     websocketConnection.send('get_name');
+    websocketConnection.send('get_pen_state');
   };
 
   const registerError = (err, msg) => {
@@ -58,15 +58,28 @@ export default function Session({
     co.onmessage = function (event) {
       const message = JSON.parse(event.data);
       if (message.hasOwnProperty('deviceName')) {
-        setDeviceName(message.deviceName);
+        dispatch({
+          type: 'SET_DEVICE_NAME',
+          payload: {
+            data: message.deviceName,
+          }
+        });
+      }
+
+      if (message.hasOwnProperty('penUp')) {
+        dispatch({
+          type: 'SET_PEN_UP',
+          payload: {
+            data: message.penUp === 'True',
+          }
+        });
       }
     };
 
     co.onopen = function (event) {
-      // console.log(`Websocket is now open on ${co.url}!`);
       registerConnection(co);
-      // console.log({ host, port });
       saveToLocalStorage('axidrawCreds', { host, port });
+      // console.log(`Websocket is now open on ${co.url}!`);
     };
 
     co.onerror = function (error) {
@@ -74,8 +87,25 @@ export default function Session({
     };
 
     co.onclose = function (event) {
-      console.log("WebSocket is now closed.");
-      // window.sessionStorage.removeItem('axiConnection');
+      dispatch({
+        type: 'SET_CONNECTED',
+        payload: {
+          data: false,
+        }
+      });
+      dispatch({
+        type: 'SET_AXI_CONNECTION',
+        payload: {
+          data: {},
+        }
+      });
+      dispatch({
+        type: 'SET_DEVICE_NAME',
+        payload: {
+          data: '…',
+        }
+      });
+      // console.log("WebSocket is now closed.");
     };
   };
 
@@ -105,7 +135,7 @@ export default function Session({
           </SessionInfoCont>
         </div>
         <Divider />
-        <AxiDrawControl deviceName={deviceName} />
+        <AxiDrawControl />
       </NavSection>
       {isConnected ? (
         <NavSection>
