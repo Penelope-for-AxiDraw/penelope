@@ -86,7 +86,11 @@ const svgToImage = (settings) => {
                 }, mimetype, quality);
             } else {
                 // Fullfil and Return the Base64 image
-                resolve(canvas.toDataURL(mimetype, quality));
+                resolve({
+                    dataUrl: canvas.toDataURL(mimetype, quality),
+                    width: finalWidth,
+                    height: finalHeight,
+                });
             }
         };
 

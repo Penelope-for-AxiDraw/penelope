@@ -1,49 +1,25 @@
-import { Button, InputLabel } from '../StyledUiCommon/styles';
+import { InputLabel, OutlineBtn } from '../StyledUiCommon/styles';
 import { ControlsContainer } from './styles';
 
-// interface actionsProps {
-//   sendCommand: (option:string) => void;
-// }
+export default function AxiActions() {
+  // const [penUp, setPenUp] = useState(true);
+  // const RAISE = 'Raise Pen';
+  // const LOWER = 'Lower Pen';
+  // TODO: Use 'current_pen' AxiDraw Python API
+  // method to determine up/down state of pen
+  // https://axidraw.com/doc/py_api/#current_pen-turtle_pen
 
-export default function AxiActions(props) {
-  const { sendCommand } = props;
-
-  const cmdAlignMode = () => {
-    console.log('set axi to align mode');
-    sendCommand('align');
-  }
-
-  const cmdToggle = () => {
-    console.log('toggle axi pen up or down');
-    sendCommand('toggle');
-  }
-
-  const cmdBeginPlot = () => {
-    console.log('begin plotting yay!');
-    sendCommand('plot');
-  }
-
-  const cmdGetName = () => {
-    // console.log('get name');
-    sendCommand('get_name');
-  }
+  const TOGGLE = 'Toggle Pen'
 
   return (
-    <div>
+    // <div>
       <ControlsContainer>
         <InputLabel>Pen Controls</InputLabel>
-        <div className="buttonGroup">
-          <Button onClick={cmdToggle}>Up/Down</Button>
-          <Button onClick={cmdAlignMode}>Align</Button>
+        <div className="button-group">
+          <OutlineBtn onClick={() => axiConnection.send('toggle')}>{TOGGLE}</OutlineBtn>
+          <OutlineBtn onClick={() => axiConnection.send('align')}>Align Pen</OutlineBtn>
         </div>
       </ControlsContainer>
-
-      <ControlsContainer>
-        <InputLabel>Plotting</InputLabel>
-        <div className="buttonGroup">
-          <Button onClick={cmdBeginPlot}>Plot Image</Button>
-        </div>
-      </ControlsContainer>
-    </div>
+    // </div>
   );
 };

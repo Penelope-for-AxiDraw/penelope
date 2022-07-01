@@ -1,8 +1,10 @@
 import { useState } from "react";
 import Image from 'next/image';
 
-import { Button, ClearBtn, Input } from "../StyledUiCommon/styles";
+import { ClearBtn, IconButton, Input } from "../StyledUiCommon/styles";
 import { ButtonInlineText, CredentialsBox, MoreInfoBox, Welcome } from "./styles";
+import { RocketLaunchIcon, XMarkIcon } from "../Icons";
+import PenelopeLogo from "../PenelopeLogo";
 
 
 const MoreInfo = ({ show, infoBoxOpen }) => {
@@ -11,15 +13,13 @@ const MoreInfo = ({ show, infoBoxOpen }) => {
       <div>
         <div className="more-info-header">
           <ClearBtn onClick={show}>
-            {/* <Image alt="temp" src={"/icn-square.svg"} width={24} height={24} /> */}
-            close
+            <XMarkIcon fill='var(--dark-purple)' width='1rem' height='1rem' />
           </ClearBtn>
         </div>
         <div>
           <p>
-            Hello there, lovely human. Welcome to Penelope, AxiDraw&apos;s
-            missing interface. You&apos;re free to use this app if you
-            don&apos;t have an{" "}
+            Hello there, lovely human. Welcome to Penelope, an interface for AxiDraw.
+            You&apos;re free to use Penelope if you don&apos;t have an{" "}
             <a
               href="https://shop.evilmadscientist.com/productsmenu/846"
               target="_blank"
@@ -27,8 +27,8 @@ const MoreInfo = ({ show, infoBoxOpen }) => {
             >
               AxiDraw
             </a>{" "}
-            pen plotter. BUT! If you don&apos;t have access to an AxiDraw,
-            Penelope might not be of much use to you.
+            pen plotter. BUT… if you don&apos;t have access to an AxiDraw,
+            this app might not be of much use to you.
           </p>
           <p>
             Still there? Fantastic. Penelope is a GUI on top of the{" "}
@@ -48,8 +48,8 @@ const MoreInfo = ({ show, infoBoxOpen }) => {
             extension and the AxiDraw API / CLI.
           </p>
           <p>
-            A couple of things before we get started: First, you&apos;ll need to
-            get a personal access token and space ID from Contentful.{" "}
+            A couple of things before we get started: First, you&apos;ll need to sign
+            in here with a personal access token and space ID from Contentful.{" "}
             <a
               href="https://www.contentful.com/help/personal-access-tokens/#how-to-get-a-personal-access-token-the-web-app"
               target="_blank"
@@ -59,7 +59,7 @@ const MoreInfo = ({ show, infoBoxOpen }) => {
             </a>{" "}
             to learn about how to set that up. You&apos;ll also need to download
             and run the{" "}
-            <a href="" target="_blank">
+            <a href="https://github.com/computershawn/penelope-server" target="_blank" rel="noreferrer">
               Penelope Python app
             </a>{" "}
             on your computer.
@@ -104,8 +104,8 @@ const AuthView = ({
     <Welcome isOpen={showMoreInfo}>
       <CredentialsBox infoBoxOpen={showMoreInfo}>
         <div className="ui-container">
-          <div className="logo-container">
-            <h1 style={{ margin: 0 }}>🌮 penelope ~ logo 🍕</h1>
+          <div style={{lineHeight:'0'}}>
+            <PenelopeLogo height={60} fill="var(--dark-purple)" />
           </div>
           <p className="form-description">Enter your personal access token and space ID</p>
           <section>
@@ -134,7 +134,7 @@ const AuthView = ({
             )}
           </section>
 
-          <Button
+          {/* <Button
             className="login-button"
             onClick={() => attemptSignIn(fieldCreds)}
             disabled={isSigningIn || anyBlankFields}
@@ -142,7 +142,12 @@ const AuthView = ({
             wide
           >
             Let&apos;s Begin
-          </Button>
+          </Button> */}
+          <IconButton className="cta" variant="alternate" onClick={() => attemptSignIn(fieldCreds)} disabled={isSigningIn || anyBlankFields} wide>
+            <RocketLaunchIcon width={24} height={24} fill="#fff" />
+            <span>Let&apos;s Begin</span>
+          </IconButton>
+
 
           <p className="input-field-hint">
             Not sure what the heck this is?{" "}

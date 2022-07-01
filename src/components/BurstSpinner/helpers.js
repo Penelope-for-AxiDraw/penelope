@@ -2,10 +2,10 @@ function randomValueBetween(minValue, maxValue) {
   return minValue + Math.random() * (maxValue - minValue);
 }
 
-function drawBackground() {
+function drawBackground(context, bgColor) {
   // to set a background, we create a rect and fill it
-  ctx2.fillStyle = '#888892';
-  ctx2.fillRect(0, 0, c2.width, c2.height);  
+  context.fillStyle = bgColor;
+  context.fillRect(0, 0, context.canvas.width, context.canvas.height);
 }
 
 function easeInQuart(t) {

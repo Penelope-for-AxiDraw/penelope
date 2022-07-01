@@ -1,11 +1,13 @@
-import BurstSpinner from "../BurstSpinner";
+import Image from "next/image";
+import { ImagePaper, ImagePreviewContainer } from "./styles";
 
-export default function ImagePreview({ thumbnail, shade }) {
+
+export default function ImagePreview({ thumbnail }) {
   return (
-    <div className="image-viewer">
-      {shade && <div className="shade-overlay"></div>}
-      <BurstSpinner />
-      <img className="image-canv" src={thumbnail.url} alt={thumbnail.fileName} width={thumbnail.width} height={thumbnail.height} />
-    </div>
+    <ImagePreviewContainer>
+      <ImagePaper style={{ width: thumbnail.width, height: thumbnail.height }}>
+        <Image src={thumbnail.url} alt={thumbnail.fileName} width={thumbnail.width} height={thumbnail.height} layout="responsive" />
+      </ImagePaper>
+    </ImagePreviewContainer>
   );
 };

@@ -6,15 +6,19 @@ export const ImageCardContainer = styled.div`
   position: relative;
   cursor: pointer;
   color: var(--dark-gray);
-  border: 1px solid #e1e1e1;
+  border: 1px solid var(--muted-purple);
   ${(props) => props.isActive && `border-color: var(--purple);`}
   border-radius: 2px;
-  width: calc(11rem - 0.125rem);
-  height: calc(13.5rem - 0.125rem);
+
+  & .checkmark-icon {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+  }
 
   & .image-container {
-    width: calc(11rem - 0.125rem);
-    height: calc(11rem - 0.125rem);
+    width: calc(8.75rem - 0.125rem);
+    height: calc(8.75rem - 0.125rem);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -25,16 +29,31 @@ export const ImageCardContainer = styled.div`
   }
 
   & p {
-    margin: 0 0 0 0.5rem;
+    margin: 0 0.5rem 0;
     font-size: 0.8125rem;
   }
 
   & .image-card-footer {
-    height: 2.5rem;
-    // background: #efefef;
+    height: 2rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    
+    & p {
+      overflow-x: hidden;
+      white-space: nowrap;
+    }
+
+    & button {
+      display: none;
+      background-color: var(--purple);
+      position: absolute;
+      right: 0;
+    }
+  }
+
+  &:hover .image-card-footer button {
+    display: block;
   }
 `;
 
@@ -61,6 +80,6 @@ export const DeleteOverlay = styled.div`
 `;
 
 export const DeleteButton = styled(ClearBtn)`
-  width: 2.5rem;
-  height: 2.5rem;
+  width: 2rem;
+  height: 2rem;
 `;

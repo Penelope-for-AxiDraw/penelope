@@ -2,13 +2,15 @@ import { useState } from 'react';
 import Image from 'next/image';
 
 import { DeleteButton, DeleteOverlay, ImageCardContainer } from './styles';
-import { Button, ClearBtn } from '../StyledUiCommon/styles';
+import { Button } from '../StyledUiCommon/styles';
+import { BASELINE_DIMENSION } from '../../constants';
+import { CheckCircleIcon, TrashCanIcon } from '../Icons';
 
 const ImageCard = ({imageData, handleClick, initDelete, isActive}) => {
   const [isDeleting, setIsDeleting] = useState(false);
   const [isBeginDelete, setIsBeginDelete] = useState(false);
 
-  const dim = 176;
+  const dim = 8.75 * BASELINE_DIMENSION;
   const imageMargin = 8;
   const {width, height} = imageData.images.thumbnail;
 
@@ -31,9 +33,14 @@ const ImageCard = ({imageData, handleClick, initDelete, isActive}) => {
       {isBeginDelete && (
         <DeleteOverlay>
           <span>Delete this image?</span>
-          <Button onClick={handleDelete} variant="alternate" wd={9}>Delete</Button>
-          <Button onClick={(e) => toggleInitDelete(e, false)} variant="light" wd={9}>Cancel</Button>
+          <Button onClick={handleDelete} variant="alternate" wd={7}>Delete</Button>
+          <Button onClick={(e) => toggleInitDelete(e, false)} variant="light" wd={7}>Cancel</Button>
         </DeleteOverlay>
+      )}
+      {isActive && (
+        <div className="checkmark-icon">
+          <CheckCircleIcon width={20} height={20} fill="var(--dark-purple)" />
+        </div>
       )}
       <div className="image-container" >
         <Image src={imageData.images.thumbnail.url} alt="" width={wd - imageMargin} height={ht - imageMargin} />
@@ -51,7 +58,7 @@ const ImageCard = ({imageData, handleClick, initDelete, isActive}) => {
       <div className="image-card-footer">
         <p>{imageData.title}</p>
         <DeleteButton onClick={(e) => toggleInitDelete(e, true)} disabled={isDeleting}>
-          <Image alt="temp" src={"/fa-trash-can-regular.svg"} width={20} height={20} />
+          <TrashCanIcon width="1rem" height="1rem" fill="#fff" />
         </DeleteButton>
       </div>
     </ImageCardContainer>

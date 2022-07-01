@@ -1,33 +1,19 @@
-import { useContext, useState } from "react";
-
+import { useContext, useState } from 'react';
 import { store } from '../../providers/store';
-import AxiConnection from '../AxiConnection';
-import AxiActions from '../AxiActions';
-import { ControlsSection, PanelSectionHeading } from "../StyledUiCommon/styles";
-
-// interface ControlProps {
-//   currentSvgData: {
-//     images: {
-//       svg: {
-//         url: string,
-//         fileName: string,
-//       }
-//     },
-//   };
-// };
+import { ControlsContainer, InputContainer, InputsWrapper, StyledAxiConnection } from './styles';
+import { ClearBtn, InputLabel, OutlineBtn, SessionInfoCont } from '../StyledUiCommon/styles';
+import { NetworkWiredIcon } from '../Icons';
 
 const AxiDrawControl = (props) => {
-  const { currentSvgData } = props;
-  const [isConnected, setIsConnected] = useState(false);
-  const [connection, setConnection] = useState();
+  const { deviceName } = props;
   const globalState = useContext(store);
-  const { dispatch } = globalState;
-
-  const registerConnection = (ws) => {
-    setIsConnected(true);
-    ws.send('get_name');
-    setConnection(ws);
-  };
+  const { dispatch, state: { axiConnection, isConnected, axiAddress, axiConnectionError } } = globalState;
+  const penUp = true;
+  const RAISE = 'Raise Pen';
+  // const LOWER = 'Lower Pen';
+  // TODO: Ping AxiDraw to get up/down status of the pen, and
+  // change the raise/lower button's text
+  const LOWER = 'Toggle Pen';
 
   const initDisconnect = () => {
     const warningCopy = {
@@ -37,9 +23,20 @@ const AxiDrawControl = (props) => {
 
     const leave = () => {
       if (isConnected) {
-        connection.close();
+        axiConnection.close();
+        dispatch({
+          type: 'SET_CONNECTED',
+          payload: {
+            data: false,
+          }
+        });
+        dispatch({
+          type: 'SET_AXI_CONNECTION',
+          payload: {
+            data: {},
+          }
+        });
       }
-      setIsConnected(false);
     };
 
     dispatch({
@@ -54,32 +51,80 @@ const AxiDrawControl = (props) => {
     });
   }
 
-  const handleConnectionError = (evt) => {
-    console.log("Websocket error:", evt);
-  }
-
-  function sendCommand(cmd) {
-    if (cmd === "plot") {
-      const pattern = /^(.*[\\/])/;
-      const [root_url] = currentSvgData.images.svg.url.match(pattern);
-      const fileName = currentSvgData.images.svg.fileName;
-      connection.send(`${cmd}|${root_url}|${fileName}`);
-    } else {
-      connection.send(cmd);
+  const handleChangeInput = (e) => {
+    if (axiConnectionError) {
+      // clear the error…
+      dispatch({
+        type: 'SET_CONNECTION_ERROR',
+        payload: {
+          data: ''
+        },
+      });
     }
+
+    const updatedaxiAddress = {
+      ...axiAddress,
+      [e.target.name]: e.target.value,
+    };
+
+    dispatch({
+      type: 'SET_AXI_ADDRESS',
+      payload: {
+        data: updatedaxiAddress
+      },
+    });
+  };
+
+  if (isConnected) {
+    return (
+      <StyledAxiConnection>
+        <div>
+          <p className="info">Connected to AxiDraw</p>
+          <SessionInfoCont>
+            <NetworkWiredIcon width={40} height={40} fill={'#4400A3'} />
+            <div className="specs">
+              {deviceName && <p>{deviceName}</p>}
+              <p>{axiAddress.host} : {axiAddress.port}</p>
+              <ClearBtn onClick={initDisconnect}>disconnect</ClearBtn>
+            </div>
+          </SessionInfoCont>
+          <ControlsContainer>
+            <InputLabel>Pen Controls</InputLabel>
+            <div className="button-group">
+              <OutlineBtn onClick={() => axiConnection.send('toggle')}>{penUp ? LOWER : RAISE }</OutlineBtn>
+              <OutlineBtn onClick={() => axiConnection.send('align')}>Align Pen</OutlineBtn>
+            </div>
+          </ControlsContainer>
+        </div>
+      </StyledAxiConnection>
+    );
   }
 
   return (
-    <ControlsSection>
-      <PanelSectionHeading>AxiDraw Plotter</PanelSectionHeading>
-      <AxiConnection
-        handleConnected={registerConnection}
-        initDisconnect={initDisconnect}
-        handleConnectionError={handleConnectionError}
-        isConnected={isConnected}
-      />
-      {isConnected && <AxiActions sendCommand={sendCommand} />}
-    </ControlsSection>
+    <StyledAxiConnection>
+      <div>
+        <p className="info">AxiDraw Connection</p>
+        <InputsWrapper>
+          <InputContainer fieldWidth={11.5}>
+            <InputLabel htmlFor="axi-ip-address">host ip address</InputLabel>
+            <input name="host" className="input-field" type="text" placeholder='000.000.000.000' onChange={handleChangeInput} value={axiAddress.host} />
+          </InputContainer>
+
+          <InputContainer fieldWidth={4.75}>
+            <InputLabel htmlFor="axi-port">port</InputLabel>
+            <input name="port" className="input-field" type="text" placeholder='0000' onChange={handleChangeInput} value={axiAddress.port} />
+          </InputContainer>
+        </InputsWrapper>
+
+        {axiConnectionError && <p className="input-field-error">{axiConnectionError}</p>}
+
+        <p className="smallText">
+          To begin plotting, enter the IP address and port of your Axi server. You’ll need to be running the server in the background.
+          <a href="https://github.com/computershawn/penelope-server" target="_blank" rel="noreferrer">Click here</a>{" "}
+          to download the server and read the documentation.
+        </p>
+      </div>
+    </StyledAxiConnection>
   );
 };
 

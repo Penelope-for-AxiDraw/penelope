@@ -12,26 +12,15 @@ export const Welcome = styled.div`
 '`;
 
 export const CredentialsBox = styled.div`
-  color: #fff;
-  background: var(--blek);
+  background: linear-gradient(0deg, var(--light-lavender) 0%, var(--lavender) 100%);
   width: 24rem;
-  height: 28rem;
-  outline: 0.0625rem solid var(--blek);
+  height: 24rem;
   padding: 2rem;
   display: flex;
   align-items: center;
   border-radius: 0.25rem;
   ${(props) => (props.infoBoxOpen && css`border-top-right-radius: 0; border-bottom-right-radius: 0;`)}
   z-index: 103;
-
-  & .logo-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 4rem;
-    border: 1px solid rgb(255 255 255 / 25%);
-    box-sizing: border-box;
-  }
 
   & .ui-container {
     display: flex;
@@ -44,16 +33,16 @@ export const CredentialsBox = styled.div`
 
     & input {
       width: calc(100% - 0.625rem);
-      background-color: #23232f;
-      color: #fefefe;
+      // background-color: #23232f;
+      // color: #fefefe;
 
-      border-top-color: var(--lavender);
-      border-bottom-color: var(--lavender);
-      border-left-color: var(--lavender);
-      border-right-color: var(--lavender);
+      // border-top-color: var(--lavender);
+      // border-bottom-color: var(--lavender);
+      // border-left-color: var(--lavender);
+      // border-right-color: var(--lavender);
     }
 
-    & :not(:first-child) {
+    & > :not(:first-child) {
       margin-top: 0.75rem;
     }
 
@@ -75,8 +64,8 @@ export const MoreInfoBox = styled.div`
   color: var(--blek);
   background-color: #fff;
   width: 24rem;
-  height: 28rem;
-  outline: 0.0625rem solid var(--blek);
+  height: 24rem;
+  // outline: 0.0625rem solid var(--blek);
   padding: 2rem;
   display: flex;
   flex-direction: column;
@@ -93,6 +82,16 @@ export const MoreInfoBox = styled.div`
   & .more-info-header {
     display: flex;
     justify-content: flex-end;
+
+    & button {
+      opacity: 0.2;
+      transition: opacity 500ms ease;
+      display: flex;
+
+      &:hover {
+        opacity: 1;
+      }
+    }
   }
 
   & > div p {
@@ -104,7 +103,7 @@ export const MoreInfoBox = styled.div`
 
 export const ButtonInlineText = styled(ClearBtn)`
   display: inline-block;
-  color: var(--lavender);
+  color: var(--dark-purple);
   font-size: inherit;
   line-height: inherit;
 `;

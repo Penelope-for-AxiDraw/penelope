@@ -1,14 +1,26 @@
 import React, { createContext, useReducer } from 'react';
+import { getFromLocalStorage } from '../utils';
+
+const creds = getFromLocalStorage('axidrawCreds');
+const hasCreds = creds?.host && creds?.port;
+const entryIndex = getFromLocalStorage('entryIndex');
 
 const initialState = {
   entries: [],
-  currentEntryIndex: 0,
+  currentEntryIndex: entryIndex || 0,
   user: {},
   disco: {
     showWarning: false,
     warningCopy: {},
     leave: () => {},
   },
+  isConnected: false,
+  axiAddress: {
+    host: hasCreds ? creds.host : '',
+    port: hasCreds ? creds.port : '',
+  },
+  axiConnectionError: '',
+  axiConnection: {},
 };
 
 const store = createContext(initialState);
@@ -45,6 +57,34 @@ const StateProvider = ({ children }) => {
         updatedState = {
           ...prevState,
           currentEntryIndex: action.payload.data,
+        };
+        return updatedState;
+
+      case 'SET_CONNECTED':
+        updatedState = {
+          ...prevState,
+          isConnected: action.payload.data,
+        };
+        return updatedState;
+
+      case 'SET_AXI_ADDRESS':
+        updatedState = {
+          ...prevState,
+          axiAddress: action.payload.data,
+        };
+        return updatedState;
+
+      case 'SET_CONNECTION_ERROR':
+        updatedState = {
+          ...prevState,
+          axiConnectionError: action.payload.data,
+        };
+        return updatedState;
+
+      case 'SET_AXI_CONNECTION':
+        updatedState = {
+          ...prevState,
+          axiConnection: action.payload.data,
         };
         return updatedState;
 

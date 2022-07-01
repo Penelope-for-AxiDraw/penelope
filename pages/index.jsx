@@ -1,38 +1,32 @@
 import { useContext, useEffect, useState } from 'react';
-// import type { NextPage } from "next";
-import AxiDrawControl from "../src/components/AxiDrawControl";
-import ImageControls from "../src/components//ImageControls";
+import Session from "../src/components/Session";
 import ImagePreview from "../src/components/ImagePreview";
-import ImageExplorer from "../src/components/ImageExplorer";
+import SvgExplorer from "../src/components/SvgExplorer";
 import DepartWarning from '../src/components/DepartWarning';
 import Dashboard from '../src/components/Dashboard';
 
 import { store } from '../src/providers/store';
 import { DASHBOARD, PLOT } from '../src/constants';
+import NavButtonGroup from '../src/components/NavButtonGroup';
+import ImageDetails from '../src/components/ImageDetails';
+import { saveToLocalStorage } from '../src/utils';
+import PenelopeLogo from '../src/components/PenelopeLogo';
 
 const Home= () => {
-  // const authMode = 'AUTH';
-  // const plotMode = 'PLOT';
   const defaultMode = DASHBOARD;
-  // const [listIndex, setListIndex] = useState(0);
-  const [selectingImage, setSelectingImage] = useState(false);
   const globalState = useContext(store);
-  const { dispatch, state: { currentEntryIndex, entries, user, disco } } = globalState;
   const [appMode, setAppMode] = useState(defaultMode);
+  const [navIndex, setNavIndex] = useState(0);
+  const { dispatch, state: { currentEntryIndex, entries, disco } } = globalState;
 
   const handleSelectImage = (index) => {
-    // setListIndex(index);
-
     dispatch({
       type: 'SET_ENTRY',
       payload: {
         data: index
       }
     });
-  }
-
-  const openImageSelectionModal = () => {
-    setSelectingImage(true);
+    saveToLocalStorage('entryIndex', index);
   }
 
   const initSignOut = () => {
@@ -45,7 +39,9 @@ const Home= () => {
       window.localStorage.removeItem('contentfulCreds');
       window.localStorage.removeItem('axidrawCreds');
       window.localStorage.removeItem('axiSvgContent');
-      setAppMode(DASHBOARD);  
+      window.localStorage.removeItem('entryIndex');
+      window.sessionStorage.removeItem('navIndex');
+      setAppMode(DASHBOARD);
     };
 
     dispatch({
@@ -68,15 +64,24 @@ const Home= () => {
 
   const hasEntries = entries.length > 0;
 
+  // useEffect(() => {
+  //   const noUser = Object.getOwnPropertyNames(user).length === 0;
+
+  //   if (noUser || !hasEntries) {
+  //     // Either user or entries is empty; Go back to auth screen
+  //     // router.push('/start');
+  //   }
+
+  // }, [hasEntries, user]);
+
   useEffect(() => {
-    const noUser = Object.getOwnPropertyNames(user).length === 0;
-
-    if (noUser || !hasEntries) {
-      // Either user or entries is empty; Go back to auth screen
-      // router.push('/start');
+    // Go to most recent tab from session on page load
+    let index;
+    if (typeof window !== 'undefined') {
+      index = window.sessionStorage.getItem('navIndex') || 0;
     }
-
-  }, [hasEntries, user]);
+    setNavIndex(JSON.parse(index));
+  }, []);
 
   const updateAppMode = (mode) => {
     setAppMode(mode);
@@ -85,8 +90,7 @@ const Home= () => {
   const LogoBlock = () => {
     return (
       <div className="logo-block">
-        <span>penelope</span><br />
-        <span>a gui for AxiDraw</span>
+        <PenelopeLogo height={40} fill="var(--dark-purple)" />
       </div>
     );
   }
@@ -107,7 +111,12 @@ const Home= () => {
   const initLeave = () => {
     disco.leave();
     dismissDepartModal();
-  }
+  };
+
+  const selectTab = (index) => {
+    setNavIndex(index);
+    window.sessionStorage.setItem('navIndex', index);
+  };
 
   if (appMode === PLOT) {
     return (
@@ -121,7 +130,30 @@ const Home= () => {
         )}
         <div className="column-left">
           <LogoBlock />
-          {hasEntries ? (
+          <NavButtonGroup
+            selectTab={selectTab}
+            navIndex={navIndex}
+           />
+           {navIndex === 0 && (
+            <Session
+              signOut={initSignOut}
+              title="Account &amp; Plotter Connection"
+            />
+           )}
+           {navIndex === 1 && (
+            <SvgExplorer
+              goToConnect={() => selectTab(0)}
+              handleSelect={handleSelectImage}
+              title="Explore Your SVGs"
+            />
+           )}
+           {navIndex === 2 && (
+            <ImageDetails
+              title="Image Details"
+              goToConnect={() => selectTab(0)}
+            />
+           )}
+          {/* {hasEntries ? (
             <>
               <ImageControls
                 currentEntry={entries[currentEntryIndex]}
@@ -135,16 +167,16 @@ const Home= () => {
             </>
           ) : (
             <NoEntriesNotification initImageSelection={openImageSelectionModal} signOut={initSignOut} selectingImage={selectingImage} />
-          )}
+          )} */}
         </div>
-        {selectingImage && (
-          <ImageExplorer
+        {/* {selectingImage && (
+          <SvgExplorer
             dismiss={() => setSelectingImage(false)}
             handleSelect={handleSelectImage}
             currentIndex={currentEntryIndex}
           />
-        )}
-        {entries.length ? <ImagePreview thumbnail={entries[currentEntryIndex].images.thumbnail} shade={selectingImage} /> : <div><h3>¯\_(ツ)_/¯</h3></div>}
+        )} */}
+        {entries.length ? <ImagePreview thumbnail={entries[currentEntryIndex].images.thumbnail} /> : <div><h3>¯\_(ツ)_/¯</h3></div>}
       </main>
     );
   }
