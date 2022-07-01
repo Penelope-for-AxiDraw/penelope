@@ -5,8 +5,8 @@ import { ImagePaper, ImagePreviewContainer } from "./styles";
 export default function ImagePreview({ thumbnail }) {
   return (
     <ImagePreviewContainer>
-      <ImagePaper>
-        <Image className="image-canv" src={thumbnail.url} alt={thumbnail.fileName} width={thumbnail.width} height={thumbnail.height} />
+      <ImagePaper style={{ width: thumbnail.width, height: thumbnail.height }}>
+        <Image src={thumbnail.url} alt={thumbnail.fileName} width={thumbnail.width} height={thumbnail.height} layout="responsive" />
       </ImagePaper>
     </ImagePreviewContainer>
   );

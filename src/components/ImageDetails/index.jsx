@@ -13,11 +13,14 @@ const ImageDetails = ({ goToConnect, title }) => {
   const entry = entries[currentEntryIndex];
   const { images, uploadDate, description, title: imageTitle } = entry;
 
-  const blankHeightStyle = isConnected ? {} : { height: '8rem' };
-  const { width: widthInch, height: heightInch } = images.svg;
+  const contentfulPpi = 96;
   const ppi = 72;
-  const widthPx = widthInch * ppi;
-  const heightPx = heightInch * ppi;
+  const blankHeightStyle = isConnected ? {} : { height: '8rem' };
+  const { width, height } = images.svg;
+  const widthPx = width / contentfulPpi * ppi;
+  const heightPx = height / contentfulPpi * ppi;
+  const widthInch = widthPx / ppi;
+  const heightInch = heightPx / ppi;
   const dateObj = new Date(uploadDate);
   const getFormattedUploadDate = (d) => {
     const monthNameShort = dateObj.toLocaleString("en-US", { month: "short" });

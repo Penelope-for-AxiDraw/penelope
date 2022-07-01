@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export const ImagePaper = styled.div`
-  display: inline-block;
+  display: block;
   margin: 1rem;
   background: #fafafa;
 `;
