@@ -39,6 +39,7 @@ const BurstSpinner = ({ rgb=[68, 0, 163] }) => {
 
     const spinnerCanvas = canvasRef.current;
     const ctx = spinnerCanvas.getContext('2d');
+    // TODO: This getContext causes a null error occasionally.
 
     const fadeTimer = Date.now() - fadeInStart;
     const opa = fadeTimer < fadeDuration ? 0.86 * fadeTimer / fadeDuration : 0.86;
