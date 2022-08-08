@@ -9,5 +9,5 @@ export const ImagePaper = styled.div`
 export const ImagePreviewContainer = styled.div`
   flex-grow: 1;
   position: relative;
-  background-color: var(--grurple);
+  background-color: var(--light-grurple);
 `;
