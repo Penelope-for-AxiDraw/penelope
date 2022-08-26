@@ -7,6 +7,7 @@ const nextConfig = {
       'avatars.githubusercontent.com'
     ],
   },
+  basePath: '/penelope',
 }
 
 module.exports = nextConfig
