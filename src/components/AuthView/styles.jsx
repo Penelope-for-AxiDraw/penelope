@@ -12,7 +12,7 @@ export const Welcome = styled.div`
 '`;
 
 export const CredentialsBox = styled.div`
-  background: linear-gradient(0deg, var(--light-lavender) 0%, var(--lavender) 100%);
+  background: url('/penelope/images/random-triangles.svg'), linear-gradient(0deg, var(--light-lavender) 0%, var(--lavender) 100%);
   width: 24rem;
   height: 24rem;
   padding: 2rem;

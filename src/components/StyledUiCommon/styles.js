@@ -208,6 +208,10 @@ const Input = styled.input`
     outline-width: 1px;
     outline-style: inset;
   }
+
+  &:disabled {
+    background-color: #f7f2fd;
+  }
 `;
 
 const TextArea = styled.textarea`
@@ -243,6 +247,7 @@ const NavSection = styled.section`
   &.gallery {
     margin: 0;
     overflow-y: auto;
+    overflow-x: hidden;
     padding: 0 2rem;
     background-color: rgb(255 255 255 / 0.4);
   }

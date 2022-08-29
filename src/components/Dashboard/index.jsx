@@ -152,7 +152,7 @@ const Dashboard = ({ updateAppMode }) => {
       <LoginScreen>
         {isLoading || isAutoSignIn ? (
           <div className="dashboard-spinner">
-            <BurstSpinner rgb={[47, 47, 60]} />
+            <BurstSpinner bgCo={[240, 238, 246]} ringCo={[107, 0, 255]} />
           </div>
         ) : (
           <AuthView

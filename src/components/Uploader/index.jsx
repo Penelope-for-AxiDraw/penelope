@@ -293,55 +293,6 @@ const Uploader = ({ dismiss }) => {
 
   const fileQueued = !!svgFileData;
 
-  // return (
-  //   <>
-  //     {isUploading && (
-  //       <LoadingOverlay>
-  //         <Spinner fillColor="white" scale={0.75} />
-  //       </LoadingOverlay>
-  //     )}
-  //     <div>
-  //       <Dropzone
-  //         onFileAdded={handleFileAdded}
-  //         disabled={false}
-  //         acceptedTypes={['.svg']}
-  //       />
-  //       <div id="preview-container"></div>
-
-  //       <div className="field-cont">
-  //         <input
-  //           className="input-field"
-  //           placeholder="Image title"
-  //           onChange={handleChangeInput}
-  //           value={title}
-  //           name={TITLE}
-  //           disabled={isUploading}
-  //         />
-  //       </div>
-
-  //       {titleError && (
-  //         <p className="input-field-error">{titleError}</p>
-  //       )}
-
-  //       <div className="field-cont">
-  //         <textarea
-  //           rows={5}
-  //           cols={33}
-  //           maxLength={256}
-  //           placeholder="Description of this work"
-  //           onChange={handleChangeInput}
-  //           value={description}
-  //           name={DESCRIPTION}
-  //           disabled={isUploading}
-  //         ></textarea>
-  //       </div>
-
-  //       <button onClick={createNewEntry} disabled={!readyToUpload || isUploading}>Upload this SVG</button>
-  //       <button onClick={() => dismiss()}>You Know What, Never Mind</button>
-  //     </div>
-  //   </>
-  // );
-
   return (
     <ScreenShade>
       {fileQueued ? (

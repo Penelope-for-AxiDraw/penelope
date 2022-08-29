@@ -24,6 +24,7 @@
 body,
 html {
   background-color: var(--dark-gray);
+  background-color: var(--light-grurple);
   padding: 0;
   margin: 0;
 }
@@ -57,7 +58,7 @@ p {
   display: flex;
   flex-direction: column;
 
-  background: url('./panorama.png'), linear-gradient(0deg, var(--light-lavender) 0%, var(--lavender) 100%);
+  background: url('/penelope/images/panorama.png'), linear-gradient(0deg, var(--light-lavender) 0%, var(--lavender) 100%);
   background-repeat: no-repeat;
   background-size: contain;
   background-position: bottom;

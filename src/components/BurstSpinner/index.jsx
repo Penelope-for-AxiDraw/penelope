@@ -14,7 +14,13 @@ for (let i = 0; i < 48; i++) {
   defaultCircles.push(new Circle(duration));
 }
 
-const BurstSpinner = ({ rgb=[68, 0, 163] }) => {
+const defaultBgColor = [68, 0, 163];
+const defaultRingColor = [255, 255, 255];
+
+const BurstSpinner = ({
+  bgCo=defaultBgColor,
+  ringCo=defaultRingColor,
+}) => {
   const canvasRef = useRef(null)  
   const circles = defaultCircles;
   const fadeInStart = Date.now();
@@ -46,7 +52,7 @@ const BurstSpinner = ({ rgb=[68, 0, 163] }) => {
 
     ctx.clearRect(0, 0, SPINNER_CANVAS_WD, SPINNER_CANVAS_HT);
     // drawBackground(ctx, `rgb(68 0 163 / ${opa})`);
-    drawBackground(ctx, `rgb(${rgb[0]} ${rgb[1]} ${rgb[2]} / ${opa})`);
+    drawBackground(ctx, `rgb(${bgCo[0]} ${bgCo[1]} ${bgCo[2]} / ${opa})`);
     
     const elapsed = Date.now() % duration;
     circles.forEach(circ => {
@@ -57,13 +63,13 @@ const BurstSpinner = ({ rgb=[68, 0, 163] }) => {
     // Render animated rings
     ctx.beginPath();
     ctx.arc(cX, cY, 60 + 100 * elapsed / duration, 0, TWO_PI, false);
-    ctx.strokeStyle = `rgb(255 255 255 / ${opa * (1 - elapsed / duration)})`;
+    ctx.strokeStyle = `rgb(${ringCo[0]} ${ringCo[1]} ${ringCo[2]} / ${opa * (1 - elapsed / duration)})`;
     ctx.lineWidth = 1;
     ctx.stroke();
 
     ctx.beginPath();
     ctx.arc(cX, cY, 60 + 80 * elapsed / duration, 0, TWO_PI, false);
-    ctx.strokeStyle = `rgb(255 255 255 / ${opa * (1 - elapsed / duration)})`;
+    ctx.strokeStyle = `rgb(${ringCo[0]} ${ringCo[1]} ${ringCo[2]} / ${opa * (1 - elapsed / duration)})`;
     ctx.lineWidth = 1;
     ctx.stroke();
 
@@ -71,13 +77,18 @@ const BurstSpinner = ({ rgb=[68, 0, 163] }) => {
     ctx.arc(cX, cY, 60, 0, TWO_PI, false);
     ctx.fillStyle = `rgb(68 0 163 / ${opa * 0.25})`;
     ctx.fill();
-    ctx.strokeStyle = `rgb(255 255 255 / ${opa})`;
-    ctx.lineWidth = 3;
+    ctx.strokeStyle = `rgb(${ringCo[0]} ${ringCo[1]} ${ringCo[2]} / ${opa})`;
+    ctx.lineWidth = 2;
     ctx.stroke();
   }
   
   useAnimationFrame(deltaTime => {
-    renderEverythingEverywhere();
+    // NOTE this check of canvasRef.current is a workaround for a `Cannot
+    // read property 'getContext' of Null` error. We should re-evaluate
+    // this entire animation to see if there's a better approach
+    if (canvasRef.current) {
+      renderEverythingEverywhere();
+    }
   });
 
   return (

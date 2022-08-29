@@ -56,12 +56,6 @@ const Home= () => {
     });
   }
 
-  const placeholder = {
-    url: 'fun-pattern.png',
-    width: 288,
-    height: 432,
-  };
-
   const hasEntries = entries.length > 0;
 
   // useEffect(() => {
@@ -153,29 +147,7 @@ const Home= () => {
               goToConnect={() => selectTab(0)}
             />
            )}
-          {/* {hasEntries ? (
-            <>
-              <ImageControls
-                currentEntry={entries[currentEntryIndex]}
-                initImageSelection={openImageSelectionModal}
-                selectingImage={selectingImage}
-                signOut={initSignOut}
-              />
-              <AxiDrawControl
-                currentSvgData={entries[currentEntryIndex]}
-              />
-            </>
-          ) : (
-            <NoEntriesNotification initImageSelection={openImageSelectionModal} signOut={initSignOut} selectingImage={selectingImage} />
-          )} */}
         </div>
-        {/* {selectingImage && (
-          <SvgExplorer
-            dismiss={() => setSelectingImage(false)}
-            handleSelect={handleSelectImage}
-            currentIndex={currentEntryIndex}
-          />
-        )} */}
         {entries.length ? <ImagePreview thumbnail={entries[currentEntryIndex].images.thumbnail} /> : <div><h3>¯\_(ツ)_/¯</h3></div>}
       </main>
     );
@@ -189,17 +161,3 @@ const Home= () => {
 };
 
 export default Home;
-
-
-const NoEntriesNotification = ({ initImageSelection, selectingImage, initSignOut }) => {
-  return (
-    <section>
-      <div>
-        <span>(╯°□°)╯︵ ┻━┻</span>
-        <p>You haven&apos;t uploaded any SVGs yet</p>
-        <button onClick={initImageSelection} disabled={selectingImage}>Let&apos;s Do That!</button>
-        <button onClick={initSignOut}>Sign Out</button>
-      </div>
-    </section>
-  );
-}
