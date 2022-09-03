@@ -13,7 +13,7 @@ import {
   svgToImage
 } from "../../utils";
 import BurstSpinner from "../BurstSpinner";
-import { BASELINE_DIMENSION } from "../../constants";
+import { BASELINE_DIMENSION, CONTENT_TYPE_ID } from "../../constants";
 
 const Uploader = ({ dismiss }) => {
   const TITLE = 'title';
@@ -58,7 +58,6 @@ const Uploader = ({ dismiss }) => {
     const pngAssetId = await uploadPng();
 
     // Configure the new entry
-    const contentType = "axiSvgData";
     const fields = {
       title: {
         'en-US': imageInfo.values[TITLE],
@@ -90,7 +89,7 @@ const Uploader = ({ dismiss }) => {
     const newEntry = await client
       .getSpace(spaceId)
       .then((space) => space.getEnvironment('master'))
-      .then((environment) => environment.createEntry(contentType, { fields }))
+      .then((environment) => environment.createEntry(CONTENT_TYPE_ID, { fields }))
       .then((entry) => entry.publish())
       .catch((e) => {
         console.error(e);

@@ -1,10 +1,12 @@
+import { CONTENT_TYPE_ID } from "../constants";
+
 // Load Axi SVG content from Contentful
   const fetchAxiSvgContent = async (space) => {
     const fieldsToGet = ['title', 'description', 'thumbnail', 'svgFile'];
     const { items: entries } = await space.getEnvironment("master")
       .then((environment) =>
         environment.getEntries({
-          content_type: 'axiSvgData',
+          content_type: CONTENT_TYPE_ID,
           select: fieldsToGet.map(f => `fields.${f}`).join(',')
         })
       );
@@ -15,8 +17,6 @@
     // TODO: Add some error handling for the above API calls
 
     const entriesWithImageUrls = publishedEntries.filter((item) => {
-      // console.log(item);
-      // return true;
       return item.fields.hasOwnProperty('svgFile') && item.fields.hasOwnProperty('thumbnail');
     }).map((item) => {
       const thumbnailID = item.fields.thumbnail["en-US"].sys.id;
