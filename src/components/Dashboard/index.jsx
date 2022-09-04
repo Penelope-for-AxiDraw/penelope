@@ -17,7 +17,7 @@ const Dashboard = ({ updateAppMode }) => {
 
   const [isLoading, setIsLoading] = useState(false);
   const [isSigningIn, setIsSigningIn] = useState(false);
-  const [isAutoSignIn, setIsAutoSignIn] = useState(true);
+  // const [isAutoSignIn, setIsAutoSignIn] = useState(true);
   const [retrievedEntries, setRetrievedEntries] = useState(false);
   const [fieldCreds, setFieldCreds] = useState({
     values: {
@@ -30,6 +30,7 @@ const Dashboard = ({ updateAppMode }) => {
     },
   });
   const credentialsLocalStorage = getFromLocalStorage('contentfulCreds');
+  const hasCredentials = credentialsLocalStorage?.accessToken && credentialsLocalStorage?.spaceId;
 
   const handleChangeInput = (e) => {
     const updatedCreds = {
@@ -167,35 +168,30 @@ const Dashboard = ({ updateAppMode }) => {
       // updateAppMode(PLOT);
     } catch (err) {
       updateSignInErrors(err);
-      setIsSigningIn(false);
       // throw err
+    } finally {
+      setIsSigningIn(false);
     }
 
     return true
   }
 
   useEffect(() => {
-    console.log('hello there');
-    // THE CODE INSIDE THIS useEffect IS ALMOST IDENTICAL
-    // TO THE CODE THAT RUNS WHEN USER CLICKS SIGN IN.
-    // MAYBE THEY CAN BE CONSOLIDATED
-    // if (!credentialsLocalStorage?.accessToken || !credentialsLocalStorage?.spaceId) {
-    //   setIsAutoSignIn(false);
-    //   // return;
-    // }
+    // THE LOGIC INSIDE THIS useEffect IS ALMOST IDENTICAL
+    // TO THE LOGIC THAT RUNS WHEN USER CLICKS SIGN IN.
+    // MAYBE THEY CAN BE CONSOLIDATED?
 
     const initClientFromStoredCreds = async () => {
-      // setIsAutoSignIn(true);
+      console.log('Initialize client from stored creds…');
+      setIsSigningIn(true);
       setRetrievedEntries(true);
       try {
         const { accessToken, spaceId } = credentialsLocalStorage;
         const client = createClient({ accessToken: accessToken });
         const space = await client.getSpace(spaceId);
-        console.log('got space');
-
         const user = await client.getCurrentUser();
         const { email, firstName, lastName, avatarUrl } = user;
-        console.log('got user');
+
         dispatch({
           type: 'SET_USER',
           payload: {
@@ -206,7 +202,6 @@ const Dashboard = ({ updateAppMode }) => {
         // 1. Authenticated! Now fetch Axi SVG Content
         setIsLoading(true);
         const data = await fetchAxiSvgContent(space);
-        console.log('got data');
 
         // 2. Save content into local storage
         saveToLocalStorage('axiSvgContent', data);
@@ -220,31 +215,33 @@ const Dashboard = ({ updateAppMode }) => {
         // 3. Show the main app component
         updateAppMode(PLOT);
       } catch (err) {
-        // setIsAutoSignIn(false);
         console.error('Auto sign-in failed', err);
+      } finally {
+        setIsSigningIn(false);
       }
 
       return true;
     }
 
-    const hasCredentials = credentialsLocalStorage?.accessToken && credentialsLocalStorage?.spaceId;
-
     if (hasCredentials && !retrievedEntries) {
       console.log('attempting to sign in from stored credentials');
       initClientFromStoredCreds();
     }
-  }, [dispatch, credentialsLocalStorage, updateAppMode, retrievedEntries]);
+
+    return () => {};
+  }, [dispatch, hasCredentials, updateAppMode, retrievedEntries, credentialsLocalStorage]);
 
   return (
     <>
       <LoginScreen>
-        {isLoading || isAutoSignIn ? (
+        {isLoading || isSigningIn ? (
           <div className="dashboard-spinner">
             <BurstSpinner bgCo={[240, 238, 246]} ringCo={[107, 0, 255]} />
           </div>
         ) : (
           <AuthView
-            attemptSignIn={initClientFromInput}
+            // attemptSignIn={initClientFromInput}
+            attemptSignIn={() => { }}
             isSigningIn={isSigningIn}
             fieldCreds={fieldCreds}
             handleChangeInput={handleChangeInput}

@@ -4,8 +4,8 @@ const TWO_PI = 2 * Math.PI;
 const SPINNER_CANVAS_WD = 640;
 const SPINNER_CANVAS_HT = 640;
 const BASELINE_DIMENSION = 16;
-const CONTENT_TYPE_ID = 'axiSvgData';
-const CONTENT_TYPE_NAME = 'Axi SVG Data';
+const CONTENT_TYPE_ID = 'axiSvgData07';
+const CONTENT_TYPE_NAME = 'Axi SVG Data07';
 
 export {
   BASELINE_DIMENSION,
