@@ -11,6 +11,7 @@ import NavButtonGroup from '../src/components/NavButtonGroup';
 import ImageDetails from '../src/components/ImageDetails';
 import { saveToLocalStorage } from '../src/utils';
 import PenelopeLogo from '../src/components/PenelopeLogo';
+import Hmmm from '../src/components/Hmmm';
 
 const Home = () => {
   const defaultMode = DASHBOARD;
@@ -145,14 +146,6 @@ const Home = () => {
     <main>
       <Dashboard updateAppMode={updateAppMode} />
     </main>
-  );
-};
-
-const Hmmm = () => {
-  return (
-    <div style={{ display: 'flex', width: '100%', justifyContent: 'center', alignItems: 'center' }}>
-      <h2>¯\_(ツ)_/¯</h2>
-    </div>
   );
 };
 

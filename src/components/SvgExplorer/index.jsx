@@ -9,7 +9,7 @@ import { store } from '../../providers/store';
 import ImageBlock from '../ImageCard';
 import Uploader from '../Uploader';
 import { PlayIcon } from '../Icons';
-import { CONTENT_TYPE_ID, CONTENT_TYPE_NAME } from '../../constants';
+// import { CONTENT_TYPE_ID, CONTENT_TYPE_NAME } from '../../constants';
 
 const SvgExplorer = ({ goToConnect, handleSelect, title }) => {
   const globalState = useContext(store);

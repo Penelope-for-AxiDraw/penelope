@@ -154,20 +154,10 @@ const AuthView = ({
             )}
           </section>
 
-          {/* <Button
-            className="login-button"
-            onClick={() => attemptSignIn(fieldCreds)}
-            disabled={isSigningIn || anyBlankFields}
-            variant="alternate"
-            wide
-          >
-            Let&apos;s Begin
-          </Button> */}
-          <IconButton className="cta" variant="alternate" onClick={() => attemptSignIn(fieldCreds)} disabled={isSigningIn || anyBlankFields} wide>
+          <IconButton className="cta" variant="alternate" onClick={() => attemptSignIn()} disabled={isSigningIn || anyBlankFields} wide>
             <RocketLaunchIcon width={24} height={24} fill="#fff" />
             <span>Let&apos;s Begin</span>
           </IconButton>
-
 
           <p className="input-field-hint">
             Not sure what the heck this is?{' '}
