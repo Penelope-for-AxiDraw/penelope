@@ -17,17 +17,20 @@ const Dashboard = ({ updateAppMode }) => {
 
   const [isLoading, setIsLoading] = useState(false);
   const [isSigningIn, setIsSigningIn] = useState(false);
+  const credentialsLocalStorage = getFromLocalStorage('contentfulCreds');
+  const defaultToken = credentialsLocalStorage?.accessToken || '';
+  const defaultSpaceId = credentialsLocalStorage?.spaceId || '';
   const [fieldCreds, setFieldCreds] = useState({
     values: {
-      [TOKEN]: isDevMode ? process.env.NEXT_PUBLIC_PERSONAL_ACCESS_TOKEN : '',
-      [SPACE_ID]: isDevMode ? process.env.NEXT_PUBLIC_SPACE : '',
+      [TOKEN]: isDevMode ? process.env.NEXT_PUBLIC_PERSONAL_ACCESS_TOKEN : defaultToken,
+      [SPACE_ID]: isDevMode ? process.env.NEXT_PUBLIC_SPACE : defaultSpaceId,
     },
     errors: {
       [TOKEN]: '',
       [SPACE_ID]: '',
     },
   });
-  const credentialsLocalStorage = getFromLocalStorage('contentfulCreds');
+  // const credentialsLocalStorage = getFromLocalStorage('contentfulCreds');
   // const hasCredentials = credentialsLocalStorage?.accessToken && credentialsLocalStorage?.spaceId;
 
   const handleChangeInput = (e) => {
@@ -102,14 +105,14 @@ const Dashboard = ({ updateAppMode }) => {
           }
         ]
       }))
-      .then((contentType) => console.info(`Content type ${contentType.sys.id} was created.`))
+      // .then((contentType) => console.info(`Content type ${contentType.sys.id} was created.`))
       .catch(console.error);
 
     // Activate (publish) the new axiSvgData content type
     await space.getEnvironment('master')
       .then((environment) => environment.getContentType(CONTENT_TYPE_ID))
       .then((contentType) => contentType.publish())
-      .then((contentType) => console.info(`Content type ${contentType.sys.id} was activated.`))
+      // .then((contentType) => console.info(`Content type ${contentType.sys.id} was activated.`))
       .catch(console.error);
   };
 
@@ -118,7 +121,7 @@ const Dashboard = ({ updateAppMode }) => {
     if (typeExists) {
       return true;
     }
-    console.log('Content type does not exist yet. Creating it now…');
+    // console.info('Content type does not exist yet. Creating it now…');
     await createContentType(space);
     return false;
   };
@@ -160,10 +163,9 @@ const Dashboard = ({ updateAppMode }) => {
       try {
         // 1. Fetch Axi SVG Content
         setIsLoading(true);
-        console.log("checking if content type exists");
+        // console.info("checking if content type exists");
         const exists = await confirmContentTypeExists(space);
         const data = exists ? await fetchAxiSvgContent(space) : [];
-        console.log("data is", data);
 
         // 2. Save content into local storage
         saveToLocalStorage('axiSvgContent', data);
