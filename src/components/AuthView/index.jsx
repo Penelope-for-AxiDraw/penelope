@@ -49,15 +49,22 @@ const MoreInfo = ({ show, infoBoxOpen }) => {
           </p>
           <p>
             A couple of things before we get started: First, you&apos;ll need to sign
-            in here with a personal access token and space ID from Contentful.{' '}
+            in here with a personal access token and space ID from Contentful. Basic accounts are{' '}
+            <a
+              href="https://www.contentful.com/"
+              target="_blank"
+              rel="noreferrer"
+            >
+              free
+            </a>{' '}. To find out how to get your personal access token,{' '}
             <a
               href="https://www.contentful.com/help/personal-access-tokens/#how-to-get-a-personal-access-token-the-web-app"
               target="_blank"
               rel="noreferrer"
             >
-              Click here
-            </a>{' '}
-            find out how to get your personal access token. Then, if you haven&apos;t already,{' '}
+              click here
+            </a>
+            . Then, if you haven&apos;t already,{' '}
             <a
               href="https://www.contentful.com/help/contentful-101/#step-2-create-a-space"
               target="_blank"
