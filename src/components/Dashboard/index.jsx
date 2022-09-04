@@ -10,14 +10,15 @@ import BurstSpinner from '../BurstSpinner';
 
 const Dashboard = ({ updateAppMode }) => {
   const globalState = useContext(store);
-  const { dispatch } = globalState;
+  const { dispatch, entries } = globalState;
   const SPACE_ID = 'spaceId';
   const TOKEN = 'accessToken';
   const isDevMode = process.env.NODE_ENV === 'development';
 
   const [isLoading, setIsLoading] = useState(false);
   const [isSigningIn, setIsSigningIn] = useState(false);
-  const [isAutoSignIn, setIsAutoSignIn] = useState(false);
+  const [isAutoSignIn, setIsAutoSignIn] = useState(true);
+  const [retrievedEntries, setRetrievedEntries] = useState(false);
   const [fieldCreds, setFieldCreds] = useState({
     values: {
       [TOKEN]: isDevMode ? process.env.NEXT_PUBLIC_PERSONAL_ACCESS_TOKEN : '',
@@ -28,6 +29,7 @@ const Dashboard = ({ updateAppMode }) => {
       [SPACE_ID]: '',
     },
   });
+  const credentialsLocalStorage = getFromLocalStorage('contentfulCreds');
 
   const handleChangeInput = (e) => {
     const updatedCreds = {
@@ -113,12 +115,12 @@ const Dashboard = ({ updateAppMode }) => {
 
   const confirmContentTypeExists = async (space) => {
     const typeExists = await checkContentType(space);
-    if (!typeExists) {
-      console.log('Content type does not exist yet. Creating it now…');
-      await createContentType(space);
+    if (typeExists) {
+      return true;
     }
-
-    return null;
+    console.log('Content type does not exist yet. Creating it now…');
+    await createContentType(space);
+    return false;
   };
 
   const initClientFromInput = async (fieldCreds) => {
@@ -143,20 +145,26 @@ const Dashboard = ({ updateAppMode }) => {
 
       // 1. Authenticated! Now fetch Axi SVG Content
       setIsLoading(true);
-      await confirmContentTypeExists(space);
-      const data = await fetchAxiSvgContent(space);
+      // await confirmContentTypeExists(space);
+      // const data = await fetchAxiSvgContent(space);
+      console.log("checking if content type exists");
+      return null;  // delete this
+      // const exists = await confirmContentTypeExists(space);
+      // console.log(exists ? "It exists" : "It does not yet exist");
+      // const data = exists ? await fetchAxiSvgContent(space) : {};
+      // console.log("data is", data);
 
-      // 2. Save content into local storage
-      saveToLocalStorage('axiSvgContent', data);
-      dispatch({
-        type: 'SET_ENTRIES_DATA',
-        payload: {
-          data,
-        },
-      });
+      // // 2. Save content into local storage
+      // saveToLocalStorage('axiSvgContent', data);
+      // dispatch({
+      //   type: 'SET_ENTRIES_DATA',
+      //   payload: {
+      //     data,
+      //   },
+      // });
 
-      // 3. Show the main app component
-      updateAppMode(PLOT);
+      // // 3. Show the main app component
+      // updateAppMode(PLOT);
     } catch (err) {
       updateSignInErrors(err);
       setIsSigningIn(false);
@@ -167,23 +175,27 @@ const Dashboard = ({ updateAppMode }) => {
   }
 
   useEffect(() => {
+    console.log('hello there');
     // THE CODE INSIDE THIS useEffect IS ALMOST IDENTICAL
     // TO THE CODE THAT RUNS WHEN USER CLICKS SIGN IN.
     // MAYBE THEY CAN BE CONSOLIDATED
-    const initClientFromStoredCreds = async () => {
-      const credentialsLocalStorage = getFromLocalStorage('contentfulCreds');
-      if (!credentialsLocalStorage?.accessToken || !credentialsLocalStorage?.spaceId) {
-        return;
-      }
+    // if (!credentialsLocalStorage?.accessToken || !credentialsLocalStorage?.spaceId) {
+    //   setIsAutoSignIn(false);
+    //   // return;
+    // }
 
-      setIsAutoSignIn(true);
+    const initClientFromStoredCreds = async () => {
+      // setIsAutoSignIn(true);
+      setRetrievedEntries(true);
       try {
         const { accessToken, spaceId } = credentialsLocalStorage;
         const client = createClient({ accessToken: accessToken });
         const space = await client.getSpace(spaceId);
+        console.log('got space');
 
         const user = await client.getCurrentUser();
         const { email, firstName, lastName, avatarUrl } = user;
+        console.log('got user');
         dispatch({
           type: 'SET_USER',
           payload: {
@@ -193,8 +205,8 @@ const Dashboard = ({ updateAppMode }) => {
 
         // 1. Authenticated! Now fetch Axi SVG Content
         setIsLoading(true);
-        await confirmContentTypeExists(space);
         const data = await fetchAxiSvgContent(space);
+        console.log('got data');
 
         // 2. Save content into local storage
         saveToLocalStorage('axiSvgContent', data);
@@ -208,18 +220,20 @@ const Dashboard = ({ updateAppMode }) => {
         // 3. Show the main app component
         updateAppMode(PLOT);
       } catch (err) {
-        setIsAutoSignIn(false);
+        // setIsAutoSignIn(false);
         console.error('Auto sign-in failed', err);
       }
 
       return true;
     }
 
-    if (!isAutoSignIn) {
+    const hasCredentials = credentialsLocalStorage?.accessToken && credentialsLocalStorage?.spaceId;
+
+    if (hasCredentials && !retrievedEntries) {
+      console.log('attempting to sign in from stored credentials');
       initClientFromStoredCreds();
     }
-
-  }, [dispatch, isAutoSignIn, updateAppMode]);
+  }, [dispatch, credentialsLocalStorage, updateAppMode, retrievedEntries]);
 
   return (
     <>
