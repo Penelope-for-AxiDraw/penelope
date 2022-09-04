@@ -5,7 +5,7 @@ import AuthView from '../AuthView';
 import { LoginScreen } from './styles';
 import { fetchAxiSvgContent, getFromLocalStorage, saveToLocalStorage } from '../../utils';
 import { store } from '../../providers/store';
-import { PLOT } from '../../constants';
+import { CONTENT_TYPE_ID, CONTENT_TYPE_NAME, PLOT } from '../../constants';
 import BurstSpinner from '../BurstSpinner';
 
 const Dashboard = ({ updateAppMode }) => {
@@ -21,7 +21,7 @@ const Dashboard = ({ updateAppMode }) => {
   const [fieldCreds, setFieldCreds] = useState({
     values: {
       [TOKEN]: isDevMode ? process.env.NEXT_PUBLIC_PERSONAL_ACCESS_TOKEN : '',
-      [SPACE_ID]: isDevMode ? process.env.NEXT_PUBLIC_SPACE: '',
+      [SPACE_ID]: isDevMode ? process.env.NEXT_PUBLIC_SPACE : '',
     },
     errors: {
       [TOKEN]: '',
@@ -34,7 +34,7 @@ const Dashboard = ({ updateAppMode }) => {
       ...fieldCreds,
       values: {
         ...fieldCreds.values,
-        [e.target.name]: e.target.value,        
+        [e.target.name]: e.target.value,
       },
       errors: {
         [TOKEN]: '',
@@ -48,6 +48,78 @@ const Dashboard = ({ updateAppMode }) => {
   const updateSignInErrors = (err) => {
     console.error(err);
   }
+
+  // Move this process to after sign-in and before fetching content
+  const checkContentType = async (space) => {
+    const contentTypeExists = await space.getEnvironment('master')
+      .then((environment) => environment.getContentTypes())
+      .then((response) => {
+        const contentTypeIds = response.items.map(item => item.sys.id);
+        return contentTypeIds.includes(CONTENT_TYPE_ID);
+      })
+      .catch(console.error);
+
+    return contentTypeExists;
+  };
+
+  const createContentType = async (space) => {
+    // Create the new content type for AxiDraw SVG data
+    await space.getEnvironment('master')
+      .then((environment) => environment.createContentTypeWithId(CONTENT_TYPE_ID, {
+        name: CONTENT_TYPE_NAME,
+        fields: [
+          {
+            id: 'title',
+            name: 'Title',
+            type: 'Symbol',
+            localized: false,
+            required: true,
+          },
+          {
+            id: 'description',
+            name: 'Description',
+            type: 'Symbol',
+            localized: false,
+            required: false,
+          },
+          {
+            id: 'thumbnail',
+            name: 'Thumbnail',
+            type: 'Link',
+            localized: false,
+            required: false,
+            linkType: 'Asset'
+          },
+          {
+            id: 'svgFile',
+            name: 'SVG File',
+            type: 'Link',
+            localized: false,
+            required: false,
+            linkType: 'Asset'
+          }
+        ]
+      }))
+      .then((contentType) => console.info(`Content type ${contentType.sys.id} was created.`))
+      .catch(console.error);
+
+    // Activate (publish) the new axiSvgData content type
+    await space.getEnvironment('master')
+      .then((environment) => environment.getContentType(CONTENT_TYPE_ID))
+      .then((contentType) => contentType.publish())
+      .then((contentType) => console.info(`Content type ${contentType.sys.id} was activated.`))
+      .catch(console.error);
+  };
+
+  const confirmContentTypeExists = async (space) => {
+    const typeExists = await checkContentType(space);
+    if (!typeExists) {
+      console.log('Content type does not exist yet. Creating it now…');
+      await createContentType(space);
+    }
+
+    return null;
+  };
 
   const initClientFromInput = async (fieldCreds) => {
     const accessToken = fieldCreds.values[TOKEN];
@@ -71,6 +143,7 @@ const Dashboard = ({ updateAppMode }) => {
 
       // 1. Authenticated! Now fetch Axi SVG Content
       setIsLoading(true);
+      await confirmContentTypeExists(space);
       const data = await fetchAxiSvgContent(space);
 
       // 2. Save content into local storage
@@ -89,7 +162,7 @@ const Dashboard = ({ updateAppMode }) => {
       setIsSigningIn(false);
       // throw err
     }
-  
+
     return true
   }
 
@@ -108,7 +181,7 @@ const Dashboard = ({ updateAppMode }) => {
         const { accessToken, spaceId } = credentialsLocalStorage;
         const client = createClient({ accessToken: accessToken });
         const space = await client.getSpace(spaceId);
-  
+
         const user = await client.getCurrentUser();
         const { email, firstName, lastName, avatarUrl } = user;
         dispatch({
@@ -120,6 +193,7 @@ const Dashboard = ({ updateAppMode }) => {
 
         // 1. Authenticated! Now fetch Axi SVG Content
         setIsLoading(true);
+        await confirmContentTypeExists(space);
         const data = await fetchAxiSvgContent(space);
 
         // 2. Save content into local storage
@@ -130,14 +204,14 @@ const Dashboard = ({ updateAppMode }) => {
             data,
           },
         });
-  
+
         // 3. Show the main app component
         updateAppMode(PLOT);
       } catch (err) {
         setIsAutoSignIn(false);
         console.error('Auto sign-in failed', err);
       }
-    
+
       return true;
     }
 

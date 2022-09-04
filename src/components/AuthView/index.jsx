@@ -19,19 +19,19 @@ const MoreInfo = ({ show, infoBoxOpen }) => {
         <div>
           <p>
             Hello there, lovely human. Welcome to Penelope, an interface for AxiDraw.
-            You&apos;re free to use Penelope if you don&apos;t have an{" "}
+            You&apos;re free to use Penelope if you don&apos;t have an{' '}
             <a
               href="https://shop.evilmadscientist.com/productsmenu/846"
               target="_blank"
               rel="noreferrer"
             >
               AxiDraw
-            </a>{" "}
+            </a>{' '}
             pen plotter. BUT… if you don&apos;t have access to an AxiDraw,
             this app might not be of much use to you.
           </p>
           <p>
-            Still there? Fantastic. Penelope is a GUI on top of the{" "}
+            Still there? Fantastic. Penelope is a GUI on top of the{' '}
             <a
               href="https://axidraw.com/doc/py_api/#introduction"
               target="_blank"
@@ -39,29 +39,42 @@ const MoreInfo = ({ show, infoBoxOpen }) => {
             >
               AxiDraw Python API
             </a>
-            . While{" "}
+            . While{' '}
             <a href="https://inkscape.org/" target="_blank" rel="noreferrer">
               Inkscape
-            </a>{" "}
+            </a>{' '}
             has an extension for plotting from AxiDraw, it&apos;s not very fun
             to use. Penelope has some of the same functionality as the Inkscape
             extension and the AxiDraw API / CLI.
           </p>
           <p>
             A couple of things before we get started: First, you&apos;ll need to sign
-            in here with a personal access token and space ID from Contentful.{" "}
+            in here with a personal access token and space ID from Contentful.{' '}
             <a
               href="https://www.contentful.com/help/personal-access-tokens/#how-to-get-a-personal-access-token-the-web-app"
               target="_blank"
               rel="noreferrer"
             >
               Click here
-            </a>{" "}
-            to learn about how to set that up. You&apos;ll also need to download
-            and run the{" "}
+            </a>{' '}
+            find out how to get your personal access token. Then, if you haven&apos;t already,{' '}
+            <a
+              href="https://www.contentful.com/help/contentful-101/#step-2-create-a-space"
+              target="_blank"
+              rel="noreferrer"
+            >
+              create a space
+            </a>{' '}. You can find out the space&apos;s id by following{' '}
+            <a
+              href="https://www.contentful.com/help/find-space-id/"
+              target="_blank"
+              rel="noreferrer"
+            >
+              these steps
+            </a>. You&apos;ll also need to download and run the{' '}
             <a href="https://github.com/computershawn/penelope-server" target="_blank" rel="noreferrer">
               Penelope Python app
-            </a>{" "}
+            </a>{' '}
             on your computer.
           </p>
         </div>
@@ -104,7 +117,7 @@ const AuthView = ({
     <Welcome isOpen={showMoreInfo}>
       <CredentialsBox infoBoxOpen={showMoreInfo}>
         <div className="ui-container">
-          <div style={{lineHeight:'0'}}>
+          <div style={{ lineHeight: '0' }}>
             <PenelopeLogo height={60} fill="var(--dark-purple)" />
           </div>
           <p className="form-description">Enter your personal access token and space ID</p>
@@ -150,7 +163,7 @@ const AuthView = ({
 
 
           <p className="input-field-hint">
-            Not sure what the heck this is?{" "}
+            Not sure what the heck this is?{' '}
             <ButtonInlineText onClick={() => setShowMoreInfo(true)}>Click here for info</ButtonInlineText>
             .
           </p>
