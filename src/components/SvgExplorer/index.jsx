@@ -9,6 +9,7 @@ import { store } from '../../providers/store';
 import ImageBlock from '../ImageCard';
 import Uploader from '../Uploader';
 import { PlayIcon } from '../Icons';
+// import { CONTENT_TYPE_ID, CONTENT_TYPE_NAME } from '../../constants';
 
 const SvgExplorer = ({ goToConnect, handleSelect, title }) => {
   const globalState = useContext(store);
@@ -33,7 +34,7 @@ const SvgExplorer = ({ goToConnect, handleSelect, title }) => {
       .then((environment) => environment.getEntry(entryId))
       .then((entry) => entry.unpublish())
       .then((entry) => entry.delete())
-      .catch(console.error)    
+      .catch(console.error)
 
     await space.getEnvironment('master')
       .then((environment) => environment.getAsset(thumbnailId))
@@ -87,10 +88,10 @@ const SvgExplorer = ({ goToConnect, handleSelect, title }) => {
       <NavSection className="gallery-cta-footer" style={blankHeightStyle}>
         {isConnected ? (
           <IconButton className="cta" variant="alternate" onClick={() => plot(entries[currentEntryIndex], axiConnection)} wide>
-              <PlayIcon width={24} height={24} fill='#fff' />
-              <span>Plot It!</span>
+            <PlayIcon width={24} height={24} fill='#fff' />
+            <span>Plot It!</span>
           </IconButton>
-        ): (
+        ) : (
           <p className="blurb">To begin plotting, <ClearBtn onClick={goToConnect}>connect to AxiDraw</ClearBtn>.</p>
         )}
       </NavSection>

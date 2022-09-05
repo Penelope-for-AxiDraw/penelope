@@ -11,8 +11,9 @@ import NavButtonGroup from '../src/components/NavButtonGroup';
 import ImageDetails from '../src/components/ImageDetails';
 import { saveToLocalStorage } from '../src/utils';
 import PenelopeLogo from '../src/components/PenelopeLogo';
+import Hmmm from '../src/components/Hmmm';
 
-const Home= () => {
+const Home = () => {
   const defaultMode = DASHBOARD;
   const globalState = useContext(store);
   const [appMode, setAppMode] = useState(defaultMode);
@@ -56,18 +57,6 @@ const Home= () => {
     });
   }
 
-  const hasEntries = entries.length > 0;
-
-  // useEffect(() => {
-  //   const noUser = Object.getOwnPropertyNames(user).length === 0;
-
-  //   if (noUser || !hasEntries) {
-  //     // Either user or entries is empty; Go back to auth screen
-  //     // router.push('/start');
-  //   }
-
-  // }, [hasEntries, user]);
-
   useEffect(() => {
     // Go to most recent tab from session on page load
     let index;
@@ -96,7 +85,7 @@ const Home= () => {
         data: {
           showWarning: false,
           warningCopy: {},
-          leave: () => {},
+          leave: () => { },
         }
       }
     });
@@ -127,28 +116,28 @@ const Home= () => {
           <NavButtonGroup
             selectTab={selectTab}
             navIndex={navIndex}
-           />
-           {navIndex === 0 && (
+          />
+          {navIndex === 0 && (
             <Session
               signOut={initSignOut}
               title="Account &amp; Plotter Connection"
             />
-           )}
-           {navIndex === 1 && (
+          )}
+          {navIndex === 1 && (
             <SvgExplorer
               goToConnect={() => selectTab(0)}
               handleSelect={handleSelectImage}
               title="Explore Your SVGs"
             />
-           )}
-           {navIndex === 2 && (
+          )}
+          {navIndex === 2 && (
             <ImageDetails
               title="Image Details"
               goToConnect={() => selectTab(0)}
             />
-           )}
+          )}
         </div>
-        {entries.length ? <ImagePreview thumbnail={entries[currentEntryIndex].images.thumbnail} /> : <div><h3>¯\_(ツ)_/¯</h3></div>}
+        {entries.length ? <ImagePreview thumbnail={entries[currentEntryIndex].images.thumbnail} /> : <Hmmm />}
       </main>
     );
   }
