@@ -239,6 +239,7 @@ const NavSection = styled.section`
   margin: 0 2rem;
   display: flex;
   flex-direction: column;
+  width: 18rem;
 
   &.main-area {
     flex-grow: 1;

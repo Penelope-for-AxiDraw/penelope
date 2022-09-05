@@ -114,7 +114,7 @@ export default function Session({
     if (isValid) {
       getAxiSocket();
     } else {
-      registerError(new Error('The host or the port of this address is badly formatted.'), 'Address is badly formatted.')
+      registerError(new Error('The host or the port of this address is badly formatted.'), 'There was a connection problem. Are you sure Penelope server is running?')
     }
   };
 

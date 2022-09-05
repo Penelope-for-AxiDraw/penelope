@@ -30,8 +30,6 @@ const Dashboard = ({ updateAppMode }) => {
       [SPACE_ID]: '',
     },
   });
-  // const credentialsLocalStorage = getFromLocalStorage('contentfulCreds');
-  // const hasCredentials = credentialsLocalStorage?.accessToken && credentialsLocalStorage?.spaceId;
 
   const handleChangeInput = (e) => {
     const updatedCreds = {

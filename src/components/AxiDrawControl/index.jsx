@@ -9,8 +9,6 @@ const AxiDrawControl = () => {
   const { dispatch, state: { axiConnection, isConnected, axiAddress, axiConnectionError, deviceName, penUp } } = globalState;
   const RAISE = 'Raise Pen';
   const LOWER = 'Lower Pen';
-  // TODO: Ping AxiDraw to get up/down status of the pen, and
-  // change the raise/lower button's text
 
   const initDisconnect = () => {
     const warningCopy = {
@@ -87,7 +85,7 @@ const AxiDrawControl = () => {
           <ControlsContainer>
             <InputLabel>Pen Controls</InputLabel>
             <div className="button-group">
-              <OutlineBtn onClick={handleToggle}>{penUp ? LOWER : RAISE }</OutlineBtn>
+              <OutlineBtn onClick={handleToggle}>{penUp ? LOWER : RAISE}</OutlineBtn>
               <OutlineBtn onClick={() => axiConnection.send('align')}>Align Pen</OutlineBtn>
             </div>
           </ControlsContainer>
@@ -100,7 +98,7 @@ const AxiDrawControl = () => {
     <StyledAxiConnection>
       <div>
         <p className="info">AxiDraw Connection</p>
-        <InputsWrapper>
+        {/* <InputsWrapper>
           <InputContainer fieldWidth={11.5}>
             <InputLabel htmlFor="axi-ip-address">host ip address</InputLabel>
             <input name="host" className="input-field" type="text" placeholder='000.000.000.000' onChange={handleChangeInput} value={axiAddress.host} />
@@ -110,15 +108,14 @@ const AxiDrawControl = () => {
             <InputLabel htmlFor="axi-port">port</InputLabel>
             <input name="port" className="input-field" type="text" placeholder='0000' onChange={handleChangeInput} value={axiAddress.port} />
           </InputContainer>
-        </InputsWrapper>
-
-        {axiConnectionError && <p className="input-field-error">{axiConnectionError}</p>}
+        </InputsWrapper> */}
 
         <p className="smallText">
-          To begin plotting, enter the IP address and port of your Axi server. You’ll need to be running the server in the background.
-          <a href="https://github.com/computershawn/penelope-server" target="_blank" rel="noreferrer">Click here</a>{" "}
-          to download the server and read the documentation.
+          To begin plotting to AxiDraw, you&apos;ll need to connect to your local instance of Penelope server. Note that you should be running the server in the background.{' '}
+          <a href="https://github.com/computershawn/penelope-server" target="_blank" rel="noreferrer">Click here</a> to download the server and read the documentation.
         </p>
+
+        {axiConnectionError && <p className="input-field-error">{axiConnectionError}</p>}
       </div>
     </StyledAxiConnection>
   );
