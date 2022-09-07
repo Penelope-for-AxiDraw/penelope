@@ -6,6 +6,9 @@ const SPINNER_CANVAS_HT = 640;
 const BASELINE_DIMENSION = 16;
 const CONTENT_TYPE_ID = 'axiSvgData';
 const CONTENT_TYPE_NAME = 'Axi SVG Data';
+const PORT = '5678';
+
+
 
 export {
   BASELINE_DIMENSION,
@@ -13,6 +16,7 @@ export {
   CONTENT_TYPE_NAME,
   DASHBOARD,
   PLOT,
+  PORT,
   SPINNER_CANVAS_HT,
   SPINNER_CANVAS_WD,
   TWO_PI,

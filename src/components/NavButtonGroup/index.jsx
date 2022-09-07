@@ -1,10 +1,15 @@
 import { ButtonGroupContainer, StyledNavIconButton } from './styles';
 import { ImagesIcon, InfoCircleIcon, ToolsIcon } from '../Icons';
+import { useContext } from 'react';
+import { store } from '../../providers/store';
 
 const NavButtonGroup = ({ navIndex, selectTab }) => {
   const iconSize = 20;
   const light = '#fff';
   const dark = '#4400A3';
+
+  const globalState = useContext(store);
+  const entries = globalState.state;
 
   const navOptions = [
     {
@@ -28,6 +33,7 @@ const NavButtonGroup = ({ navIndex, selectTab }) => {
           key={index}
           className={navIndex === index ? 'active' : ''}
           onClick={(_evt) => selectTab(index)}
+          disabled={index == 2 && !entries.length}
         >
           {option.icon(index)}
           <span>{option.text}</span>

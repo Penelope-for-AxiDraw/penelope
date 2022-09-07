@@ -1,15 +1,15 @@
 import { useContext } from 'react';
-import { ClearBtn, Divider, IconButton, NavSection, PanelSectionHeading } from '../StyledUiCommon/styles';
+
+import { ClearBtn, Divider, NavSection, PanelSectionHeading } from '../StyledUiCommon/styles';
 import { store } from '../../providers/store';
-import { PlayIcon } from '../Icons';
 import Image from 'next/image';
 import { ImageContainer, InfoContainer } from './styles';
-import { plot } from '../../utils';
 import { BASELINE_DIMENSION } from '../../constants';
+import PlotButton from '../PlotButton';
 
 const ImageDetails = ({ goToConnect, title }) => {
   const globalState = useContext(store);
-  const { state: { axiConnection, currentEntryIndex, entries, isConnected } } = globalState;
+  const { state: { currentEntryIndex, entries, isConnected } } = globalState;
   const entry = entries[currentEntryIndex];
   const { images, uploadDate, description, title: imageTitle } = entry;
 
@@ -65,10 +65,7 @@ const ImageDetails = ({ goToConnect, title }) => {
 
       <NavSection className="info-cta-footer" style={blankHeightStyle}>
         {isConnected ? (
-          <IconButton className="cta" variant="alternate" onClick={() => plot(entries[currentEntryIndex], axiConnection)} wide>
-            <PlayIcon width={24} height={24} fill='#fff' />
-            <span>Plot It!</span>
-          </IconButton>
+          <PlotButton />
         ) : (
           <p className="blurb">To begin plotting, <ClearBtn onClick={goToConnect}>connect to AxiDraw</ClearBtn>.</p>
         )}

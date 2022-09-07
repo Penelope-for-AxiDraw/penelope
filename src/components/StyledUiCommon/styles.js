@@ -69,6 +69,7 @@ const IconButton = styled(ClearBtn)`
   border-radius: 0.125rem;
   position: relative;
   background: var(--purple);
+  ${(props) => (props.disabled ? css`opacity: 0.75;` : css`opacity: 1;`)}
 
   & svg {
     // position: absolute;
