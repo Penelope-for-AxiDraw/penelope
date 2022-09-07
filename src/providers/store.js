@@ -1,8 +1,6 @@
 import React, { createContext, useReducer } from 'react';
 import { getFromLocalStorage } from '../utils';
 
-const creds = getFromLocalStorage('axidrawCreds');
-const hasCreds = creds?.host && creds?.port;
 const entryIndex = getFromLocalStorage('entryIndex');
 
 const initialState = {
@@ -15,14 +13,11 @@ const initialState = {
     leave: () => {},
   },
   isConnected: false,
-  axiAddress: {
-    host: hasCreds ? creds.host : '',
-    port: hasCreds ? creds.port : '',
-  },
   axiConnectionError: '',
   axiConnection: {},
   penUp: true,
   deviceName: '…',
+  penelopeAppHost: '',
 };
 
 const store = createContext(initialState);
@@ -34,6 +29,13 @@ const StateProvider = ({ children }) => {
     let updatedState;
 
     switch (action.type) {
+      case 'SET_HOST':
+        updatedState = {
+          ...prevState,
+          penelopeAppHost: action.payload.data,
+        };
+        return updatedState;
+
       case 'SET_ENTRIES_DATA':
         updatedState = {
           ...prevState,
@@ -66,13 +68,6 @@ const StateProvider = ({ children }) => {
         updatedState = {
           ...prevState,
           isConnected: action.payload.data,
-        };
-        return updatedState;
-
-      case 'SET_AXI_ADDRESS':
-        updatedState = {
-          ...prevState,
-          axiAddress: action.payload.data,
         };
         return updatedState;
 

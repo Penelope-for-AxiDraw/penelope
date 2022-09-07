@@ -38,7 +38,7 @@ const Home = () => {
 
     const leave = () => {
       window.localStorage.removeItem('contentfulCreds');
-      window.localStorage.removeItem('axidrawCreds');
+      // window.localStorage.removeItem('axidrawCreds');
       window.localStorage.removeItem('axiSvgContent');
       window.localStorage.removeItem('entryIndex');
       window.sessionStorage.removeItem('navIndex');
@@ -65,6 +65,15 @@ const Home = () => {
     }
     setNavIndex(JSON.parse(index));
   }, []);
+
+  useEffect(() => {
+    dispatch({
+      type: 'SET_HOST',
+      payload: {
+        data: window.location.hostname,
+      },
+    });
+  }, [dispatch]);
 
   const updateAppMode = (mode) => {
     setAppMode(mode);

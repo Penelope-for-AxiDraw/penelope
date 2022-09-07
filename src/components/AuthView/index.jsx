@@ -80,7 +80,7 @@ const MoreInfo = ({ show, infoBoxOpen }) => {
               these steps
             </a>. You&apos;ll also need to download and run the{' '}
             <a href="https://github.com/computershawn/penelope-server" target="_blank" rel="noreferrer">
-              Penelope Python app
+              Penelope server app
             </a>{' '}
             on your computer.
           </p>

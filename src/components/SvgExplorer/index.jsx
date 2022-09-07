@@ -1,15 +1,13 @@
 import { useContext, useState } from 'react';
 import { createClient } from 'contentful-management';
-// import Image from 'next/image';
 
-import { ClearBtn, IconButton, NavSection, OutlineBtn, PanelSectionHeading } from '../StyledUiCommon/styles';
+import { ClearBtn, NavSection, OutlineBtn, PanelSectionHeading } from '../StyledUiCommon/styles';
 import { ExplorerGrid } from './styles';
 import { fetchAxiSvgContent, getFromLocalStorage, plot, saveToLocalStorage } from '../../utils';
 import { store } from '../../providers/store';
 import ImageBlock from '../ImageCard';
 import Uploader from '../Uploader';
-import { PlayIcon } from '../Icons';
-// import { CONTENT_TYPE_ID, CONTENT_TYPE_NAME } from '../../constants';
+import PlotButton from '../PlotButton';
 
 const SvgExplorer = ({ goToConnect, handleSelect, title }) => {
   const globalState = useContext(store);
@@ -87,10 +85,7 @@ const SvgExplorer = ({ goToConnect, handleSelect, title }) => {
       </NavSection>
       <NavSection className="gallery-cta-footer" style={blankHeightStyle}>
         {isConnected ? (
-          <IconButton className="cta" variant="alternate" onClick={() => plot(entries[currentEntryIndex], axiConnection)} wide>
-            <PlayIcon width={24} height={24} fill='#fff' />
-            <span>Plot It!</span>
-          </IconButton>
+          <PlotButton />
         ) : (
           <p className="blurb">To begin plotting, <ClearBtn onClick={goToConnect}>connect to AxiDraw</ClearBtn>.</p>
         )}
