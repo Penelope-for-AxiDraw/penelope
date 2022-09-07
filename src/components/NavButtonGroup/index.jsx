@@ -9,7 +9,7 @@ const NavButtonGroup = ({ navIndex, selectTab }) => {
   const dark = '#4400A3';
 
   const globalState = useContext(store);
-  const entries = globalState.state;
+  const { entries } = globalState.state;
 
   const navOptions = [
     {
@@ -33,7 +33,7 @@ const NavButtonGroup = ({ navIndex, selectTab }) => {
           key={index}
           className={navIndex === index ? 'active' : ''}
           onClick={(_evt) => selectTab(index)}
-          disabled={index == 2 && !entries.length}
+          disabled={index === 2 && !entries.length}
         >
           {option.icon(index)}
           <span>{option.text}</span>
