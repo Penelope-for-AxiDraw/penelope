@@ -8,22 +8,18 @@ Penelope consists of a [Next.js](https://nextjs.org/) project bootstrapped with 
 
 ### Running the App
 
-You should first clone and run the Python API locally. Then, install, build and run the Next.js app:
+Node.js is a prerequisite for this applicaiton. If you don't have it, <a href="https://nodejs.org" target="_blank">you can get Node.js here</a>. Then you should download/clone the Python API and run it locally. Finally, download/clone this repo, and install, build and run the Next.js app:
 
 ```bash
-npm install
-```
-```bash
-npm run build
-```
-```bash
-npm run start
+$ npm install
+$ npm run build
+$ npm run start
 ```
 Open [http://localhost:3000/penelope](http://localhost:3000) with your browser to use the app.
 
 ### Development
 To develop the app, you can make changes to the code locally and then run it with
 ```bash
-npm run dev
+$ npm run dev
 ```
 Then open [http://localhost:3000/penelope](http://localhost:3000) to view your updates.
