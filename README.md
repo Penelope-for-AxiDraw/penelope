@@ -15,11 +15,11 @@ $ npm install
 $ npm run build
 $ npm run start
 ```
-Open [http://localhost:3000/penelope](http://localhost:3000) with your browser to use the app.
+Open [http://localhost:3000/penelope](http://localhost:3000/penelope) with your browser to use the app.
 
 ### Development
 To develop the app, you can make changes to the code locally and then run it with
 ```bash
 $ npm run dev
 ```
-Then open [http://localhost:3000/penelope](http://localhost:3000) to view your updates.
+Then open [http://localhost:3000/penelope](http://localhost:3000/penelope) to view your updates.
