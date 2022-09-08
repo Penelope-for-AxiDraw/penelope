@@ -8,8 +8,11 @@ Penelope consists of a [Next.js](https://nextjs.org/) project bootstrapped with 
 
 ### Running the App
 
-You should first clone and run the Python API locally. Then, build and run the Next.js app:
+You should first clone and run the Python API locally. Then, install, build and run the Next.js app:
 
+```bash
+npm install
+```
 ```bash
 npm run build
 ```
