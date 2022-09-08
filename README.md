@@ -8,7 +8,7 @@ Penelope consists of a [Next.js](https://nextjs.org/) project bootstrapped with 
 
 ### Running the App
 
-Node.js is a prerequisite for this applicaiton. If you don't have it, <a href="https://nodejs.org" target="_blank">you can get Node.js here</a>. Then you should download/clone the Python API and run it locally. Finally, download/clone this repo, and install, build and run the Next.js app:
+Node.js is a prerequisite for this applicaiton. If you don't have it, <a href="https://nodejs.org" target="_blank">you can get Node.js here</a>. Then you should download/clone the Python API and run it locally. Finally, download/clone this repo, and install, build and run the app:
 
 ```bash
 $ npm install
