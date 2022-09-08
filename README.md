@@ -1,3 +1,5 @@
+<img width="143" alt="penelope-logo@2x" src="https://user-images.githubusercontent.com/10648307/189042864-3dea5d3a-50be-44bd-953d-99d24f51aa49.png">
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
