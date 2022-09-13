@@ -135,6 +135,7 @@ const AuthView = ({
               value={fieldCreds.values[TOKEN]}
               name="accessToken"
               disabled={isSigningIn}
+              type="password"
             />
             {tokenError && <p className="input-field-error">{tokenError}</p>}
           </section>
@@ -145,6 +146,7 @@ const AuthView = ({
               value={fieldCreds.values[SPACE_ID]}
               name="spaceId"
               disabled={isSigningIn}
+              type="password"
             />
             {spaceError && <p className="input-field-error">{spaceError}</p>}
             {anyBlankFields && (

@@ -70,6 +70,18 @@ const IconButton = styled(ClearBtn)`
   position: relative;
   background: var(--purple);
   ${(props) => (props.disabled ? css`opacity: 0.75;` : css`opacity: 1;`)}
+  
+  &.cta {
+    box-shadow: 0 4px 6px 0 rgba(0, 0, 0, 0.24), 0 6px 16px 0 rgba(0, 0, 0, 0.18);
+  }
+
+  &.cta:hover, &.cta:active {
+    box-shadow: 0 8px 12px 0 rgba(0, 0, 0, 0.24), 0 12px 32px 0 rgba(0, 0, 0, 0.18);
+  }
+
+  &.cta:active {
+    box-shadow: 0 4px 6px 0 rgba(0, 0, 0, 0.24), 0 6px 16px 0 rgba(0, 0, 0, 0.18);
+  }
 
   & svg {
     // position: absolute;
