@@ -23,6 +23,10 @@ const _sendAxiCommand = async (requestBody) => {
   const penelopeAppHost = getFromLocalStorage('penelopeAppHost') || '';
   const apiPrefix = `http://${penelopeAppHost}:${PORT}/api`;
   const requestUrl = `${apiPrefix}/command`;
+  const mode = 'cors';
+  const headers = {
+    'Content-Type': 'application/json'
+  };
 
   const response = await fetch(requestUrl, {
     method: 'POST',
