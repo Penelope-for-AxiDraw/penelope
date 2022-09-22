@@ -1,5 +1,4 @@
 import { useState } from "react";
-import Image from 'next/image';
 
 import { ClearBtn, IconButton, Input } from "../StyledUiCommon/styles";
 import { ButtonInlineText, CredentialsBox, MoreInfoBox, Welcome } from "./styles";
