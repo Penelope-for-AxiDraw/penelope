@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import { createClient } from 'contentful-management';
 
 import AuthView from '../AuthView';

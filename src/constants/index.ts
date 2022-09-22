@@ -6,7 +6,7 @@ const SPINNER_CANVAS_HT = 640;
 const BASELINE_DIMENSION = 16;
 const CONTENT_TYPE_ID = 'axiSvgData';
 const CONTENT_TYPE_NAME = 'Axi SVG Data';
-const PORT = '5678';
+const PORT = '5000';
 const RAISE = 'Raise Pen';
 const LOWER = 'Lower Pen';
 

@@ -24,9 +24,6 @@ const Home = () => {
     saveToLocalStorage('penelopeAppHost', window.location.hostname);
   }, []);
 
-  // const host = getFromLocalStorage('penelopeAppHost') || '';
-  // const apiPrefix = `http://${host}:5000/api`;
-
   const handleSelectImage = (index) => {
     dispatch({
       type: 'SET_ENTRY',
@@ -72,15 +69,6 @@ const Home = () => {
     }
     setNavIndex(JSON.parse(index));
   }, []);
-
-  // useEffect(() => {
-  //   dispatch({
-  //     type: 'SET_HOST',
-  //     payload: {
-  //       data: window.location.hostname,
-  //     },
-  //   });
-  // }, [dispatch]);
 
   const updateAppMode = (mode) => {
     setAppMode(mode);
@@ -141,7 +129,6 @@ const Home = () => {
           )}
           {navIndex === 1 && (
             <SvgExplorer
-              goToConnect={() => selectTab(0)}
               handleSelect={handleSelectImage}
               title="Explore Your SVGs"
             />
@@ -149,7 +136,6 @@ const Home = () => {
           {navIndex === 2 && (
             <ImageDetails
               title="Image Details"
-              goToConnect={() => selectTab(0)}
             />
           )}
         </div>

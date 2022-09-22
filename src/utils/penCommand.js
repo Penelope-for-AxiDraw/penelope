@@ -1,46 +1,52 @@
-const getAxiInfo = async (infoType, apiPrefix) => {
+import { PORT } from "../constants";
+import { getFromLocalStorage } from "./storage";
+
+const getAxiInfo = async (infoType) => {
+  const penelopeAppHost = getFromLocalStorage('penelopeAppHost') || '';
+  const apiPrefix = `http://${penelopeAppHost}:${PORT}/api`;
   const requestUrl = `${apiPrefix}/info?q=${infoType}`;
+  const mode = 'cors';
+  const headers = {
+    'Content-Type': 'application/json'
+  };
 
   const response = await fetch(requestUrl, {
     method: 'GET',
-    mode: 'cors',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    referrerPolicy: 'no-referrer'
+    mode,
+    headers,
   }).then(res => res.json());
 
   return response;
 };
 
-const _sendAxiCommand = async (requestBody, apiPrefix) => {
+const _sendAxiCommand = async (requestBody) => {
+  const penelopeAppHost = getFromLocalStorage('penelopeAppHost') || '';
+  const apiPrefix = `http://${penelopeAppHost}:${PORT}/api`;
   const requestUrl = `${apiPrefix}/command`;
 
-  const result = await fetch(requestUrl, {
+  const response = await fetch(requestUrl, {
     method: 'POST',
-    mode: 'cors',
-    headers: {
-      'Content-Type': 'application/json'
-    },
+    mode,
+    headers,
     body: requestBody,
   });
 
-  return result;
+  return response;
 }
 
-const penToggle = async (apiPrefix) => {
+const penToggle = async () => {
   const requestBody = JSON.stringify({ action: 'toggle' });
-  const response = await _sendAxiCommand(requestBody, apiPrefix);
+  const response = await _sendAxiCommand(requestBody);
   return response.json();
 };
 
-const penAlign = async (apiPrefix) => {
+const penAlign = async () => {
   const requestBody = JSON.stringify({ action: 'align' });
-  const response = await _sendAxiCommand(requestBody, apiPrefix);
+  const response = await _sendAxiCommand(requestBody);
   return response.json();
 };
 
-const plotDrawing = async (currentSvgData, apiPrefix) => {
+const plotDrawing = async (currentSvgData) => {
   const action = 'plot';
   const pattern = /^(.*[\\/])/;
   const fileName = currentSvgData.images.svg.fileName;
@@ -52,7 +58,7 @@ const plotDrawing = async (currentSvgData, apiPrefix) => {
     fileUrl,
   });
 
-  const response = await _sendAxiCommand(requestBody, apiPrefix);
+  const response = await _sendAxiCommand(requestBody);
   return response.json();
 };
 

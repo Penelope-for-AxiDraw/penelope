@@ -1,7 +1,6 @@
 import axiConnectFormValidation from './axiConnectFormValidation';
 import fetchAxiSvgContent from './fetchAxiSvgContent';
 import { getFromLocalStorage, saveToLocalStorage } from './storage';
-import plot from './plot';
 import svgToImage from './svgToImage';
 import { getAxiInfo, penAlign, penToggle, plotDrawing } from './penCommand';
 
@@ -13,7 +12,6 @@ export {
   penAlign,
   penToggle,
   plotDrawing,
-  plot,
   saveToLocalStorage,
   svgToImage
 };

@@ -7,7 +7,7 @@ import { ImageContainer, InfoContainer } from './styles';
 import { BASELINE_DIMENSION } from '../../constants';
 import PlotButton from '../PlotButton';
 
-const ImageDetails = ({ goToConnect, title }) => {
+const ImageDetails = ({ title }) => {
   const globalState = useContext(store);
   const { state: { currentEntryIndex, entries, isConnected } } = globalState;
   const entry = entries[currentEntryIndex];
@@ -15,7 +15,6 @@ const ImageDetails = ({ goToConnect, title }) => {
 
   const contentfulPpi = 96;
   const ppi = 72;
-  const blankHeightStyle = isConnected ? {} : { height: '8rem' };
   const { width, height } = images.svg;
   const widthPx = width / contentfulPpi * ppi;
   const heightPx = height / contentfulPpi * ppi;
@@ -63,12 +62,8 @@ const ImageDetails = ({ goToConnect, title }) => {
         <Divider spacing={1.5} />
       </NavSection>
 
-      <NavSection className="info-cta-footer" style={blankHeightStyle}>
-        {isConnected ? (
-          <PlotButton />
-        ) : (
-          <p className="blurb">To begin plotting, <ClearBtn onClick={goToConnect}>connect to AxiDraw</ClearBtn>.</p>
-        )}
+      <NavSection className="info-cta-footer">
+        <PlotButton />
       </NavSection>
     </>
   )

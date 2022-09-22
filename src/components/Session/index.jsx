@@ -1,121 +1,35 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext } from 'react';
 
 import { store } from '../../providers/store';
 import { ClearBtn, NavSection, SessionInfoCont, PanelSectionHeading, Divider } from '../StyledUiCommon/styles';
 import { UserCircleIcon } from '../Icons';
 import AxiDrawControl from '../AxiDrawControl';
-// import { PORT } from '../../constants';
 import PlotButton from '../PlotButton';
-// import { getFromLocalStorage } from '../../utils';
+import { useEffect } from 'react';
+import { getAxiInfo } from '../../utils';
 
 export default function Session({
   signOut,
   title,
 }) {
-  // const [readyToConnect, setReadyToConnect] = useState(true);
   const globalState = useContext(store);
-  const {
-    // dispatch,
-    state: {
-      // isConnected,
-      user,
-    } } = globalState;
+  const { dispatch, state: { deviceName, user } } = globalState;
 
-  // const penelopeAppHost = getFromLocalStorage('penelopeAppHost') || '';
+  useEffect(() => {
+    const getDeviceName = async () => {
+      const data = await getAxiInfo('deviceName');
+      dispatch({
+        type: 'SET_DEVICE_NAME',
+        payload: {
+          data: data.deviceName,
+        }
+      });
+    };
 
-  // useEffect(() => {
-  //   const registerConnection = (websocketConnection) => {
-  //     dispatch({
-  //       type: 'SET_CONNECTED',
-  //       payload: {
-  //         data: true,
-  //       }
-  //     });
-  //     dispatch({
-  //       type: 'SET_AXI_CONNECTION',
-  //       payload: {
-  //         data: websocketConnection,
-  //       }
-  //     });
-
-  //     websocketConnection.send('get_name');
-  //     websocketConnection.send('get_pen_state');
-  //   };
-
-  //   const registerError = (err, msg) => {
-  //     dispatch({
-  //       type: 'SET_CONNECTION_ERROR',
-  //       payload: {
-  //         data: msg
-  //       },
-  //     });
-  //     console.warn("Websocket error:", err);
-  //   };
-
-  //   const getAxiSocket = () => {
-  //     const co = new WebSocket(`ws://${penelopeAppHost}:${PORT}/`);
-  //     co.onmessage = function (event) {
-  //       const message = JSON.parse(event.data);
-  //       if (message.hasOwnProperty('deviceName')) {
-  //         dispatch({
-  //           type: 'SET_DEVICE_NAME',
-  //           payload: {
-  //             data: message.deviceName,
-  //           }
-  //         });
-  //       }
-
-  //       if (message.hasOwnProperty('penUp')) {
-  //         dispatch({
-  //           type: 'SET_PEN_UP',
-  //           payload: {
-  //             data: message.penUp === 'True',
-  //           }
-  //         });
-  //       }
-  //     };
-
-  //     co.onopen = function (event) {
-  //       registerConnection(co);
-  //       console.info(`Websocket is now open on ${co.url}`);
-  //     };
-
-  //     co.onerror = function (error) {
-  //       registerError(error, 'Yikes! Please double-check the address and make sure the server is running.');
-  //     };
-
-  //     co.onclose = function (event) {
-  //       dispatch({
-  //         type: 'SET_CONNECTED',
-  //         payload: {
-  //           data: false,
-  //         }
-  //       });
-  //       dispatch({
-  //         type: 'SET_AXI_CONNECTION',
-  //         payload: {
-  //           data: {},
-  //         }
-  //       });
-  //       dispatch({
-  //         type: 'SET_DEVICE_NAME',
-  //         payload: {
-  //           data: '…',
-  //         }
-  //       });
-  //       console.info("WebSocket is now closed.");
-  //     };
-  //   };
-
-  //   if (!isConnected && readyToConnect) {
-  //     setReadyToConnect(false);
-  //     getAxiSocket();
-  //   }
-  // }, [dispatch, isConnected, penelopeAppHost, readyToConnect]);
-
-  // const handleClickConnect = () => {
-  //   setReadyToConnect(true);
-  // };
+    if (!deviceName) {
+      getDeviceName();
+    }
+  }, [deviceName, dispatch]);
 
   return (
     <>
@@ -136,18 +50,6 @@ export default function Session({
         <Divider />
         <AxiDrawControl />
       </NavSection>
-      {/* {isConnected ? (
-        <NavSection>
-          <PlotButton />
-        </NavSection>
-      ) : (
-        <NavSection>
-          <IconButton className="cta" variant="alternate" onClick={handleClickConnect} wide>
-            <PlugIcon width="1.5rem" height="1.5rem" fill='#fff' />
-            <span>Connect!</span>
-          </IconButton>
-        </NavSection>
-      )} */}
       <NavSection>
         <PlotButton />
       </NavSection>
