@@ -20,6 +20,13 @@ const Home = () => {
   const [navIndex, setNavIndex] = useState(0);
   const { dispatch, state: { currentEntryIndex, entries, disco } } = globalState;
 
+  useEffect(() => {
+    saveToLocalStorage('penelopeAppHost', window.location.hostname);
+  }, []);
+
+  // const host = getFromLocalStorage('penelopeAppHost') || '';
+  // const apiPrefix = `http://${host}:5000/api`;
+
   const handleSelectImage = (index) => {
     dispatch({
       type: 'SET_ENTRY',
@@ -66,14 +73,14 @@ const Home = () => {
     setNavIndex(JSON.parse(index));
   }, []);
 
-  useEffect(() => {
-    dispatch({
-      type: 'SET_HOST',
-      payload: {
-        data: window.location.hostname,
-      },
-    });
-  }, [dispatch]);
+  // useEffect(() => {
+  //   dispatch({
+  //     type: 'SET_HOST',
+  //     payload: {
+  //       data: window.location.hostname,
+  //     },
+  //   });
+  // }, [dispatch]);
 
   const updateAppMode = (mode) => {
     setAppMode(mode);

@@ -3,7 +3,8 @@ import { store } from '../../providers/store';
 import { ControlsContainer, StyledAxiConnection } from './styles';
 import { ClearBtn, InputLabel, OutlineBtn, SessionInfoCont } from '../StyledUiCommon/styles';
 import { NetworkWiredIcon } from '../Icons';
-import { PORT } from '../../constants';
+import { LOWER, PORT, RAISE } from '../../constants';
+import { getFromLocalStorage, penAlign, penToggle } from '../../utils';
 
 const AxiDrawControl = () => {
   const globalState = useContext(store);
@@ -17,8 +18,9 @@ const AxiDrawControl = () => {
       penelopeAppHost,
       penUp
     } } = globalState;
-  const RAISE = 'Raise Pen';
-  const LOWER = 'Lower Pen';
+
+  const host = getFromLocalStorage('penelopeAppHost') || '';
+  const apiPrefix = `http://${host}:5000/api`;
 
   const initDisconnect = () => {
     const warningCopy = {
@@ -44,15 +46,29 @@ const AxiDrawControl = () => {
     });
   }
 
-  const handleToggle = () => {
-    axiConnection.send('toggle');
+  // const handleToggle = () => {
+  //   axiConnection.send('toggle');
 
+  //   dispatch({
+  //     type: 'SET_PEN_UP',
+  //     payload: {
+  //       data: !penUp
+  //     },
+  //   });
+  // }
+
+  const handleClickToggle = () => {
+    penToggle(apiPrefix);
     dispatch({
       type: 'SET_PEN_UP',
       payload: {
         data: !penUp
       },
     });
+  }
+
+  const handleClickAlign = () => {
+    penAlign(apiPrefix);
   }
 
   if (isConnected) {
@@ -71,8 +87,8 @@ const AxiDrawControl = () => {
           <ControlsContainer>
             <InputLabel>Pen Controls</InputLabel>
             <div className="button-group">
-              <OutlineBtn onClick={handleToggle}>{penUp ? LOWER : RAISE}</OutlineBtn>
-              <OutlineBtn onClick={() => axiConnection.send('align')}>Align Pen</OutlineBtn>
+              <OutlineBtn onClick={handleClickToggle}>{penUp ? LOWER : RAISE}</OutlineBtn>
+              <OutlineBtn onClick={handleClickAlign}>Align Pen</OutlineBtn>
             </div>
           </ControlsContainer>
         </div>

@@ -17,7 +17,7 @@ const initialState = {
   axiConnection: {},
   penUp: true,
   deviceName: '…',
-  penelopeAppHost: '',
+  // penelopeAppHost: '',
 };
 
 const store = createContext(initialState);
@@ -29,12 +29,12 @@ const StateProvider = ({ children }) => {
     let updatedState;
 
     switch (action.type) {
-      case 'SET_HOST':
-        updatedState = {
-          ...prevState,
-          penelopeAppHost: action.payload.data,
-        };
-        return updatedState;
+      // case 'SET_HOST':
+      //   updatedState = {
+      //     ...prevState,
+      //     penelopeAppHost: action.payload.data,
+      //   };
+      //   return updatedState;
 
       case 'SET_ENTRIES_DATA':
         updatedState = {

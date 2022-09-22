@@ -1,119 +1,121 @@
 import { useContext, useEffect, useState } from 'react';
 
 import { store } from '../../providers/store';
-import { ClearBtn, NavSection, SessionInfoCont, PanelSectionHeading, Divider, IconButton } from '../StyledUiCommon/styles';
-import { PlugIcon, UserCircleIcon } from '../Icons';
+import { ClearBtn, NavSection, SessionInfoCont, PanelSectionHeading, Divider } from '../StyledUiCommon/styles';
+import { UserCircleIcon } from '../Icons';
 import AxiDrawControl from '../AxiDrawControl';
-import { PORT } from '../../constants';
+// import { PORT } from '../../constants';
 import PlotButton from '../PlotButton';
+// import { getFromLocalStorage } from '../../utils';
 
 export default function Session({
   signOut,
   title,
 }) {
-  const [readyToConnect, setReadyToConnect] = useState(true);
+  // const [readyToConnect, setReadyToConnect] = useState(true);
   const globalState = useContext(store);
   const {
-    dispatch,
+    // dispatch,
     state: {
-      isConnected,
-      penelopeAppHost,
+      // isConnected,
       user,
     } } = globalState;
 
-  useEffect(() => {
-    const registerConnection = (websocketConnection) => {
-      dispatch({
-        type: 'SET_CONNECTED',
-        payload: {
-          data: true,
-        }
-      });
-      dispatch({
-        type: 'SET_AXI_CONNECTION',
-        payload: {
-          data: websocketConnection,
-        }
-      });
+  // const penelopeAppHost = getFromLocalStorage('penelopeAppHost') || '';
 
-      websocketConnection.send('get_name');
-      websocketConnection.send('get_pen_state');
-    };
+  // useEffect(() => {
+  //   const registerConnection = (websocketConnection) => {
+  //     dispatch({
+  //       type: 'SET_CONNECTED',
+  //       payload: {
+  //         data: true,
+  //       }
+  //     });
+  //     dispatch({
+  //       type: 'SET_AXI_CONNECTION',
+  //       payload: {
+  //         data: websocketConnection,
+  //       }
+  //     });
 
-    const registerError = (err, msg) => {
-      dispatch({
-        type: 'SET_CONNECTION_ERROR',
-        payload: {
-          data: msg
-        },
-      });
-      console.warn("Websocket error:", err);
-    };
+  //     websocketConnection.send('get_name');
+  //     websocketConnection.send('get_pen_state');
+  //   };
 
-    const getAxiSocket = () => {
-      const co = new WebSocket(`ws://${penelopeAppHost}:${PORT}/`);
-      co.onmessage = function (event) {
-        const message = JSON.parse(event.data);
-        if (message.hasOwnProperty('deviceName')) {
-          dispatch({
-            type: 'SET_DEVICE_NAME',
-            payload: {
-              data: message.deviceName,
-            }
-          });
-        }
+  //   const registerError = (err, msg) => {
+  //     dispatch({
+  //       type: 'SET_CONNECTION_ERROR',
+  //       payload: {
+  //         data: msg
+  //       },
+  //     });
+  //     console.warn("Websocket error:", err);
+  //   };
 
-        if (message.hasOwnProperty('penUp')) {
-          dispatch({
-            type: 'SET_PEN_UP',
-            payload: {
-              data: message.penUp === 'True',
-            }
-          });
-        }
-      };
+  //   const getAxiSocket = () => {
+  //     const co = new WebSocket(`ws://${penelopeAppHost}:${PORT}/`);
+  //     co.onmessage = function (event) {
+  //       const message = JSON.parse(event.data);
+  //       if (message.hasOwnProperty('deviceName')) {
+  //         dispatch({
+  //           type: 'SET_DEVICE_NAME',
+  //           payload: {
+  //             data: message.deviceName,
+  //           }
+  //         });
+  //       }
 
-      co.onopen = function (event) {
-        registerConnection(co);
-        console.info(`Websocket is now open on ${co.url}`);
-      };
+  //       if (message.hasOwnProperty('penUp')) {
+  //         dispatch({
+  //           type: 'SET_PEN_UP',
+  //           payload: {
+  //             data: message.penUp === 'True',
+  //           }
+  //         });
+  //       }
+  //     };
 
-      co.onerror = function (error) {
-        registerError(error, 'Yikes! Please double-check the address and make sure the server is running.');
-      };
+  //     co.onopen = function (event) {
+  //       registerConnection(co);
+  //       console.info(`Websocket is now open on ${co.url}`);
+  //     };
 
-      co.onclose = function (event) {
-        dispatch({
-          type: 'SET_CONNECTED',
-          payload: {
-            data: false,
-          }
-        });
-        dispatch({
-          type: 'SET_AXI_CONNECTION',
-          payload: {
-            data: {},
-          }
-        });
-        dispatch({
-          type: 'SET_DEVICE_NAME',
-          payload: {
-            data: '…',
-          }
-        });
-        console.info("WebSocket is now closed.");
-      };
-    };
+  //     co.onerror = function (error) {
+  //       registerError(error, 'Yikes! Please double-check the address and make sure the server is running.');
+  //     };
 
-    if (!isConnected && readyToConnect) {
-      setReadyToConnect(false);
-      getAxiSocket();
-    }
-  }, [dispatch, isConnected, penelopeAppHost, readyToConnect]);
+  //     co.onclose = function (event) {
+  //       dispatch({
+  //         type: 'SET_CONNECTED',
+  //         payload: {
+  //           data: false,
+  //         }
+  //       });
+  //       dispatch({
+  //         type: 'SET_AXI_CONNECTION',
+  //         payload: {
+  //           data: {},
+  //         }
+  //       });
+  //       dispatch({
+  //         type: 'SET_DEVICE_NAME',
+  //         payload: {
+  //           data: '…',
+  //         }
+  //       });
+  //       console.info("WebSocket is now closed.");
+  //     };
+  //   };
 
-  const handleClickConnect = () => {
-    setReadyToConnect(true);
-  };
+  //   if (!isConnected && readyToConnect) {
+  //     setReadyToConnect(false);
+  //     getAxiSocket();
+  //   }
+  // }, [dispatch, isConnected, penelopeAppHost, readyToConnect]);
+
+  // const handleClickConnect = () => {
+  //   setReadyToConnect(true);
+  // };
 
   return (
     <>
@@ -134,7 +136,7 @@ export default function Session({
         <Divider />
         <AxiDrawControl />
       </NavSection>
-      {isConnected ? (
+      {/* {isConnected ? (
         <NavSection>
           <PlotButton />
         </NavSection>
@@ -145,7 +147,10 @@ export default function Session({
             <span>Connect!</span>
           </IconButton>
         </NavSection>
-      )}
+      )} */}
+      <NavSection>
+        <PlotButton />
+      </NavSection>
     </>
   );
 }
