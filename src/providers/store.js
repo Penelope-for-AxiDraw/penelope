@@ -12,12 +12,10 @@ const initialState = {
     warningCopy: {},
     leave: () => {},
   },
-  isConnected: false,
   axiConnectionError: '',
   axiConnection: {},
   penUp: true,
-  deviceName: '…',
-  penelopeAppHost: '',
+  deviceName: null,
 };
 
 const store = createContext(initialState);
@@ -29,13 +27,6 @@ const StateProvider = ({ children }) => {
     let updatedState;
 
     switch (action.type) {
-      case 'SET_HOST':
-        updatedState = {
-          ...prevState,
-          penelopeAppHost: action.payload.data,
-        };
-        return updatedState;
-
       case 'SET_ENTRIES_DATA':
         updatedState = {
           ...prevState,
@@ -61,13 +52,6 @@ const StateProvider = ({ children }) => {
         updatedState = {
           ...prevState,
           currentEntryIndex: action.payload.data,
-        };
-        return updatedState;
-
-      case 'SET_CONNECTED':
-        updatedState = {
-          ...prevState,
-          isConnected: action.payload.data,
         };
         return updatedState;
 

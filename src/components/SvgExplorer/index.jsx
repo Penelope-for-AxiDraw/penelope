@@ -1,17 +1,17 @@
 import { useContext, useState } from 'react';
 import { createClient } from 'contentful-management';
 
-import { ClearBtn, NavSection, OutlineBtn, PanelSectionHeading } from '../StyledUiCommon/styles';
+import { NavSection, OutlineBtn, PanelSectionHeading } from '../StyledUiCommon/styles';
 import { ExplorerGrid } from './styles';
-import { fetchAxiSvgContent, getFromLocalStorage, plot, saveToLocalStorage } from '../../utils';
+import { fetchAxiSvgContent, getFromLocalStorage, saveToLocalStorage } from '../../utils';
 import { store } from '../../providers/store';
 import ImageBlock from '../ImageCard';
 import Uploader from '../Uploader';
 import PlotButton from '../PlotButton';
 
-const SvgExplorer = ({ goToConnect, handleSelect, title }) => {
+const SvgExplorer = ({ handleSelect, title }) => {
   const globalState = useContext(store);
-  const { dispatch, state: { axiConnection, currentEntryIndex, entries, isConnected } } = globalState;
+  const { dispatch, state: { currentEntryIndex, entries } } = globalState;
   const [uploaderIsOpen, setUploaderIsOpen] = useState(false);
 
   const initDelete = async (index) => {
@@ -61,8 +61,6 @@ const SvgExplorer = ({ goToConnect, handleSelect, title }) => {
     });
   }
 
-  const blankHeightStyle = isConnected ? {} : { height: '8rem' };
-
   return (
     <>
       {uploaderIsOpen && <Uploader dismiss={() => setUploaderIsOpen(false)} />}
@@ -83,12 +81,8 @@ const SvgExplorer = ({ goToConnect, handleSelect, title }) => {
           ))}
         </ExplorerGrid>
       </NavSection>
-      <NavSection className="gallery-cta-footer" style={blankHeightStyle}>
-        {isConnected ? (
-          <PlotButton />
-        ) : (
-          <p className="blurb">To begin plotting, <ClearBtn onClick={goToConnect}>connect to AxiDraw</ClearBtn>.</p>
-        )}
+      <NavSection className="gallery-cta-footer">
+        <PlotButton />
       </NavSection>
     </>
   )

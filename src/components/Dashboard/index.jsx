@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import { createClient } from 'contentful-management';
 
 import AuthView from '../AuthView';
@@ -155,7 +155,7 @@ const Dashboard = ({ updateAppMode }) => {
   };
 
   const contentfulSignIn = async () => {
-    const {client, space} = await initClient();
+    const { client, space } = await initClient();
 
     if (client) {
       try {
@@ -175,6 +175,7 @@ const Dashboard = ({ updateAppMode }) => {
         });
 
         // 3. Show the main app component
+        setIsLoading(false);
         updateAppMode(PLOT);
       } catch (err) {
         updateSignInErrors(err);
@@ -185,22 +186,20 @@ const Dashboard = ({ updateAppMode }) => {
   }
 
   return (
-    <>
-      <LoginScreen>
-        {isLoading || isSigningIn ? (
-          <div className="dashboard-spinner">
-            <BurstSpinner bgCo={[240, 238, 246]} ringCo={[107, 0, 255]} />
-          </div>
-        ) : (
-          <AuthView
-            attemptSignIn={contentfulSignIn}
-            isSigningIn={isSigningIn}
-            fieldCreds={fieldCreds}
-            handleChangeInput={handleChangeInput}
-          />
-        )}
-      </LoginScreen>
-    </>
+    <LoginScreen>
+      {isLoading || isSigningIn ? (
+        <div className="dashboard-spinner">
+          <BurstSpinner bgCo={[240, 238, 246]} ringCo={[107, 0, 255]} />
+        </div>
+      ) : (
+        <AuthView
+          attemptSignIn={contentfulSignIn}
+          isSigningIn={isSigningIn}
+          fieldCreds={fieldCreds}
+          handleChangeInput={handleChangeInput}
+        />
+      )}
+    </LoginScreen>
   );
 };
 

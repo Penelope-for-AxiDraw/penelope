@@ -20,6 +20,10 @@ const Home = () => {
   const [navIndex, setNavIndex] = useState(0);
   const { dispatch, state: { currentEntryIndex, entries, disco } } = globalState;
 
+  useEffect(() => {
+    saveToLocalStorage('penelopeAppHost', window.location.hostname);
+  }, []);
+
   const handleSelectImage = (index) => {
     dispatch({
       type: 'SET_ENTRY',
@@ -65,15 +69,6 @@ const Home = () => {
     }
     setNavIndex(JSON.parse(index));
   }, []);
-
-  useEffect(() => {
-    dispatch({
-      type: 'SET_HOST',
-      payload: {
-        data: window.location.hostname,
-      },
-    });
-  }, [dispatch]);
 
   const updateAppMode = (mode) => {
     setAppMode(mode);
@@ -134,7 +129,6 @@ const Home = () => {
           )}
           {navIndex === 1 && (
             <SvgExplorer
-              goToConnect={() => selectTab(0)}
               handleSelect={handleSelectImage}
               title="Explore Your SVGs"
             />
@@ -142,7 +136,6 @@ const Home = () => {
           {navIndex === 2 && (
             <ImageDetails
               title="Image Details"
-              goToConnect={() => selectTab(0)}
             />
           )}
         </div>
