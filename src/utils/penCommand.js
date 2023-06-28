@@ -14,9 +14,10 @@ const getAxiInfo = async (infoType) => {
     method: 'GET',
     mode,
     headers,
-  }).then(res => res.json());
-
-  return response;
+  }).then(res => res.json())
+    .catch((err) => console.info(`(${err.message} ::: Not connected)`));
+  
+  return { ...response, connected: !!response };
 };
 
 const _sendAxiCommand = async (requestBody) => {

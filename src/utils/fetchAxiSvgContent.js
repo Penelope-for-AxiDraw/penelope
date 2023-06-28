@@ -2,7 +2,7 @@ import { CONTENT_TYPE_ID } from "../constants";
 
 // Load Axi SVG content from Contentful
   const fetchAxiSvgContent = async (space) => {
-    const fieldsToGet = ['title', 'description', 'thumbnail', 'svgFile'];
+    const fieldsToGet = ['title', 'description', 'thumbnail', 'svgFile', 'folder'];
     const { items: entries } = await space.getEnvironment("master")
       .then((environment) =>
         environment.getEntries({
@@ -10,11 +10,13 @@ import { CONTENT_TYPE_ID } from "../constants";
           select: fieldsToGet.map(f => `fields.${f}`).join(',')
         })
       );
-    
+
     const publishedEntries = entries.filter(item => item.isPublished());
     const { items: assets } = await space.getEnvironment("master")
       .then((environment) => environment.getAssets());
     // TODO: Add some error handling for the above API calls
+
+    const folderNamesSet = new Set();
 
     const entriesWithImageUrls = publishedEntries.filter((item) => {
       return item.fields.hasOwnProperty('svgFile') && item.fields.hasOwnProperty('thumbnail');
@@ -26,10 +28,15 @@ import { CONTENT_TYPE_ID } from "../constants";
       const svgID = item.fields.svgFile["en-US"].sys.id;
       const svgAsset = assets.find((asset) => asset.sys.id === svgID);
 
+      if (item.fields.folder?.["en-US"]) {
+        folderNamesSet.add(item.fields.folder?.["en-US"]);
+      }
+
       return {
         id: item.sys.id,
         description: item.fields.description["en-US"],
         title: item.fields.title["en-US"],
+        folder: item.fields.folder?.["en-US"] || null,
         images: {
           thumbnail: {
             id: thumbnailAsset?.sys.id,
@@ -50,6 +57,8 @@ import { CONTENT_TYPE_ID } from "../constants";
         uploadDate: item.sys.publishedAt,
       };
     });
+
+    const folders = Array.from(folderNamesSet);
 
     return entriesWithImageUrls;
   }

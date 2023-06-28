@@ -10,6 +10,10 @@ export const StyledAxiConnection = styled.div`
   & .info {
     margin-top: 0;
   }
+
+  & .info.alert {
+    color: var(--alert-red-dark);
+  }
 `;
 
 export const InputContainer = styled.div`

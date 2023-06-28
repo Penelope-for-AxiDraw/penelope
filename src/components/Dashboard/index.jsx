@@ -48,8 +48,8 @@ const Dashboard = ({ updateAppMode }) => {
   };
 
   const updateSignInErrors = (err) => {
-    // console.error(err);
-    console.error('Your personal access token and/or space ID is invalid');
+    console.error(err);
+    // console.error('Your personal access token and/or space ID is invalid');
   }
 
   // Move this process to after sign-in and before fetching content

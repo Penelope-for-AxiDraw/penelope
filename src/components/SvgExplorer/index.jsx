@@ -11,7 +11,7 @@ import PlotButton from '../PlotButton';
 
 const SvgExplorer = ({ handleSelect, title }) => {
   const globalState = useContext(store);
-  const { dispatch, state: { currentEntryIndex, entries } } = globalState;
+  const { dispatch, state: { currentEntryIndex, entries }, axiConnection } = globalState;
   const [uploaderIsOpen, setUploaderIsOpen] = useState(false);
 
   const initDelete = async (index) => {
@@ -82,7 +82,7 @@ const SvgExplorer = ({ handleSelect, title }) => {
         </ExplorerGrid>
       </NavSection>
       <NavSection className="gallery-cta-footer">
-        <PlotButton />
+        {axiConnection && <PlotButton />}
       </NavSection>
     </>
   )

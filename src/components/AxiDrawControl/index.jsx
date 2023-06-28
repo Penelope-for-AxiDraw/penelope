@@ -12,6 +12,7 @@ const AxiDrawControl = () => {
     dispatch,
     state: {
       deviceName,
+      axiConnection,
       penUp
     } } = globalState;
 
@@ -33,23 +34,29 @@ const AxiDrawControl = () => {
 
   return (
     <StyledAxiConnection>
-      <div>
-        <p className="info">Connected to AxiDraw</p>
-        <SessionInfoCont>
-          <NetworkWiredIcon width={40} height={40} fill={'#4400A3'} />
-          <div className="specs">
-            <p>{deviceName || 'no device name'}</p>
-            <p>{penelopeAppHost} : {PORT}</p>
-          </div>
-        </SessionInfoCont>
-        <ControlsContainer>
-          <InputLabel>Pen Controls</InputLabel>
-          <div className="button-group">
-            <OutlineBtn onClick={handleClickToggle}>{penUp ? LOWER : RAISE}</OutlineBtn>
-            <OutlineBtn onClick={handleClickAlign}>Align Pen</OutlineBtn>
-          </div>
-        </ControlsContainer>
-      </div>
+      {axiConnection ? (
+        <div>
+          <p className="info">Connected to AxiDraw</p>
+          <SessionInfoCont>
+            <NetworkWiredIcon width={40} height={40} fill={'#4400A3'} />
+            <div className="specs">
+              <p>{deviceName || 'no device name'}</p>
+              <p>{penelopeAppHost} : {PORT}</p>
+            </div>
+          </SessionInfoCont>
+          <ControlsContainer>
+            <InputLabel>Pen Controls</InputLabel>
+            <div className="button-group">
+              <OutlineBtn onClick={handleClickToggle}>{penUp ? LOWER : RAISE}</OutlineBtn>
+              <OutlineBtn onClick={handleClickAlign}>Align Pen</OutlineBtn>
+            </div>
+          </ControlsContainer>
+        </div>
+      ) : (
+        <div>
+          <p className="info alert">Not connected to AxiDraw. Is the server running?</p>
+        </div>
+      )}
     </StyledAxiConnection>
   );
 };

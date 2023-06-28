@@ -9,7 +9,7 @@ import PlotButton from '../PlotButton';
 
 const ImageDetails = ({ title }) => {
   const globalState = useContext(store);
-  const { state: { currentEntryIndex, entries, isConnected } } = globalState;
+  const { state: { currentEntryIndex, entries, axiConnection } } = globalState;
   const entry = entries[currentEntryIndex];
   const { images, uploadDate, description, title: imageTitle } = entry;
 
@@ -63,7 +63,7 @@ const ImageDetails = ({ title }) => {
       </NavSection>
 
       <NavSection className="info-cta-footer">
-        <PlotButton />
+        {axiConnection && <PlotButton />}
       </NavSection>
     </>
   )

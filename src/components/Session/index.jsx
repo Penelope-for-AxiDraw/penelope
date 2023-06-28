@@ -13,15 +13,17 @@ export default function Session({
   title,
 }) {
   const globalState = useContext(store);
-  const { dispatch, state: { deviceName, user } } = globalState;
+  const { dispatch, state: { deviceName, user }, axiConnection } = globalState;
 
   useEffect(() => {
     const getDeviceName = async () => {
       const data = await getAxiInfo('deviceName');
+      const t = data?.connected ? 'SET_DEVICE_NAME' : 'SET_AXI_CONNECTION';
+      const d = data?.connected ? data?.deviceName : false;
       dispatch({
-        type: 'SET_DEVICE_NAME',
+        type: t,
         payload: {
-          data: data.deviceName,
+          data: d,
         }
       });
     };
@@ -51,7 +53,7 @@ export default function Session({
         <AxiDrawControl />
       </NavSection>
       <NavSection>
-        <PlotButton />
+        {axiConnection && <PlotButton />}
       </NavSection>
     </>
   );

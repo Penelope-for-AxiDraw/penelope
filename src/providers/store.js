@@ -13,7 +13,7 @@ const initialState = {
     leave: () => {},
   },
   axiConnectionError: '',
-  axiConnection: {},
+  axiConnection: false,
   penUp: true,
   deviceName: null,
 };
