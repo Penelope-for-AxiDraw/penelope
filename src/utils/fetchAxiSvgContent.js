@@ -60,7 +60,10 @@ import { CONTENT_TYPE_ID } from "../constants";
 
     const folders = Array.from(folderNamesSet);
 
-    return entriesWithImageUrls;
+    return {
+      entriesWithImageUrls,
+      folders
+    };
   }
 
   export default fetchAxiSvgContent;

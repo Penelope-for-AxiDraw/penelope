@@ -5,6 +5,7 @@ const entryIndex = getFromLocalStorage('entryIndex');
 
 const initialState = {
   entries: [],
+  folders: [],
   currentEntryIndex: entryIndex || 0,
   user: {},
   disco: {
@@ -30,7 +31,8 @@ const StateProvider = ({ children }) => {
       case 'SET_ENTRIES_DATA':
         updatedState = {
           ...prevState,
-          entries: action.payload.data,
+          entries: action.payload.data.entriesWithImageUrls,
+          folders: action.payload.data.folders,
         };
         return updatedState;
 
