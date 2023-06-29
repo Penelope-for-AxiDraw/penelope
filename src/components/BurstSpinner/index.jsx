@@ -18,10 +18,10 @@ const defaultBgColor = [68, 0, 163];
 const defaultRingColor = [255, 255, 255];
 
 const BurstSpinner = ({
-  bgCo=defaultBgColor,
-  ringCo=defaultRingColor,
+  bgCo = defaultBgColor,
+  ringCo = defaultRingColor,
 }) => {
-  const canvasRef = useRef(null)  
+  const canvasRef = useRef(null)
   const circles = defaultCircles;
   const fadeInStart = Date.now();
 
@@ -53,7 +53,7 @@ const BurstSpinner = ({
     ctx.clearRect(0, 0, SPINNER_CANVAS_WD, SPINNER_CANVAS_HT);
     // drawBackground(ctx, `rgb(68 0 163 / ${opa})`);
     drawBackground(ctx, `rgb(${bgCo[0]} ${bgCo[1]} ${bgCo[2]} / ${opa})`);
-    
+
     const elapsed = Date.now() % duration;
     circles.forEach(circ => {
       circ.update(elapsed, cX, cY, opa);
@@ -81,7 +81,7 @@ const BurstSpinner = ({
     ctx.lineWidth = 2;
     ctx.stroke();
   }
-  
+
   useAnimationFrame(deltaTime => {
     // NOTE this check of canvasRef.current is a workaround for a `Cannot
     // read property 'getContext' of Null` error. We should re-evaluate

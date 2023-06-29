@@ -63,7 +63,7 @@ const Home = () => {
 
   useEffect(() => {
     // Go to most recent tab from session on page load
-    let index;
+    let index = 0;
     if (typeof window !== 'undefined') {
       index = window.sessionStorage.getItem('navIndex') || 0;
     }
